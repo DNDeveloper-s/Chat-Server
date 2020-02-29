@@ -4,6 +4,10 @@ const router = express.Router();
 
 const authController = require('../controllers/authController');
 
-router.get('/auth', authController.getAuth);
+// EndPoint comes under "/auth"
+
+router.get('/ui', authController.getAuth);
+
+router.post('/register', authController.postRegAuth);
 
 module.exports = router;

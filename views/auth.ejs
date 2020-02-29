@@ -1,11 +1,86 @@
 <%- include('includes/head.ejs') %>
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/main.css">
 </head>
 <body>
 
     
+    <div class="body-bg">
+        <div class="image-item">
+            <img src="./assets/images/bg-1.jpg" alt="">
+        </div>
+        <div class="image-item">
+            <img src="./assets/images/bg-2.jpg" alt="">
+        </div>
+        <div class="image-item">
+            <img src="./assets/images/bg-3.jpg" alt="">
+        </div>
+        <div class="image-item">
+            <img src="./assets/images/bg-4.jpg" alt="">
+        </div>
+        <div class="image-item">
+            <img src="./assets/images/bg-5.jpg" alt="">
+        </div>
+        <div class="image-item">
+            <img src="./assets/images/bg-1.jpg" alt="">
+        </div>
+    </div>
+    <div class="body-overlay"></div>
+
+    <div class="auth-modal">
+        <form id="loginForm" class="anim" data-removeanim="false" action="">
+            <h3>Login</h3>
+            <div class="input-control">
+                <label for="email">Email</label>
+                <input type="email" name="email">
+            </div>
+            <div class="input-control">
+                <label for="password">Password</label>
+                <input type="password" name="password">
+            </div>
+            <button class="pointer mainAuthBtn btn" type="submit">Login
+                <div class="loader-container">
+                    <svg width="40" height="40">
+                        <circle class="loader" cx="20" cy="20" r="17"></circle>
+                    </svg>
+                </div>
+            </button>
+            <div class="reset-password">
+                <p>Don't remember your password? You can request to reset your password <a href="">here</a>!</p>
+            </div>
+        </form>
+       <!-- <form class="anim" action="" data-removeanim="false">
+           <h3>Register</h3>
+           <div class="input-control">
+               <label for="fullName">Full Name</label>
+               <input type="text" name="fullName">
+           </div>
+           <div class="input-control">
+               <label for="email">Email</label>
+               <input type="email" name="email">
+           </div>
+           <div class="input-control">
+               <label for="password">Password</label>
+               <input type="password" name="password">
+           </div>
+           <div class="input-control">
+               <label for="conPassword">Confirm Password</label>
+               <input type="password" name="conPassword">
+           </div>
+           <button class="pointer" type="submit">Register</button>
+       </form> -->
+    </div>
+
+    <div class="nav">
+        <ul>
+            <li class="pointer authBtnShow login active" data-btn="login"><p>Login</p></li>
+            <li class="pointer authBtnShow reg" data-btn="reg"><p>Register</p></li>
+        </ul>
+    </div>
 
 
-    <script src="/auth.js"></script>
+
+    <script src="/assets/js/main.bundle.js"></script>
 </body>
 </html>
