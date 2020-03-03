@@ -1,0 +1,170 @@
+<%- include('includes/head.ejs') %>
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/css/material-icons.css">
+</head>
+<body>
+
+    <div id="root">
+        <!-- Left Side Nav bar -->
+        <div class="nav_bar">
+            <div class="userDetails-NameSpace_container">
+                <!-- User Details Container -->
+                <div class="user_dp image_holder">
+                     <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+                </div>
+                <hr>
+                <!-- Add New NameSpace Container -->
+                <div class="add-name_space image_holder">
+                    <img src="/assets/images/add.png" alt="add-icon">
+                </div>
+                <hr>
+                <!-- NameSpace Container -->
+                <div class="nameSpaceContainer">
+<!--                    <div class="name_space image_holder anim" ns="/wikit" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
+<!--                        <img src="/assets/images/Capture.PNG" alt="wikit" title="wikit">-->
+<!--                    </div>-->
+<!--                    <div class="name_space image_holder" ns="/dndeveloper">-->
+<!--                         <img src="./assets/images/Capture.PNG" alt="DNDeveloper" title="">-->
+<!--                    </div>-->
+<!--                    <div class="name_space image_holder" ns="/ewl">-->
+<!--                         <img src="./assets/images/IMG_20191019_011435.jpg" alt="DNDeveloper">-->
+<!--                    </div>-->
+<!--                    <div class="name_space image_holder" ns="/devils">-->
+<!--                         <img src="./assets/images/saurabh_with_laptop_front.jpg" alt="DNDeveloper">-->
+<!--                    </div>-->
+<!--                    <div class="name_space image_holder">-->
+<!--                         <img src="./assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">-->
+<!--                    </div>-->
+                </div>
+                <hr class="logout">
+                <!-- Logout Button Element -->
+                <div class="logout-btn image_holder">
+                    <img src="/assets/images/logout.png" alt="logout-icon">
+                </div>
+            </div>
+            <div class="nameSpaceDetails-Room_container">
+                <div class="namespace-name">
+                    <h3>DNDeveloper</h3><i class="material-icons">arrow_drop_down</i>
+                </div>
+                <!-- Room Container -->
+                <div class="roomContainer">
+                    <h4 class="room-group-name">Rooms</h4>
+                    <!-- Real Rooms -->
+<!--                    <div class="room anim" data-id="5e0f1444ff19141a58ef4ce0" data-nsid="5e0e4d536ab3a74520d9e359" data-ns="wikit" data-animtochilds="false" data-animdelay="0.1" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
+<!--                        <div class="room-name">-->
+<!--                            <span># </span><span>2345</span></div>-->
+<!--                        <i class="pointer material-icons delete-room">delete</i>-->
+<!--                    </div>-->
+<!--                    <div class="room anim" data-id="5e0f1444ff19141a58ef4ce0" data-nsid="5e0e4d536ab3a74520d9e359" data-ns="wikit" data-animtochilds="false" data-animdelay="0.1" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
+<!--                        <div class="room-name"><span># </span><span>2345</span></div>-->
+<!--                        <i class="pointer material-icons delete-room">delete</i>-->
+<!--                    </div>-->
+<!--                        <div class="room">-->
+<!--                            <div class="room-name"><span># </span><span>general</span></div>-->
+<!--                            <i class="pointer material-icons">delete</i>-->
+<!--                        </div>-->
+<!--                        <hr>-->
+<!--                    <div class="room">-->
+<!--                        <div class="room-name"><span># </span><span>announcements</span></div>-->
+<!--                    </div>-->
+<!--                    <hr>-->
+<!--                    <div class="room">-->
+<!--                        <div class="room-name"><span># </span><span>bots</span></div>-->
+<!--                    </div>-->
+<!--                    <hr>-->
+<!--                    <div class="room">-->
+<!--                        <div class="room-name"><span># </span><span>music</span></div>-->
+<!--                    </div>-->
+<!--                    <hr>-->
+<!--                    <div class="room">-->
+<!--                        <div class="room-name"><span># </span><span>others</span></div>-->
+<!--                    </div>-->
+<!--                    <hr>-->
+                </div>
+                <button class="pointer add-room">Add Room</button>
+            </div>
+        </div>
+        <!-- Main Message display bar -->
+        <div class="main_bar">
+            <!-- Room Details on top of the message container -->
+            <div class="room-details">
+                <!-- Left Bar on top message -->
+                <div class="keepItLeft">
+                    <div class="current-room-name">
+                        <span>Saurabh Singh</span>
+                    </div>
+                    <div class="users-online" title="No. of online users">
+                        <p></p>
+                        <i class="material-icons">person</i>
+                    </div>
+                </div>
+                <!-- Right Bar on top message -->
+                <div class="keepItRight mob-search-btn">
+                    <i class="material-icons">search</i>
+                </div>
+                <div class="keepItRight mob-drop-down">
+                    <input type="text" class="search-bar" placeholder="Search here!">
+                    <button class="pointer">Search</button>
+                </div>
+            </div>
+            <!-- Message display container -->
+            <div class="message-display__container">
+                <!-- Real Message Body -->
+<!--                <div class="message">-->
+<!--                    <div class="user-img">-->
+<!--                        <img src="./assets/images/Saurabh_DP_square.jpg" class="message-user_dp" alt="">-->
+<!--                    </div>-->
+<!--                    <div class="message-body">-->
+<!--                        <div class="message-header">-->
+<!--                            <div class="user">-->
+<!--                                <span class="message-user_name">Slim Shady</span>-->
+<!--                            </div>-->
+<!--                            <span class="message-time_stamp">5:20 am</span>-->
+<!--                        </div>-->
+<!--                        <div class="message-data">-->
+<!--                            <p>This is my first message!</p>-->
+<!--                        </div>-->
+<!--                        <div class="message-status">-->
+<!--                            <i class="material-icons">done_all</i>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="message">-->
+<!--                    <div class="message-header">-->
+<!--                        <div class="user">-->
+<!--                            <img src="./assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">-->
+<!--                            <span class="message-user_name">Saurabh Singh</span>-->
+<!--                        </div>-->
+<!--                        <span class="message-time_stamp">5:20 am</span>-->
+<!--                    </div>-->
+<!--                    <div class="message-data">-->
+<!--                        <p>This is not my first one though!</p>-->
+<!--                    </div>-->
+<!--                    <div class="message-status">-->
+<!--                        <i class="material-icons">done_all</i>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+            <!-- Send Message Element -->
+            <form class="send-message">
+                <input type="text" placeholder="Enter your message!" required>
+                <button class="pointer" type="submit">Send<i class="material-icons">send</i></button>
+            </form>
+        </div>
+        <!--  Modal with BackDrop  -->
+<!--        <div class="back-drop"></div>-->
+<!--        <div class="modal max-width-500" data-id="addRoom">-->
+<!--            <h4>Are you sure?... You want to delete the room!</h4>-->
+<!--            <div class="flex align btns">-->
+<!--                <button class="pointer redLinear" type="button">Yes</button>-->
+<!--                <button class="pointer" type="button">No</button>-->
+<!--            </div>-->
+<!--        </div>-->
+    </div>
+
+
+    <script src="/assets/js/main.bundle.js"></script>
+    
+</body>
+</html>

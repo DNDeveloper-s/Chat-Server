@@ -1,6 +1,8 @@
 import { bgAnim, toggleAuthFormUI } from './utilities';
 import { submitRegForm } from './auth';
-// import { submitRegHandler } from './eventHandlers';
+require('./eventHandlers')();
+
+// import './dashboard/dashboardUI';
 
 // Some utilities function BackgroundAnimation
 bgAnim();
@@ -8,5 +10,9 @@ bgAnim();
 toggleAuthFormUI(submitRegForm);
 
 // submitRegHandler();
+
+// addModal();
+
+// addNewNS();
 
 console.log('Nice');

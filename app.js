@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
@@ -15,7 +16,8 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/node_modules/material-design-icons'));
 
 app.use('/auth', authRoutes);
 

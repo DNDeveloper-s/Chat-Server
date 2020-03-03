@@ -48,3 +48,9 @@ exports.postRegAuth = async (req, res, next) => {
     }
     
 }
+
+exports.getDashboard = async (req, res, next) => {
+    res.render('dashboard', {
+        pageTitle: `Dashboard | Saurabh Singh`
+    })
+}

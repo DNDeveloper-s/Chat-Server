@@ -10,4 +10,6 @@ router.get('/ui', authController.getAuth);
 
 router.post('/register', authController.postRegAuth);
 
+router.get('/dashboard', authController.getDashboard);
+
 module.exports = router;
