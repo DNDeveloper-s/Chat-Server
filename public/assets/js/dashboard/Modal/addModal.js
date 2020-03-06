@@ -1,3 +1,5 @@
+const { postNewNs } = require('../Namespace/addNamespace');
+
 const addModal = (el, roomDetails) => {
     const rootEl = document.getElementById('root');
     const backDropHTML = `<div class="back-drop"></div>`;
@@ -83,8 +85,12 @@ const addModal = (el, roomDetails) => {
 
      async function modalButtonHandler (e) {
         if(modalEl.dataset.id === 'addNs') {
-            const nsTitle = modalEl.querySelector('[name="nsTitle"]').value;
-            const defaultRoomTitle = modalEl.querySelector('[name="defaultRoomTitle"]').value;
+            const nsData =  {
+                title: modalEl.querySelector('[name="nsTitle"]').value,
+                defRoomTitle: modalEl.querySelector('[name="defaultRoomTitle"]').value
+            }
+
+            postNewNs(nsData);
 
             // console.log(socket);
             // socket.emit('namespace', {action: 'create', details: {

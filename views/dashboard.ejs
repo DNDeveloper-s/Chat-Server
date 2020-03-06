@@ -21,6 +21,12 @@
                 <hr>
                 <!-- NameSpace Container -->
                 <div class="nameSpaceContainer">
+                    <% for(let workSpace of workSpaces) { %>
+                        <div class="name_space image_holder anim" data-ns="/<%= workSpace.title %>" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">
+                            <!-- <img src="/assets/images/Capture.PNG" alt="<%= workSpace.title %>" title="<%= workSpace.title %>"> -->
+                            <p><%= workSpace.title %></p>
+                        </div>
+                    <% } %>
 <!--                    <div class="name_space image_holder anim" ns="/wikit" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
 <!--                        <img src="/assets/images/Capture.PNG" alt="wikit" title="wikit">-->
 <!--                    </div>-->
@@ -92,7 +98,7 @@
                 <!-- Left Bar on top message -->
                 <div class="keepItLeft">
                     <div class="current-room-name">
-                        <span>Saurabh Singh</span>
+                        <span><%= userName %></span>
                     </div>
                     <div class="users-online" title="No. of online users">
                         <p></p>
@@ -164,7 +170,7 @@
     </div>
 
 
-    <script src="/assets/js/main.bundle.js"></script>
+    <script src="/assets/js/dashboard.bundle.js"></script>
     
 </body>
 </html>

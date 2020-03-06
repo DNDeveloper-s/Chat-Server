@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
+    "start": "nodemon app.js",
     "start:dev": "webpack-dev-server"
   },
   "author": "DNDeveloper",
@@ -12,9 +13,12 @@
   "dependencies": {
     "bcrypt": "^4.0.0",
     "body-parser": "^1.19.0",
+    "connect-mongodb-session": "^2.3.1",
+    "csurf": "^1.11.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "mongoose": "^5.9.2",
     "socket.io": "^2.3.0"
   },

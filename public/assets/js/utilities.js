@@ -1,4 +1,5 @@
 // import { submitRegForm } from './auth';
+const { regHandle, loginHandle } = require('./auth')
 
 // Background animation
 const bgAnim = () => {
@@ -18,7 +19,7 @@ const bgAnim = () => {
     
 
 // Toggle Login | Register Form
-const toggleAuthFormUI = (cb) => {
+const toggleAuthFormUI = () => {
 
     // Container
     const authModalContainer = document.querySelector('.auth-modal');
@@ -31,6 +32,15 @@ const toggleAuthFormUI = (cb) => {
     const regFormHtml = `<form id="regForm" class="anim" action="" data-removeanim="false"> <h3>Register</h3> <div class="input-control"> <label for="fullName">Full Name</label> <input type="text" name="fullName"> </div><div class="input-control"> <label for="email">Email</label> <input type="email" name="email"> </div><div class="input-control"> <label for="password">Password</label> <input type="password" name="password"> </div><div class="input-control"> <label for="conPassword">Confirm Password</label> <input type="password" name="conPassword"> </div><button class="pointer" type="submit">Register</button> </form>`;
     const loginFormHtml = `<form id="loginForm" class="anim" data-removeanim="false" action=""> <h3>Login</h3> <div class="input-control"> <label for="email">Email</label> <input type="email" name="email"> </div><div class="input-control"> <label for="password">Password</label> <input type="password" name="password"> </div><button class="pointer mainAuthBtn btn" type="submit">Login <div class="loader-container"> <svg width="40" height="40"> <circle class="loader" cx="20" cy="20" r="17"></circle> </svg> </div></button> <div class="reset-password"> <p>Don't remember your password? You can request to reset your password <a href="">here</a>!</p></div></form>`;
 
+                
+    const form = document.getElementById(`loginForm`);
+                
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        loginHandle();
+    });
+
+
     authToggleBtn.forEach(btn => {
         btn.addEventListener('click', function(e) {
 
@@ -38,8 +48,11 @@ const toggleAuthFormUI = (cb) => {
                 authModalContainer.innerHTML = eval(`${this.dataset.btn}FormHtml`);
                 
                 const form = document.getElementById(`${this.dataset.btn}Form`);
+                console.log(form);
+                
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
+                    const cb = eval(`${this.dataset.btn}Handle`);
                     cb();
                     console.log(form);
                 });

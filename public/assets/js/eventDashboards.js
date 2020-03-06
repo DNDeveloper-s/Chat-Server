@@ -17,4 +17,20 @@ module.exports = () => {
         console.log(addModal);
         addModal('ROOM');
     });
+    const logOutBtn = document.querySelector('.logout-btn');
+    logOutBtn.addEventListener('click', async () => {
+
+        const res = await fetch(`${window.location.origin}/auth/logout`, {
+            method: "POST"
+        })
+
+        const data = await res.json();
+
+        if(data.acknowledgment.type === "success") {
+            console.log('Done!');
+            
+            window.location = `${window.location.origin}/auth/ui`;
+        }
+    });
+    
 }

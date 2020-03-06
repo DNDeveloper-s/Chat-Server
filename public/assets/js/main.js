@@ -1,13 +1,16 @@
 import { bgAnim, toggleAuthFormUI } from './utilities';
-import { submitRegForm } from './auth';
-require('./eventHandlers')();
-
-// import './dashboard/dashboardUI';
+import { loader } from './auth';
+// import {event} from './eventAuths';
 
 // Some utilities function BackgroundAnimation
 bgAnim();
 // Toggle Auth Forms
-toggleAuthFormUI(submitRegForm);
+toggleAuthFormUI();
+
+// Loading Animation
+loader();
+
+// event();
 
 // submitRegHandler();
 

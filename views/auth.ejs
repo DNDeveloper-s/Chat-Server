@@ -28,6 +28,9 @@
     <div class="body-overlay"></div>
 
     <div class="auth-modal">
+        <% if( acknowledgment.exists ) { %>
+            <div class="popup <%= acknowledgment.type %>"><%= acknowledgment.message %></div>
+        <% } %>
         <form id="loginForm" class="anim" data-removeanim="false" action="">
             <h3>Login</h3>
             <div class="input-control">
