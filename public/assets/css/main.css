@@ -518,6 +518,8 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-transition: .5s;
+  transition: .5s;
 }
 
 @media (max-width: 768px) {
@@ -668,13 +670,17 @@ body {
 }
 
 #root.namespace-interchange > .nav_bar > .nameSpaceDetails-Room_container {
-  -webkit-filter: blur(4px);
-          filter: blur(4px);
+  -webkit-transition: .5s;
+  transition: .5s;
+  -webkit-filter: blur(2px);
+          filter: blur(2px);
 }
 
 #root.namespace-interchange > .main_bar {
-  -webkit-filter: blur(4px);
-          filter: blur(4px);
+  -webkit-transition: .5s;
+  transition: .5s;
+  -webkit-filter: blur(2px);
+          filter: blur(2px);
 }
 
 #root > .main_bar {
@@ -694,6 +700,8 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-transition: .5s;
+  transition: .5s;
 }
 
 @media (max-width: 768px) {

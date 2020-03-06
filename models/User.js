@@ -20,7 +20,13 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectID,
             ref: 'WorkSpace'
         }
-    ]
+    ],
+    config: {
+        defaultWorkSpace: {
+            type: Schema.Types.ObjectID,
+            ref: 'WorkSpace'
+        }
+    }
 }, {timestamps: true})
 
 module.exports = mongoose.model('User', userSchema);

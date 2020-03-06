@@ -1,4 +1,5 @@
 const { postNewNs } = require('../Namespace/addNamespace');
+const { postNewRoom } = require('../Room/addRoom');
 
 const addModal = (el, roomDetails) => {
     const rootEl = document.getElementById('root');
@@ -27,11 +28,11 @@ const addModal = (el, roomDetails) => {
                 </label>
                 <div class="check-boxes">
                     <label class="checkbox-control" for="roomMode">
-                        <input type="radio" value="true" name="roomMode">
+                        <input type="radio" value="Private" name="roomMode">
                         Private
                     </label>
                     <label class="checkbox-control" for="roomMode">
-                        <input type="radio" value="false" name="roomMode">
+                        <input type="radio" value="Public" name="roomMode">
                         Public
                     </label>
                 </div>
@@ -102,14 +103,23 @@ const addModal = (el, roomDetails) => {
             // })
         } else if(modalEl.dataset.id === 'addRoom') {
             const roomContainer = document.querySelector('.roomContainer');
-            const roomTitle = modalEl.querySelector('[name="roomTitle"]').value;
-            let roomMode;
+            const name = modalEl.querySelector('[name="roomTitle"]').value;
+            let privacy;
             const roomModes = document.getElementsByName('roomMode');
             for(let i = 0; i < roomModes.length; i++) {
                 if(roomModes[i].checked) {
-                    roomMode = roomModes[i].value
+                    privacy = roomModes[i].value
                 }
             }
+
+            // console.log(privacy);
+            
+
+            postNewRoom({
+                name: name,
+                privacy: privacy
+            });
+
             const roomNs = roomContainer.querySelector('.room').dataset.ns;
 
             // nsSocket.emit('room', {action: 'create', details: {

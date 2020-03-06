@@ -408,6 +408,7 @@ body {
             background: linear-gradient(180deg, #303030 0%, #0e0d0d 100%);
             display: flex;
             flex-direction: column;
+            transition: .5s;
 
             @media (max-width: 768px) {
                 width: 0;
@@ -543,12 +544,14 @@ body {
     &.namespace-interchange {
         > .nav_bar {
             > .nameSpaceDetails-Room_container {
-                filter: blur(4px);
+                transition: .5s;
+                filter: blur(2px);
             }
         }
 
         > .main_bar {
-            filter: blur(4px);
+            transition: .5s;
+            filter: blur(2px);
         }
     }
 
@@ -560,6 +563,7 @@ body {
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+        transition: .5s;
 
         @media (max-width: 768px) {
             width: calc(100vw - 55px);

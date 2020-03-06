@@ -9,12 +9,14 @@ exports.getDashboard = async (req, res, next) => {
 
     const user = await User.findOne({email: req.session.user.email});
     await User.findOne({ email: req.session.user.email})
-    .populate('workSpaces') // <==
+    .populate('workSpaces')
+    .populate('config.defaultWorkSpace')
     .exec(function(err, user){
         res.render('dashboard', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
             userName: req.session.user.name,
-            workSpaces: user.workSpaces
+            workSpaces: user.workSpaces,
+            config: user.config
         });
     });
     // const workSpaces = [];
@@ -90,6 +92,10 @@ exports.postWorkspace = async (req, res, next) => {
 
     room.workSpaceId = workSpace._id;
 
+    if(!user.workSpaces.length > 0) {
+        user.config.defaultWorkspace = workSpace._id;
+    }
+
     user.workSpaces.push(workSpace._id);
 
     await room.save();
@@ -111,6 +117,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
     const nsName = req.query.nsName;
     const genInvLink = req.query.genInvLink;
     const connectByLink = req.query.connectByLink;
+    const createRoom = req.query.createRoom;
 
     const nsp = io.of(`/${nsName}`);
 
@@ -183,12 +190,70 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
     }
 
+    if(createRoom) {
+        const name = req.body.name;
+        const privacy = req.body.privacy;
+        const nsEndPoint = req.query.nsEndPoint;
+
+        const workSpace = await WorkSpace.findOne({endPoint: `/${nsEndPoint}`});
+
+        if(!workSpace) {
+            return next(`Line 201 Invalid Workspace! /${nsEndPoint}`);
+        }
+
+        const room = new Room({
+            name: name,
+            privacy: privacy,
+            workSpaceId: workSpace._id
+        });
+
+        await room.save();
+
+        workSpace.rooms.push(room._id);
+
+        await workSpace.save();
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Created Room Successfully!',
+                roomName: room.name
+            }
+        })
+
+    }
+
 }
 
 exports.getWorkSpaceFunctions = async (req, res, next) => {
 
     const isLoad = req.query.isLoad;
     const nsEndPoint = req.query.nsEndPoint;
+    const defaultOne = req.query.defaultOne;
+
+    if(defaultOne) {
+        // const user = await User.findOne({email: req.session.user.email});
+
+        
+        await User.findOne({email: req.session.user.email})
+        .populate('config.defaultWorkSpace')
+        .exec((err, user) => {
+            if(err) next(err.message);
+            if(!user) {
+                return next('Invalid User!');
+            }
+
+            return res.json({
+                acknowledgment: {
+                    type: 'success',
+                    message: 'Succesfully Got the default Workspace!',
+                    config: user.config,
+                }
+            })
+
+        })
+
+    }
 
     if(isLoad) {
             
@@ -233,14 +298,12 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
             await workSpace.save();
             await user.save();
 
-            nsp.emit('toMe', {data: workSpace.connectedClients, type: 'connect'});
-
             // Fetch all rooms
 
             await WorkSpace.findOne({endPoint: nsEndPoint})
             .populate('rooms')
             .exec((err, workSpace) => {
-                nsp.emit('rooms', {rooms: workSpace.rooms, type: 'fetchedRooms'});
+                nsp.emit('connectedToNamespace', {rooms: workSpace.rooms, workSpace: workSpace  , type: 'fetchedRooms'});
             })
 
             // On Disconnection, Updating Namespace clients
@@ -266,12 +329,14 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         
 
         await User.findOne({ email: req.session.user.email})
-        .populate('workSpaces') // <==
+        .populate('workSpaces')
+        .populate('config.defaultWorkSpace') // <==
         .exec(function(err, user){
             return res.render('dashboard', {
                 pageTitle: `Dashboard | ${req.session.user.name}`,
                 userName: req.session.user.name,
-                workSpaces: user.workSpaces
+                workSpaces: user.workSpaces,
+                config: user.config
             });
         });
 
