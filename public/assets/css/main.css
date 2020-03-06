@@ -667,6 +667,16 @@ body {
   background: linear-gradient(0deg, #fb5f8a 0%, #a22346 100%);
 }
 
+#root.namespace-interchange > .nav_bar > .nameSpaceDetails-Room_container {
+  -webkit-filter: blur(4px);
+          filter: blur(4px);
+}
+
+#root.namespace-interchange > .main_bar {
+  -webkit-filter: blur(4px);
+          filter: blur(4px);
+}
+
 #root > .main_bar {
   position: relative;
   width: 100%;

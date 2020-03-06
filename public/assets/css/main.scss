@@ -540,6 +540,18 @@ body {
         }
     }
 
+    &.namespace-interchange {
+        > .nav_bar {
+            > .nameSpaceDetails-Room_container {
+                filter: blur(4px);
+            }
+        }
+
+        > .main_bar {
+            filter: blur(4px);
+        }
+    }
+
     > .main_bar {
         position: relative;
         width: 100%;
@@ -811,8 +823,17 @@ body {
             opacity: 1;
             animation: removeBackDrop .19s ease-in-out forwards;
         }
-    }
 
+        // &.namespace-interchange {
+        //     position: fixed;
+        //     top: 0;
+        //     left: 90px;
+        //     width: calc(100vw - 90px);
+        //     height: 100vh;
+        //     background: rgba(0,0,0,0.6);
+        //     filter: blur(4px);
+        // }
+    }
     > .modal {
         width: 90vw;
         max-width: 320px;

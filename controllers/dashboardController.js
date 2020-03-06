@@ -82,9 +82,7 @@ exports.postWorkspace = async (req, res, next) => {
             }
         },
         rooms: [
-            {
-                id: room._id
-            }
+            room._id
         ]
     });
 
@@ -208,7 +206,9 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
             const user = await User.findOne({email: req.session.user.email});
 
-            user.socketId = nsSocket.id;
+            if(!user) {
+                next('Invalid User From Line 212 in dashboardController.js!');
+            }
 
             socket_id.push(nsSocket.id);
             if (socket_id[0] === nsSocket.id) {
@@ -220,19 +220,37 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
             // On Connection, Updating Namespace clients
             const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
 
-            workSpace.connectedClients.push(user._id);
+            if(!workSpace) {
+                next('Invalid Workspace From Line 224 in dashboardController.js!');
+            }
+
+            const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() === user._id.toString());
+
+            if(!updatedConnectedClients.length > 0) {
+                workSpace.connectedClients.push(user._id);
+            }
 
             await workSpace.save();
             await user.save();
 
             nsp.emit('toMe', {data: workSpace.connectedClients, type: 'connect'});
-            
+
+            // Fetch all rooms
+
+            await WorkSpace.findOne({endPoint: nsEndPoint})
+            .populate('rooms')
+            .exec((err, workSpace) => {
+                nsp.emit('rooms', {rooms: workSpace.rooms, type: 'fetchedRooms'});
+            })
 
             // On Disconnection, Updating Namespace clients
             nsSocket.on('disconnect', async () => {
                 nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
-                // const user = await User.findOne({socketId: req.session.user._id});
                 const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+
+                if(!workSpace) {
+                    next('Invalid Workspace From Line 224 in dashboardController.js!');
+                }
 
                 const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
         
@@ -244,12 +262,9 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
             });
 
-            // Fetch all rooms
-
         })
         
 
-        const user = await User.findOne({email: req.session.user.email});
         await User.findOne({ email: req.session.user.email})
         .populate('workSpaces') // <==
         .exec(function(err, user){

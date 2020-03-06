@@ -44,10 +44,8 @@ const workSpaceSchema = new Schema({
     },
     rooms: [
         {
-            id: {
-                type: Schema.Types.ObjectID,
-                ref: 'Room'
-            },
+            type: Schema.Types.ObjectID,
+            ref: 'Room'
         }
     ],
     invLinks: [

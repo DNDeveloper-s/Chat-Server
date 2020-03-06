@@ -1,4 +1,7 @@
 const io = require('socket.io-client');
+
+const { showRooms } = require('../Room/roomUI'); 
+
 let nsSocket;
 
 async function connectToNs(nsEndPoint) {
@@ -41,6 +44,11 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket.on('connectedByLink', function(data) {
         console.log(data);
+    });
+
+    nsSocket.on('rooms', function(data) {
+        console.log(data);
+        showRooms(data.rooms);
     });
 
     nsSocket.on('disconnected', function(data) {
