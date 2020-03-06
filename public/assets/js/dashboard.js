@@ -10,7 +10,7 @@ const generateInviteLink = () => {
     
     genBtn.addEventListener('click', async (e) => {
         e.preventDefault();
-        const nsName = window.location.search.split('name=')[1];
+        const nsName = window.location.search.split('nsEndPoint=')[1];
         const res = await fetch(`${window.location.origin}/dashboard/workspace?nsName=${nsName}&genInvLink=true`, {
             method: "POST"
         });

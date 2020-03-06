@@ -57,11 +57,25 @@ exports.postWorkspace = async (req, res, next) => {
 
     await room.save();
 
+    let endPoint;
+
+    while(true) {
+        let randomNum = Math.ceil(Math.random() * 8798778);
+        endPoint = `/${title}${randomNum}`;
+
+        const workSpace = await WorkSpace.findOne({endPoint: endPoint});
+        if(workSpace) {
+            continue;
+        } 
+        break;
+    }
+
     const workSpace = new WorkSpace({
         title: title,
         defRoom: {
             id: room._id
         },
+        endPoint: endPoint,
         roles: {
             owner: {
                 id: req.session.user._id
@@ -106,7 +120,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
         const randomNum = Math.ceil(Math.random() * 487749);
         const link = `${nsName}-${randomNum}`;
 
-        const workSpace = await WorkSpace.findOne({title: nsName});
+        const workSpace = await WorkSpace.findOne({endPoint: `/${nsName}`});
 
         workSpace.invLinks.push(link);
 
@@ -124,7 +138,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
     if(connectByLink) {
         const link = req.query.connectTo;
 
-        const workSpace = await WorkSpace.findOne({title: nsName});
+        const workSpace = await WorkSpace.findOne({endPoint: `/${nsName}`});
 
         if(!workSpace) {
             next('Invalid Workspace!');
@@ -180,26 +194,59 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
     if(isLoad) {
             
-        const io = require('../socket').getIO();
+        // const io = require('../socket').getIO();
+        const socket_id = [];
 
-        console.log('Line 185', nsEndPoint);
+        const io = req.app.get('socketio');
 
         const nsp = io.of(nsEndPoint);
 
-        nsp.on('connection', nsSocket => {
-            // nsSocket.emit('hi', {data: 'Nice'});
+        console.log('Line 185', nsEndPoint);
+
+        nsp.on('connection', async (nsSocket) => {
             console.log('Line 107', nsSocket.id);
 
-            nsp.clients((error, clients) => {
-                if (error) throw error;
-    
-                nsp.emit('clients', {data: clients});
-    
-                console.log('Line 195', clients); // => [PZDoMHjiu8PYfRiKAAAF, Anw2LatarvGVVXEIAAAD]
-            }); 
-        })
+            const user = await User.findOne({email: req.session.user.email});
 
-        nsp.emit('toMe', {data: 'Its to me only!'});
+            user.socketId = nsSocket.id;
+
+            socket_id.push(nsSocket.id);
+            if (socket_id[0] === nsSocket.id) {
+                // remove the connection listener for any subsequent 
+                // connections with the same ID
+                nsp.removeAllListeners('connection'); 
+            }
+
+            // On Connection, Updating Namespace clients
+            const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+
+            workSpace.connectedClients.push(user._id);
+
+            await workSpace.save();
+            await user.save();
+
+            nsp.emit('toMe', {data: workSpace.connectedClients, type: 'connect'});
+            
+
+            // On Disconnection, Updating Namespace clients
+            nsSocket.on('disconnect', async () => {
+                nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
+                // const user = await User.findOne({socketId: req.session.user._id});
+                const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+
+                const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
+        
+                workSpace.connectedClients = updatedConnectedClients;
+
+                await workSpace.save();
+
+                nsp.emit('toMe', {data: workSpace.connectedClients, type: 'disconnect', id: req.session.user._id});
+
+            });
+
+            // Fetch all rooms
+
+        })
         
 
         const user = await User.findOne({email: req.session.user.email});
@@ -212,6 +259,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 workSpaces: user.workSpaces
             });
         });
+
+
 
         // return res.json({
         //     acknowledgment: {

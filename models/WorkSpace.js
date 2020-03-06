@@ -10,6 +10,10 @@ const workSpaceSchema = new Schema({
     image: {
         type: String
     },
+    endPoint: {
+        type: String,
+        required: true
+    },
     roles: {
         owner: {
             id: {
@@ -49,6 +53,12 @@ const workSpaceSchema = new Schema({
     invLinks: [
         {
             type: String
+        }
+    ],
+    connectedClients: [
+        {
+            type: Schema.Types.ObjectID,
+            ref: 'User'
         }
     ]
 }, {timestamps: true});

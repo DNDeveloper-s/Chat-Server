@@ -1,7 +1,13 @@
 const io = require('socket.io-client');
 let nsSocket;
 
-function connectToNs(nsEndPoint) {
+async function connectToNs(nsEndPoint) {
+    console.log(nsEndPoint);
+    
+    await fetch(`${window.location.origin}/dashboard/workspace?isLoad=true&nsEndPoint=${nsEndPoint}`, {
+        method: "GET"
+    });
+
     // if(nsSocket) {
         
     //     if(nsEndPoint === nsSocket.nsp) {
@@ -36,6 +42,10 @@ function connectToNs(nsEndPoint) {
     nsSocket.on('connectedByLink', function(data) {
         console.log(data);
     });
+
+    nsSocket.on('disconnected', function(data) {
+        console.log(data);
+    });
     
 }
 
@@ -62,18 +72,10 @@ function nsListeners() {
         ns.addEventListener('click', async (e) => {
             if (window.history.replaceState) {
                 //prevents browser from storing history with each change:
-                window.history.replaceState('Workspace', `${ns.dataset.ns.slice(1)}`, `/dashboard/workspace?isLoad=true&name=${ns.dataset.ns.slice(1)}`);
+                window.history.replaceState('Workspace', `${ns.dataset.ns.slice(1)}`, `/dashboard/workspace?isLoad=true&nsEndPoint=${ns.dataset.ns.slice(1)}`);
              }
             const isIt = isItSameNs(nsSocket, ns.dataset.ns);
-            if(!isIt) {
-                
-                await fetch(`${window.location.origin}/dashboard/workspace?isLoad=true&nsEndPoint=${ns.dataset.ns}`, {
-                    method: "GET"
-                });
-                // const data = await response.json();
-                
-                // console.log(data);
-                
+            if(!isIt) {                
                 connectToNs(ns.dataset.ns);
             }
         });

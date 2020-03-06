@@ -17,7 +17,7 @@ async function postNewNs(ns) {
     console.log(data);
     if(data.acknowledgment.type === "success") {
         addNewNS({
-            endPoint: `/${data.acknowledgment.workSpace.title}`,
+            endPoint: data.acknowledgment.workSpace.endPoint,
             title: data.acknowledgment.workSpace.title,
         });
     }

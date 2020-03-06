@@ -20,7 +20,10 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectID,
             ref: 'WorkSpace'
         }
-    ]
+    ],
+    socketId: {
+        type: String,
+    }
 }, {timestamps: true})
 
 module.exports = mongoose.model('User', userSchema);
