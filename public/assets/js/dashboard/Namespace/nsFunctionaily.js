@@ -26,10 +26,7 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket = io(`${window.location.origin}${nsEndPoint}`);
 
-    console.log(nsSocket);
     
-
-    console.log(`${window.location.origin}${nsEndPoint}`);
 
     nsSocket.on('clients', function(data) {
         console.log(data);
@@ -40,7 +37,6 @@ async function connectToNs(nsEndPoint) {
     });
 
     nsSocket.on('connectedToNamespace', function(data) {
-        console.log(data);
         showRooms(data.rooms, data.workSpace);
 
         // Injecting the Namespace Name
@@ -64,6 +60,14 @@ async function connectToNs(nsEndPoint) {
     nsSocket.on('disconnected', function(data) {
         console.log(data);
     });
+
+    nsSocket.on('roomJoined', data => {
+        console.log(data);
+    })
+
+    nsSocket.on('roomLeft', data => {
+        console.log(data);
+    })
     
 }
 

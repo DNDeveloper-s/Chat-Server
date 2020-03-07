@@ -34,6 +34,8 @@ function addNewRoom(roomDetails, workSpace) {
     const lastRoom = rooms[rooms.length-1];
 
     const { addModal } = require('../Modal/addModal');
+
+    const { joinRoom } = require('./addRoom');
     
 
     lastRoom.querySelector('i.delete-room').addEventListener('click', function(e) {
@@ -42,6 +44,14 @@ function addNewRoom(roomDetails, workSpace) {
             roomNsId: this.parentElement.dataset.nsid,
             nsEndPoint: this.parentElement.dataset.ns,
             roomName: this.parentElement.querySelector('.roomName').innerText
+        });
+    });
+
+    lastRoom.querySelector('.room-name').addEventListener('click', function(e) {
+        
+        joinRoom({
+            nsId: workSpace._id,
+            roomId: roomDetails._id
         });
     })
 

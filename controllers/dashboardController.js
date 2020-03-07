@@ -95,6 +95,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
     const connectByLink = req.query.connectByLink;
     const createRoom = req.query.createRoom;
     const deleteRoom = req.query.deleteRoom;
+    const joinRoom = req.query.joinRoom;
 
     let nsp = io.of(`/${nsName}`);
     
@@ -175,8 +176,6 @@ exports.workSpaceFunctions = async(req, res, next) => {
         const nsEndPoint = req.query.nsEndPoint;
 
         nsp = io.of(`/${nsEndPoint}`);
-    
-        console.log('Line 125 ', nsp.name);
 
         const workSpace = await WorkSpace.findOne({endPoint: `/${nsEndPoint}`});
 
@@ -218,7 +217,6 @@ exports.workSpaceFunctions = async(req, res, next) => {
         const nsEndPoint = req.query.nsEndPoint;
 
         nsp = io.of(`/${nsEndPoint}`);
-        console.log('Line 221 ', nsEndPoint);
         
 
         const workSpace = await WorkSpace.findById(nsId);
@@ -257,6 +255,13 @@ exports.workSpaceFunctions = async(req, res, next) => {
         }) 
     }
 
+    if(joinRoom) {
+        const nsEndPoint = req.query.nsEndPoint;
+
+        nsp = io.of(`/${nsEndPoint}`);
+        nsp.to('someRoom').emit('roomEvent', {data: 'Its a room event!'});
+    }
+
 }
 
 exports.getWorkSpaceFunctions = async (req, res, next) => {
@@ -264,7 +269,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
     const isLoad = req.query.isLoad;
     let nsEndPoint = req.query.nsEndPoint;
     const defaultOne = req.query.defaultOne;
-    const createRoom = req.query.createRoom;
+    const joinRoom = req.query.joinRoom;
 
     if(defaultOne) {
         
@@ -297,10 +302,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
             const nsp = io.of(nsEndPoint);
 
-            console.log('Line 274', nsEndPoint);
-
             nsp.on('connection', async (nsSocket) => {
-                console.log('Line 107', nsSocket.id);
 
                 const user = await User.findOne({email: req.session.user.email});
 
@@ -344,6 +346,35 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     nsp.emit('connectedToNamespace', {rooms: workSpace.rooms, workSpace: workSpace  , type: 'fetchedRooms'});
                 })
 
+                nsSocket.on('joinRoom', async (data) => {
+
+                    if(!user.joinedRoom) {
+                        user.joinedRoom = data.roomId;
+                        await user.save();
+                        nsSocket.join(data.roomId, () => {
+                            let rooms = Object.keys(nsSocket.rooms);
+                            console.log(rooms); // [ <socket.id>, 'room 237' ]
+                            nsSocket.broadcast.to(data.roomId).emit('roomJoined', {data: 'a new user has joined the room'}); // broadcast to everyone in the room
+                          });
+                    } else {
+                        
+                        // console.log('Line 360', user.joinedRoom.toString(), data.roomId.toString());
+                        if(user.joinedRoom.toString() !== data.roomId.toString()) {
+                            console.log('Line 360', user.joinedRoom.toString(), data.roomId.toString());
+                            nsSocket.leave(user.joinedRoom, async() => {
+                                nsp.to(user.joinedRoom).emit('roomLeft', {data: 'a User left the room!'}); // broadcast to everyone in the room
+                                user.joinedRoom = data.roomId;
+                                await user.save();
+                                nsSocket.join(data.roomId, () => {
+                                    let rooms = Object.keys(nsSocket.rooms);
+                                    console.log(rooms); // [ <socket.id>, 'room 237' ]
+                                    nsSocket.broadcast.to(data.roomId).emit('roomJoined', {data: 'a new user has joined the room'}); // broadcast to everyone in the room
+                                  });
+                            });
+                        }
+                    }
+                })
+
 
                 // On Disconnection, Updating Namespace clients
                 nsSocket.on('disconnect', async () => {
@@ -353,8 +384,6 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     if(!workSpace) {
                         throw new Error('Invalid Workspace From Line 322 in dashboardController.js!');
                     }
-
-                    console.log('Line 334 workspace from ', workSpace);
                     
 
                     const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());

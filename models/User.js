@@ -26,6 +26,10 @@ const userSchema = new Schema({
             type: Schema.Types.ObjectID,
             ref: 'WorkSpace'
         }
+    },
+    joinedRoom: {
+        type: Schema.Types.ObjectID,
+        ref: 'Room'
     }
 }, {timestamps: true})
 
