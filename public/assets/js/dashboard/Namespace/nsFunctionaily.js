@@ -62,10 +62,12 @@ async function connectToNs(nsEndPoint) {
     });
 
     nsSocket.on('roomJoined', data => {
+        // console.clear();
         console.log(data);
     })
 
     nsSocket.on('roomLeft', data => {
+        // console.clear();
         console.log(data);
     })
     
