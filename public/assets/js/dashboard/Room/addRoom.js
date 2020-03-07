@@ -1,3 +1,8 @@
+const io = require('socket.io-client');
+
+const { addNewRoom } = require('./roomUI');
+const { getNsSocket } = require('../Namespace/nsFunctionaily');
+
 async function postNewRoom(roomDetails) {
     const nsEndPoint = window.location.search.split('nsEndPoint=')[1];
     console.log(nsEndPoint);
@@ -14,9 +19,8 @@ async function postNewRoom(roomDetails) {
     });
 
     const data = await res.json();
-    
+
     console.log(data);
-    
 }
 
 module.exports = { postNewRoom };

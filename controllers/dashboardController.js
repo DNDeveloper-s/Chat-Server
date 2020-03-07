@@ -112,14 +112,16 @@ exports.postWorkspace = async (req, res, next) => {
 
 
 exports.workSpaceFunctions = async(req, res, next) => {
-    const io = require('../socket').getIO();
+
+    const io = req.app.get('socketio');
 
     const nsName = req.query.nsName;
     const genInvLink = req.query.genInvLink;
     const connectByLink = req.query.connectByLink;
     const createRoom = req.query.createRoom;
 
-    const nsp = io.of(`/${nsName}`);
+    let nsp = io.of(`/${nsName}`);
+    
 
     if(genInvLink) {
         const randomNum = Math.ceil(Math.random() * 487749);
@@ -191,9 +193,14 @@ exports.workSpaceFunctions = async(req, res, next) => {
     }
 
     if(createRoom) {
+        
         const name = req.body.name;
         const privacy = req.body.privacy;
         const nsEndPoint = req.query.nsEndPoint;
+
+        nsp = io.of(`/${nsEndPoint}`);
+    
+        console.log('Line 125 ', nsp.name);
 
         const workSpace = await WorkSpace.findOne({endPoint: `/${nsEndPoint}`});
 
@@ -213,11 +220,17 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
         await workSpace.save();
 
+        nsp.emit('roomCreated', {
+            roomDetails: room,
+            workSpace: workSpace
+        })
+
         return res.json({
             acknowledgment: {
                 type: 'success',
                 message: 'Created Room Successfully!',
-                roomName: room.name
+                roomDetails: room,
+                workSpace: workSpace
             }
         })
 
@@ -228,8 +241,9 @@ exports.workSpaceFunctions = async(req, res, next) => {
 exports.getWorkSpaceFunctions = async (req, res, next) => {
 
     const isLoad = req.query.isLoad;
-    const nsEndPoint = req.query.nsEndPoint;
+    let nsEndPoint = req.query.nsEndPoint;
     const defaultOne = req.query.defaultOne;
+    const createRoom = req.query.createRoom;
 
     if(defaultOne) {
         // const user = await User.findOne({email: req.session.user.email});
@@ -258,87 +272,108 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
     if(isLoad) {
             
         // const io = require('../socket').getIO();
-        const socket_id = [];
+        try {
+            const socket_id = [];
 
-        const io = req.app.get('socketio');
+            const io = req.app.get('socketio');
 
-        const nsp = io.of(nsEndPoint);
+            const nsp = io.of(nsEndPoint);
 
-        console.log('Line 185', nsEndPoint);
+            console.log('Line 274', nsEndPoint);
 
-        nsp.on('connection', async (nsSocket) => {
-            console.log('Line 107', nsSocket.id);
+            nsp.on('connection', async (nsSocket) => {
+                console.log('Line 107', nsSocket.id);
 
-            const user = await User.findOne({email: req.session.user.email});
+                const user = await User.findOne({email: req.session.user.email});
 
-            if(!user) {
-                next('Invalid User From Line 212 in dashboardController.js!');
-            }
-
-            socket_id.push(nsSocket.id);
-            if (socket_id[0] === nsSocket.id) {
-                // remove the connection listener for any subsequent 
-                // connections with the same ID
-                nsp.removeAllListeners('connection'); 
-            }
-
-            // On Connection, Updating Namespace clients
-            const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
-
-            if(!workSpace) {
-                next('Invalid Workspace From Line 224 in dashboardController.js!');
-            }
-
-            const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() === user._id.toString());
-
-            if(!updatedConnectedClients.length > 0) {
-                workSpace.connectedClients.push(user._id);
-            }
-
-            await workSpace.save();
-            await user.save();
-
-            // Fetch all rooms
-
-            await WorkSpace.findOne({endPoint: nsEndPoint})
-            .populate('rooms')
-            .exec((err, workSpace) => {
-                nsp.emit('connectedToNamespace', {rooms: workSpace.rooms, workSpace: workSpace  , type: 'fetchedRooms'});
-            })
-
-            // On Disconnection, Updating Namespace clients
-            nsSocket.on('disconnect', async () => {
-                nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
-                const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
-
-                if(!workSpace) {
-                    next('Invalid Workspace From Line 224 in dashboardController.js!');
+                if(!user) {
+                    throw new Error('Invalid User From Line 282 in dashboardController.js!');
                 }
 
-                const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
-        
-                workSpace.connectedClients = updatedConnectedClients;
+                socket_id.push(nsSocket.id);
+                if (socket_id[0] === nsSocket.id) {
+                    // remove the connection listener for any subsequent 
+                    // connections with the same ID
+                    nsp.removeAllListeners('connection'); 
+                }
+
+                if(nsEndPoint.slice(0, 1) !== '/') {
+                    nsEndPoint = `/${nsEndPoint}`;
+                }
+
+                // On Connection, Updating Namespace clients
+                const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+                
+
+                if(!workSpace) {
+                    throw new Error(`Invalid Workspace From Line 296 in dashboardController.js! ${nsEndPoint}`);
+                }
+
+                const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() === user._id.toString());
+
+                if(!updatedConnectedClients.length > 0) {
+                    workSpace.connectedClients.push(user._id);
+                }
 
                 await workSpace.save();
+                await user.save();
 
-                nsp.emit('toMe', {data: workSpace.connectedClients, type: 'disconnect', id: req.session.user._id});
 
+                // Fetch all rooms
+                await WorkSpace.findOne({endPoint: nsEndPoint})
+                .populate('rooms')
+                .exec((err, workSpace) => {
+                    nsp.emit('connectedToNamespace', {rooms: workSpace.rooms, workSpace: workSpace  , type: 'fetchedRooms'});
+                })
+
+
+                // // Create Room
+                // if(createRoom) {
+                //     nsp.emit('roomCreated', {
+                //         roomDetails: 'Room Details',
+                //         workSpace: 'Workspace Details'
+                //     })
+                // }
+
+                // On Disconnection, Updating Namespace clients
+                nsSocket.on('disconnect', async () => {
+                    nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
+                    const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+
+                    if(!workSpace) {
+                        throw new Error('Invalid Workspace From Line 322 in dashboardController.js!');
+                    }
+
+                    console.log('Line 334 workspace from ', workSpace);
+                    
+
+                    const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
+            
+                    workSpace.connectedClients = updatedConnectedClients;
+
+                    await workSpace.save();
+
+                    nsp.emit('toMe', {data: workSpace.connectedClients, type: 'disconnect', id: req.session.user._id});
+
+                });
+
+            })
+            
+
+            await User.findOne({ email: req.session.user.email})
+            .populate('workSpaces')
+            .populate('config.defaultWorkSpace') // <==
+            .exec(function(err, user){
+                return res.render('dashboard', {
+                    pageTitle: `Dashboard | ${req.session.user.name}`,
+                    userName: req.session.user.name,
+                    workSpaces: user.workSpaces,
+                    config: user.config
+                });
             });
-
-        })
-        
-
-        await User.findOne({ email: req.session.user.email})
-        .populate('workSpaces')
-        .populate('config.defaultWorkSpace') // <==
-        .exec(function(err, user){
-            return res.render('dashboard', {
-                pageTitle: `Dashboard | ${req.session.user.name}`,
-                userName: req.session.user.name,
-                workSpaces: user.workSpaces,
-                config: user.config
-            });
-        });
+        } catch (e) {
+            return next(e);
+        }
 
 
 

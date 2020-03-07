@@ -1,8 +1,12 @@
 const io = require('socket.io-client');
 
-const { showRooms } = require('../Room/roomUI'); 
+const { showRooms, addNewRoom } = require('../Room/roomUI'); 
 
 let nsSocket;
+
+function getNsSocket() {
+    return nsSocket;
+} 
 
 async function connectToNs(nsEndPoint) {
 
@@ -21,6 +25,9 @@ async function connectToNs(nsEndPoint) {
     });
 
     nsSocket = io(`${window.location.origin}${nsEndPoint}`);
+
+    console.log(nsSocket);
+    
 
     console.log(`${window.location.origin}${nsEndPoint}`);
 
@@ -42,6 +49,11 @@ async function connectToNs(nsEndPoint) {
 
         // Removing the blur effect
         root.classList.remove('namespace-interchange');
+    });
+
+    nsSocket.on('roomCreated', data => {
+        console.log(data);
+        addNewRoom(data.roomDetails, data.workSpace);
     });
 
     nsSocket.on('disconnected', function(data) {
@@ -90,4 +102,4 @@ async function nsListeners() {
     })
 }
 
-module.exports = { connectToNs, nsListeners };
+module.exports = { connectToNs, nsListeners, getNsSocket };

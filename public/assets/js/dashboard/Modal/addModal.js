@@ -114,7 +114,7 @@ const addModal = (el, roomDetails) => {
 
             // console.log(privacy);
             
-
+            
             postNewRoom({
                 name: name,
                 privacy: privacy
