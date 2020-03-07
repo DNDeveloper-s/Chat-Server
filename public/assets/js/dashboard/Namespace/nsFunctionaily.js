@@ -1,6 +1,6 @@
 const io = require('socket.io-client');
 
-const { showRooms, addNewRoom } = require('../Room/roomUI'); 
+const { showRooms, addNewRoom, deleteRooom } = require('../Room/roomUI'); 
 
 let nsSocket;
 
@@ -54,6 +54,11 @@ async function connectToNs(nsEndPoint) {
     nsSocket.on('roomCreated', data => {
         console.log(data);
         addNewRoom(data.roomDetails, data.workSpace);
+    });
+
+    nsSocket.on('roomDeleted', data => {
+        console.log(data);
+        deleteRooom(data);
     });
 
     nsSocket.on('disconnected', function(data) {

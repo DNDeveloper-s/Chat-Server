@@ -1,5 +1,5 @@
 const { postNewNs } = require('../Namespace/addNamespace');
-const { postNewRoom } = require('../Room/addRoom');
+const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
 
 const addModal = (el, roomDetails) => {
     const rootEl = document.getElementById('root');
@@ -41,7 +41,7 @@ const addModal = (el, roomDetails) => {
         `;
     } else if(el === 'CONFIRM') {
         addModalHTML = `
-            <div class="modal max-width-500" tabindex="0" data-id="deleteRoom" data-roomId="${roomDetails.roomId}" data-nsId="${roomDetails.roomNsId}">
+            <div class="modal max-width-500" tabindex="0" data-id="deleteRoom" data-roomId="${roomDetails.roomId}" data-nsEndPoint="${roomDetails.nsEndPoint}" data-nsId="${roomDetails.roomNsId}">
                 <h4 class="pl-10">Are you sure?... You want to delete the room <span style="color: red">#${roomDetails.roomName}</span>!</h4>
                 <div class="flex align btns">
                     <button class="pointer redLinear yes" type="button">Yes</button>
@@ -73,7 +73,6 @@ const addModal = (el, roomDetails) => {
     }
 
     console.log(window.location.origin);
-    // const nsImage = modalEl.querySelector('[name="nsImage"]');
 
     modalEl.addEventListener('keydown', e => {
         if(e.key === 'Enter') {
@@ -92,15 +91,7 @@ const addModal = (el, roomDetails) => {
             }
 
             postNewNs(nsData);
-
-            // console.log(socket);
-            // socket.emit('namespace', {action: 'create', details: {
-            //         nsTitle: nsTitle,
-            //         defaultRoomTitle: defaultRoomTitle
-            //     }}, (newNs) => {
-            //     // console.log(newNs);
-            //     addNewNS(newNs);
-            // })
+            
         } else if(modalEl.dataset.id === 'addRoom') {
             const roomContainer = document.querySelector('.roomContainer');
             const name = modalEl.querySelector('[name="roomTitle"]').value;
@@ -112,36 +103,22 @@ const addModal = (el, roomDetails) => {
                 }
             }
 
-            // console.log(privacy);
-            
-            
             postNewRoom({
                 name: name,
                 privacy: privacy
             });
 
-            const roomNs = roomContainer.querySelector('.room').dataset.ns;
-
-            // nsSocket.emit('room', {action: 'create', details: {
-            //         roomTitle: roomTitle,
-            //         roomMode: roomMode,
-            //         roomNs: roomNs
-            //     }}, () => {
-            //     joinNs({
-            //         endPoint: '/' + roomNs,
-            //         fetchAll: true,
-            //         dontAddAnimClass: true
-            //     });
-            // });
         } else if(modalEl.dataset.id === 'deleteRoom') {
             const roomId = modalEl.dataset.roomid;
             const nsId = modalEl.dataset.nsid;
-            // nsSocket.emit('room', {action: 'delete', details: {
-            //         roomId: roomId,
-            //         nsId: nsId
-            //     }}, () => {
-            //     console.log('/' + roomId);
-            // });
+            const nsEndPoint = modalEl.dataset.nsEndPoint;
+
+            postDeleteRoom({
+                roomId: roomId,
+                nsId: nsId,
+                nsEndPoint: nsEndPoint
+            })
+
         }
         removeModal();
     }

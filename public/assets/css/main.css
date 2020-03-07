@@ -588,12 +588,6 @@ body {
   opacity: 0;
 }
 
-#root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > hr {
-  width: 100%;
-  border: 0.5px solid rgba(101, 101, 101, 0.46);
-  margin-bottom: 5px;
-}
-
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room-group-name {
   width: 100%;
   font-size: 20px;
@@ -606,14 +600,23 @@ body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  position: relative;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 7px 0;
+  padding: 12px 0;
   overflow: hidden;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room > hr {
+  width: 100%;
+  border: 0.5px solid rgba(101, 101, 101, 0.46);
+  margin-bottom: 3px;
+  position: absolute;
+  bottom: 0;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room > .room-name {

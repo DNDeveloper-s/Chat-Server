@@ -19,31 +19,6 @@ exports.getDashboard = async (req, res, next) => {
             config: user.config
         });
     });
-    // const workSpaces = [];
-
-
-    // if(user.workSpaces.length > 0) {
-    //     user.workSpaces.forEach(async (curId, ind) => {
-    //         const workSpace = await WorkSpace.findById(curId.id);
-    //         workSpaces.push(workSpace);
-    
-    //         if(user.workSpaces.length - 1 === ind) {
-    //             console.log(workSpaces);
-                
-    //             res.render('dashboard', {
-    //                 pageTitle: `Dashboard | ${req.session.user.name}`,
-    //                 userName: req.session.user.name,
-    //                 workSpaces: workSpaces
-    //             });
-    //         }
-    //     })
-    // } else {
-    //     res.render('dashboard', {
-    //         pageTitle: `Dashboard | ${req.session.user.name}`,
-    //         userName: req.session.user.name,
-    //         workSpaces: workSpaces
-    //     });
-    // }
 }
 
 exports.postWorkspace = async (req, res, next) => {
@@ -119,6 +94,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
     const genInvLink = req.query.genInvLink;
     const connectByLink = req.query.connectByLink;
     const createRoom = req.query.createRoom;
+    const deleteRoom = req.query.deleteRoom;
 
     let nsp = io.of(`/${nsName}`);
     
@@ -236,6 +212,51 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
     }
 
+    if(deleteRoom) {
+        const nsId = req.body.nsId;
+        const roomId = req.body.roomId;
+        const nsEndPoint = req.query.nsEndPoint;
+
+        nsp = io.of(`/${nsEndPoint}`);
+        console.log('Line 221 ', nsEndPoint);
+        
+
+        const workSpace = await WorkSpace.findById(nsId);
+
+        if(!workSpace) {
+            return next('Invalid Workspace from Line 223');
+        }
+
+        if(workSpace.rooms.length > 1) {
+            if(workSpace.defRoom.id.toString() === roomId.toString()) {
+                workSpace.rooms = workSpace.rooms.filter(id => id !== roomId.toString());
+                workSpace.defRoom.id = workSpace.rooms[0];
+            } else {
+                workSpace.rooms = workSpace.rooms.filter(id => id !== roomId.toString());
+            }
+        } else {
+            return next('You don\'t have enough room to delete!');
+        }
+
+        await Room.findByIdAndRemove(roomId);
+
+        nsp.emit('roomDeleted', {
+            roomId: roomId,
+            nsId: nsId
+        })
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Deleted Room Successfully!',
+                roomDetails: {
+                    roomId: roomId,
+                    nsId: nsId
+                }
+            }
+        }) 
+    }
+
 }
 
 exports.getWorkSpaceFunctions = async (req, res, next) => {
@@ -246,8 +267,6 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
     const createRoom = req.query.createRoom;
 
     if(defaultOne) {
-        // const user = await User.findOne({email: req.session.user.email});
-
         
         await User.findOne({email: req.session.user.email})
         .populate('config.defaultWorkSpace')
@@ -271,7 +290,6 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
     if(isLoad) {
             
-        // const io = require('../socket').getIO();
         try {
             const socket_id = [];
 
@@ -326,14 +344,6 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     nsp.emit('connectedToNamespace', {rooms: workSpace.rooms, workSpace: workSpace  , type: 'fetchedRooms'});
                 })
 
-
-                // // Create Room
-                // if(createRoom) {
-                //     nsp.emit('roomCreated', {
-                //         roomDetails: 'Room Details',
-                //         workSpace: 'Workspace Details'
-                //     })
-                // }
 
                 // On Disconnection, Updating Namespace clients
                 nsSocket.on('disconnect', async () => {

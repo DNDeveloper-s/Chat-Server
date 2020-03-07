@@ -23,13 +23,37 @@ function addNewRoom(roomDetails, workSpace) {
         <div class="room anim" data-id="${roomDetails._id}" data-nsId="${workSpace._id}" data-ns="${workSpace.endPoint}" data-animtochilds="false" data-animDelay="${0.1}" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px">
             <div class="room-name">
             ${mode}                    
-            <span># </span><span>${roomDetails.name}</span></div>
+            <span># </span><span class="roomName">${roomDetails.name}</span></div>
             <i class="pointer material-icons delete-room">delete</i>
+            <hr>
         </div>
-        <hr>
     `;
     roomContainer.insertAdjacentHTML('beforeend', roomHTML);
 
+    const rooms = roomContainer.querySelectorAll('.room.anim');
+    const lastRoom = rooms[rooms.length-1];
+
+    const { addModal } = require('../Modal/addModal');
+    
+
+    lastRoom.querySelector('i.delete-room').addEventListener('click', function(e) {
+        addModal('CONFIRM', {
+            roomId: this.parentElement.dataset.id,
+            roomNsId: this.parentElement.dataset.nsid,
+            nsEndPoint: this.parentElement.dataset.ns,
+            roomName: this.parentElement.querySelector('.roomName').innerText
+        });
+    })
+
 }
 
-module.exports = { showRooms, addNewRoom };
+function deleteRooom(roomDetails) {
+    const roomContainer = document.querySelector('.roomContainer');
+
+    const room = roomContainer.querySelector(`.room[data-id="${roomDetails.roomId}"][data-nsId="${roomDetails.nsId}"]`);
+
+    roomContainer.removeChild(room);
+
+}
+
+module.exports = { showRooms, addNewRoom, deleteRooom };
