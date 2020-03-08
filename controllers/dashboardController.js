@@ -440,7 +440,6 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     }
 
                     user.joinedRoom = undefined;
-                    user.lastNsEndPoint = nsEndPoint;
                     
                     await user.save();
 

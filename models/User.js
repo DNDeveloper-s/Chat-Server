@@ -30,8 +30,7 @@ const userSchema = new Schema({
     joinedRoom: {
         type: Schema.Types.ObjectID,
         ref: 'Room'
-    },
-    lastNsEndPoint: String
+    }
 }, {timestamps: true})
 
 module.exports = mongoose.model('User', userSchema);
