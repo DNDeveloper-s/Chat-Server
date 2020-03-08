@@ -1,6 +1,7 @@
 const io = require('socket.io-client');
 
-const { showRooms, addNewRoom, deleteRooom } = require('../Room/roomUI'); 
+const { showRooms, loadRoom, addNewRoom, deleteRooom, updateClients } = require('../Room/roomUI'); 
+// const { joinRoom } = require('../Room/addRoom');
 
 let nsSocket;
 
@@ -26,11 +27,15 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket = io(`${window.location.origin}${nsEndPoint}`);
 
-    
+    console.log('Connecting to NS!', nsSocket);
+
+    // nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
+    //     loadRoom(roomData);
+    // });
 
     nsSocket.on('clients', function(data) {
         console.log(data);
-    })  
+    });
 
     nsSocket.on('connectedByLink', function(data) {
         console.log(data);
@@ -38,6 +43,10 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket.on('connectedToNamespace', function(data) {
         showRooms(data.rooms, data.workSpace);
+
+        nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
+            loadRoom(roomData);
+        });
 
         // Injecting the Namespace Name
         const nameSpaceNameHolder = document.querySelector('.namespace-name > h3');
@@ -64,11 +73,13 @@ async function connectToNs(nsEndPoint) {
     nsSocket.on('roomJoined', data => {
         // console.clear();
         console.log(data);
+        updateClients(data.clients.length);
     })
 
     nsSocket.on('roomLeft', data => {
         // console.clear();
-        console.log(data);
+        console.log(data.clients.length, data.data);
+        updateClients(data.clients.length);
     })
     
 }
@@ -99,8 +110,7 @@ async function nsListeners() {
     const data = await res.json();
 
     console.log(data);
-    
-    
+       
     connectToNs(data.acknowledgment.config.defaultWorkSpace.endPoint);
 
     nameSpaces.forEach(ns => {

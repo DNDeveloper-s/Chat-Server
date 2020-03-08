@@ -1,6 +1,6 @@
 const io = require('socket.io-client');
 
-const { addNewRoom, deleteRooom } = require('./roomUI');
+const { loadRoom } = require('./roomUI');
 const { getNsSocket } = require('../Namespace/nsFunctionaily');
 
 async function postNewRoom(roomDetails) {
@@ -46,35 +46,12 @@ async function postDeleteRoom(roomDetails) {
 }
 
 async function joinRoom(roomDetails) {
-    const nsEndPoint = window.location.search.split('nsEndPoint=')[1];
 
     const nsSocket = getNsSocket();
 
-    nsSocket.emit('joinRoom', {roomId: roomDetails.roomId});
-
-    console.log(nsSocket);
-    
-    
-    // await fetch(`${window.location.origin}/dashboard/workspace?isLoad=true&joinRoom=true&nsEndPoint=${nsEndPoint}`, {
-    //     method: "GET"
-    // });
-    
-    // const res = await fetch(`${window.location.origin}/dashboard/workspace?&joinRoom=true&nsEndPoint=${nsEndPoint}`, {
-    //     method: "POST",
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //         roomId: roomDetails.roomId,
-    //         nsId: roomDetails.nsId,
-    //     })
-    // });
-
-    // const data = await res.json();
-
-    // console.log(data);
-
-    // deleteRooom(data.acknowledgment.roomDetails);
+    nsSocket.emit('joinRoom', {roomId: roomDetails.roomId}, (roomData) => {
+        loadRoom(roomData);
+    });
 }
 
 

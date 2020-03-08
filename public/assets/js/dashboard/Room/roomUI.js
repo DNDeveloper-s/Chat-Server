@@ -66,4 +66,16 @@ function deleteRooom(roomDetails) {
 
 }
 
-module.exports = { showRooms, addNewRoom, deleteRooom };
+function loadRoom(roomDetails) {
+    const curRoomName = document.querySelector('.current-room-name > span');
+
+    curRoomName.innerHTML = roomDetails.name.toUpperCase();
+}
+
+function updateClients(numOfClients) {
+    const curRoomName = document.querySelector('.users-online > p');
+
+    curRoomName.innerHTML = numOfClients;    
+}
+
+module.exports = { showRooms, addNewRoom, deleteRooom, loadRoom, updateClients };

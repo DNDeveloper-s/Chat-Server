@@ -345,31 +345,81 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 .exec((err, workSpace) => {
                     nsp.emit('connectedToNamespace', {rooms: workSpace.rooms, workSpace: workSpace  , type: 'fetchedRooms'});
                 })
+                
 
-                nsSocket.on('joinRoom', async (data) => {
+                nsSocket.on('joinDefaultRoom', async(dataNs, callback) => {
+                    console.log('Joining Default Room');
+                    
+                    const workSpace = await WorkSpace.findOne({endPoint: dataNs.nsEndPoint});
+                    const roomId = workSpace.rooms[0].toString();
+                    if(user.joinedRoom !== undefined) {
+                        nsSocket.leave(user.joinedRoom, async() => {
+                            // const clients = nsSocket.adapter.rooms[user.joinedRoom];
+                            // io.of(user.lastNsEndPoint).to(user.joinedRoom).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
+                            user.joinedRoom = roomId;
+                            await user.save();
+                            nsSocket.join(roomId, async () => {
+                                const room = await Room.findById(roomId);
+                                let rooms = Object.keys(nsSocket.rooms);
+                                // console.log(rooms); // [ <socket.id>, 'room 237' ]
+                                callback(room);
+                                nsp.in(roomId).clients((err, clients) => {
+                                    // nsSocket.broadcast.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                                    nsp.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                                });
+                            });
+                        });
+                    } else {
+                        user.joinedRoom = roomId;
+                        await user.save();
+                        nsSocket.join(roomId, async () => {
+                            const room = await Room.findById(roomId);
+                            let rooms = Object.keys(nsSocket.rooms);
+                            // console.log(rooms); // [ <socket.id>, 'room 237' ]
+                            callback(room);
+                            nsp.in(roomId).clients((err, clients) => {
+                                // nsSocket.broadcast.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                                nsp.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                            });
+                          });
+                    }
+                })
 
+                nsSocket.on('joinRoom', async (data, callback) => {
+                    console.log('Line 350', nsSocket.id);
+                    
                     if(!user.joinedRoom) {
                         user.joinedRoom = data.roomId;
                         await user.save();
-                        nsSocket.join(data.roomId, () => {
+                        nsSocket.join(data.roomId, async () => {
+                            const room = await Room.findById(data.roomId);
                             let rooms = Object.keys(nsSocket.rooms);
-                            console.log(rooms); // [ <socket.id>, 'room 237' ]
-                            nsSocket.broadcast.to(data.roomId).emit('roomJoined', {data: 'a new user has joined the room'}); // broadcast to everyone in the room
+                            // console.log(rooms); // [ <socket.id>, 'room 237' ]
+                            callback(room);
+                            nsp.in(data.roomId).clients((err, clients) => {
+                                // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                                nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                            });
                           });
                     } else {
                         
                         // console.log('Line 360', user.joinedRoom.toString(), data.roomId.toString());
                         if(user.joinedRoom.toString() !== data.roomId.toString()) {
-                            console.log('Line 360', user.joinedRoom.toString(), data.roomId.toString());
                             nsSocket.leave(user.joinedRoom, async() => {
-                                nsp.to(user.joinedRoom).emit('roomLeft', {data: 'a User left the room!'}); // broadcast to everyone in the room
+                                const clients = nsSocket.adapter.rooms[user.joinedRoom];
+                                nsp.to(user.joinedRoom).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
                                 user.joinedRoom = data.roomId;
                                 await user.save();
-                                nsSocket.join(data.roomId, () => {
+                                nsSocket.join(data.roomId, async () => {
+                                    const room = await Room.findById(data.roomId);
                                     let rooms = Object.keys(nsSocket.rooms);
-                                    console.log(rooms); // [ <socket.id>, 'room 237' ]
-                                    nsSocket.broadcast.to(data.roomId).emit('roomJoined', {data: 'a new user has joined the room'}); // broadcast to everyone in the room
-                                  });
+                                    // console.log(rooms); // [ <socket.id>, 'room 237' ]
+                                    callback(room);
+                                    nsp.in(data.roomId).clients((err, clients) => {
+                                        // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                                        nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                                    });
+                                });
                             });
                         }
                     }
@@ -379,12 +429,20 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 // On Disconnection, Updating Namespace clients
                 nsSocket.on('disconnect', async () => {
                     nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
+                    
+                    const clients = nsSocket.adapter.rooms[user.joinedRoom];
+                    nsp.to(user.joinedRoom).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
+
                     const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
 
                     if(!workSpace) {
                         throw new Error('Invalid Workspace From Line 322 in dashboardController.js!');
                     }
+
+                    user.joinedRoom = undefined;
+                    user.lastNsEndPoint = nsEndPoint;
                     
+                    await user.save();
 
                     const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
             
@@ -411,7 +469,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 });
             });
         } catch (e) {
-            return next(e);
+            return next(e.message);
         }
 
 
@@ -424,3 +482,9 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         // });
     }
 }
+
+// function getClients(room) {
+//     nsp.in(data.roomId).clients((err, clients) => {
+//         return clients.length;
+//     });
+// }
