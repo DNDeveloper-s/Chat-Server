@@ -29,6 +29,14 @@ body {
   overflow: hidden !important;
 }
 
+.green {
+  color: greenyellow !important;
+}
+
+.red {
+  color: #ff2b00 !important;
+}
+
 .body-bg {
   position: absolute;
   top: 0;
@@ -538,6 +546,7 @@ body {
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name {
+  position: relative;
   display: inline-block;
   height: 40px;
   margin: 20px 10%;
@@ -556,15 +565,50 @@ body {
   line-height: 40px;
 }
 
-#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .material-icons {
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .namespace-event > * {
+  line-height: 40px;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .namespace-event > .material-icons {
   -webkit-transform: scale(1.15);
           transform: scale(1.15);
 }
 
-#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > h3 {
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .namespace-event > h3 {
   float: left;
   font-weight: 700;
   font-family: "Montserrat_Light", sans-serif;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, from(#2b2b2b), to(#252424));
+  background: linear-gradient(180deg, #2b2b2b 0%, #252424 100%);
+  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  border: 0.5px solid #232222;
+  z-index: 199;
+  display: none;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown.opened {
+  display: block;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown > .ns-option {
+  padding: 0 9px;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown > .ns-option > p {
+  font-size: 13px;
+  color: #fff;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown > .ns-option:hover {
+  background: #d4c68b12;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer {
@@ -1036,6 +1080,13 @@ body {
           animation: addBackDrop .19s ease-in-out forwards;
 }
 
+#root > .back-drop.noOpaque {
+  background: rgba(0, 0, 0, 0);
+  -webkit-animation: none;
+          animation: none;
+  opacity: 1;
+}
+
 #root > .back-drop.remove {
   opacity: 1;
   -webkit-animation: removeBackDrop .19s ease-in-out forwards;
@@ -1059,7 +1110,7 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  padding: 20px;
+  padding: 20px 0 0;
   z-index: 201;
   border-radius: 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
@@ -1079,14 +1130,78 @@ body {
           animation: removePopupModal .19s ease-in-out forwards;
 }
 
-#root > .modal > .check-boxes {
+#root > .modal h5 {
+  color: #1f6471;
+  font-family: 'Montserrat_Bold', sans-serif;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+#root > .modal[data-id="getInvCode"] > h5 {
+  color: #1d616e;
+  text-align: center;
+  font-size: 14px;
+}
+
+#root > .modal .invite-code {
+  padding: 50px 0;
+  text-align: center;
+  border: 1px solid #e5e8e9;
+  background: #b5bebf59;
+  margin: 10px 0 20px;
+}
+
+#root > .modal .invite-code > p {
+  font-weight: 800;
+  color: #d6174b;
+}
+
+#root > .modal > .first-choice {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 0 20px;
+}
+
+#root > .modal > .option-choice {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 10px 20px 20px;
+  background: #2a7481;
+}
+
+#root > .modal > .option-choice > h5 {
+  color: #fff;
+}
+
+#root > .modal > .option-choice > button {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#0b0b0b), to(#202020));
+  background-image: linear-gradient(0deg, #0b0b0b 0%, #202020 100%);
+}
+
+#root > .modal .check-boxes {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-#root > .modal > .check-boxes > .checkbox-control {
+#root > .modal .check-boxes > .checkbox-control {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1098,21 +1213,21 @@ body {
   width: 50%;
 }
 
-#root > .modal > .check-boxes > .checkbox-control > label {
+#root > .modal .check-boxes > .checkbox-control > label {
   margin: 10px 0;
 }
 
-#root > .modal > .check-boxes > .checkbox-control > input {
+#root > .modal .check-boxes > .checkbox-control > input {
   width: 20px;
   margin-right: 4px;
 }
 
-#root > .modal > .btns {
+#root > .modal .btns {
   margin-top: 20px;
   width: 100%;
 }
 
-#root > .modal > .btns > button {
+#root > .modal .btns > button {
   width: 50%;
   margin: 0 15px 0 0;
 }
@@ -1137,6 +1252,129 @@ body {
 #root > .modal button:hover, #root > .modal button:active {
   background: -webkit-gradient(linear, left bottom, left top, from(#49a0b1), to(#1b5e6b));
   background: linear-gradient(0deg, #49a0b1 0%, #1b5e6b 100%);
+}
+
+#root > .modal .or {
+  margin: 10px 0;
+  text-align: center;
+  color: darkgrey;
+}
+
+#root > .modal .or > p {
+  position: relative;
+  font-size: 18px;
+}
+
+#root > .modal .or > p::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 45%;
+  height: 1px;
+  background: lightgrey;
+}
+
+#root > .modal .or > p::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 45%;
+  height: 1px;
+  background: lightgrey;
+}
+
+#root > .friends-list {
+  height: 100%;
+  background: -webkit-gradient(linear, left top, left bottom, from(#303030), to(#0e0d0d));
+  background: linear-gradient(180deg, #303030 0%, #0e0d0d 100%);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 10px 0;
+}
+
+#root > .friends-list > .friend {
+  position: relative;
+  margin: 10px 10px;
+  width: 45px;
+  height: 45px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 4px;
+}
+
+#root > .friends-list > .friend > img {
+  width: 100%;
+  height: 100%;
+}
+
+#root > .friends-list > .friend > .status {
+  z-index: 2;
+  width: 10px;
+  height: 10px;
+  border-radius: 200px;
+  border: 1px solid #fff;
+  background: greenyellow;
+  position: absolute;
+  top: calc(100% - 7px);
+  left: calc(100% - 6px);
+  -webkit-box-shadow: 0 2px 4px black;
+          box-shadow: 0 2px 4px black;
+}
+
+#root > .friends-list > .friend[data-status="online"] {
+  border: 2px solid greenyellow;
+}
+
+#root > .friends-list > .friend[data-status="online"] > .status {
+  background: greenyellow;
+}
+
+#root > .friends-list > .friend[data-status="offline"] {
+  border: 2px solid #9c9e9a;
+}
+
+#root > .friends-list > .friend[data-status="offline"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+#root > .friends-list > .friend[data-status="offline"] > .status {
+  background: #9c9e9a;
+}
+
+#root > .friends-list > .friend[data-status="idle"] {
+  border: 2px solid rgba(255, 255, 0, 0.712);
+}
+
+#root > .friends-list > .friend[data-status="idle"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+#root > .friends-list > .friend[data-status="idle"] > .status {
+  background: yellow;
 }
 
 @-webkit-keyframes addBackDrop {

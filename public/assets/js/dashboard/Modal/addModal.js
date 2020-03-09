@@ -1,5 +1,6 @@
-const { postNewNs } = require('../Namespace/addNamespace');
+const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
+const { copyToClipboard } = require('../../utilities');
 
 const addModal = (el, roomDetails) => {
     const rootEl = document.getElementById('root');
@@ -8,16 +9,29 @@ const addModal = (el, roomDetails) => {
     if(el === 'NS') {
         addModalHTML = `
             <div class="modal" data-id="addNs" tabindex="0">
-                <label for="nsTitle">
-                    <input name="nsTitle" type="text" placeholder="Namespace Title">
-                </label>
-                <label for="nsImage">
-                    <input type="file" name="nsImage">
-                </label>
-                <label for="defaultRoomTitle">
-                    <input name="defaultRoomTitle" type="text" placeholder="Default Room Title">
-                </label>
-                <button class="pointer yes" type="button">Create</button>
+                <div class="first-choice">  
+                    <h5>Create a new Workspace</h3>
+                    <label for="nsTitle">
+                        <input name="nsTitle" type="text" placeholder="Namespace Title">
+                    </label>
+                    <label for="nsImage">
+                        <input type="file" name="nsImage">
+                    </label>
+                    <label for="defaultRoomTitle">
+                        <input name="defaultRoomTitle" type="text" placeholder="Default Room Title">
+                    </label>
+                    <button class="pointer yes" type="button">Create</button>
+                    <div class="or">
+                        <p>or</p>
+                    </div>
+                </div>
+                <div class="option-choice join-using-link" data-id="joinUsingLink">
+                    <h5>Join a workspace using invite code</h3>
+                    <label for="joiningLink">
+                        <input name="joiningLink" type="text" placeholder="Enter invite code">
+                    </label>
+                    <button class="pointer another" type="button">Join</button>
+                </div>
             </div>
         `;
     } else if(el === 'ROOM') {
@@ -49,6 +63,16 @@ const addModal = (el, roomDetails) => {
                 </div>
             </div>
         `;
+    } else if(el.split('=')[0] === 'GETINVCODE') {
+        addModalHTML = `
+            <div class="modal" data-id="getInvCode" tabindex="0">
+                <h5>Invite Code</h5>
+                <div class="invite-code">
+                    <p>${el.split('=')[1]}</p>
+                </div>
+                <button class="copy-invite-code pointer yes">Copy to Clipboard</button>
+            </div>
+        `;
     }
     rootEl.insertAdjacentHTML('beforeend', backDropHTML);
     rootEl.insertAdjacentHTML('beforeend', addModalHTML);
@@ -56,11 +80,15 @@ const addModal = (el, roomDetails) => {
     const modalEl = rootEl.querySelector('.modal');
     modalEl.focus();
     if(!roomDetails) {
-        modalEl.querySelector('input').focus();
+        if(modalEl.querySelector('input')) {
+            modalEl.querySelector('input').focus();
+        }
     } else {
         const cancelBtn = modalEl.querySelector('button.no');
         cancelBtn.addEventListener('click', removeModal);
     }
+    console.log(backDropEl);
+    
     backDropEl.addEventListener('click', removeModal);
 
     function removeModal() {
@@ -119,6 +147,28 @@ const addModal = (el, roomDetails) => {
                 nsEndPoint: nsEndPoint
             })
 
+        } else if(modalEl.dataset.id === 'getInvCode') {
+            const strToCopy = modalEl.querySelector('.invite-code > p').innerText;
+            copyToClipboard(strToCopy);
+        }
+        removeModal();
+    }
+
+    // Extra for joining namespace using link 
+    // Two links on the same modal
+    // So New Event Handler for 
+    
+    const anothermodalEl = modalEl.querySelector('.option-choice');
+    const anotherModalButtonEl = modalEl.querySelector('button.another');
+    if(anotherModalButtonEl) {
+        anotherModalButtonEl.addEventListener('click', anotherModalButtonHandler);  
+    }
+
+    async function anotherModalButtonHandler(e) {
+        e.preventDefault();
+        if(anothermodalEl.dataset.id === 'joinUsingLink') {
+            const link = anothermodalEl.querySelector('input[name="joiningLink"]').value;
+            joinUsingLink(link);
         }
         removeModal();
     }

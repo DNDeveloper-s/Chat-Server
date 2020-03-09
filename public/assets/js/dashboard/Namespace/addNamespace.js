@@ -55,4 +55,15 @@ function addNewNS(namespace) {
     // });
 }
 
-module.exports = { postNewNs, addNewNS };
+async function joinUsingLink(link) {
+
+    const res = await fetch(`${window.location.origin}/dashboard/workspace?nsName=${link.split('-')[0]}&connectByLink=true&connectTo=${link}`, {
+        method: "POST"
+    })
+
+    const data = await res.json();
+
+    console.log(data);
+}
+
+module.exports = { postNewNs, addNewNS, joinUsingLink };

@@ -15,6 +15,12 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    friendsList: [
+        {
+            type: Schema.Types.ObjectID,
+            ref: 'User'
+        }
+    ],
     workSpaces: [
         {
             type: Schema.Types.ObjectID,

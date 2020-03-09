@@ -11,12 +11,14 @@ exports.getDashboard = async (req, res, next) => {
     await User.findOne({ email: req.session.user.email})
     .populate('workSpaces')
     .populate('config.defaultWorkSpace')
+    // .populate('friendsList')
     .exec(function(err, user){
         res.render('dashboard', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
             userName: req.session.user.name,
             workSpaces: user.workSpaces,
-            config: user.config
+            config: user.config,
+            // friendsList: user.friendsList
         });
     });
 }
@@ -68,7 +70,7 @@ exports.postWorkspace = async (req, res, next) => {
     room.workSpaceId = workSpace._id;
 
     if(!user.workSpaces.length > 0) {
-        user.config.defaultWorkspace = workSpace._id;
+        user.config.defaultWorkSpace = workSpace._id;
     }
 
     user.workSpaces.push(workSpace._id);
@@ -106,7 +108,8 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
         const workSpace = await WorkSpace.findOne({endPoint: `/${nsName}`});
 
-        workSpace.invLinks.push(link);
+        workSpace.invLink.link = link;
+        workSpace.invLink.linkExpiration = Date.now() + 1 * 60 * 60 * 1000;
 
         await workSpace.save();
 
@@ -128,11 +131,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
             next('Invalid Workspace!');
         }
 
-        const linkIsValid = workSpace.invLinks.filter(invLink => {
-            return invLink === link;
-        })
-
-        if(!linkIsValid.length > 0) {
+        if(link !== workSpace.invLink.link || !workSpace.invLink.linkExpiration > Date.now()) {
             return res.json({
                 acknowledgment: {
                     type: 'error',
@@ -143,9 +142,8 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
         workSpace.roles.members.push(req.session.user._id);
 
-        const updatedInvLinks = workSpace.invLinks.filter(cur => cur !== link);
-
-        workSpace.invLinks = updatedInvLinks;
+        workSpace.invLink.link = undefined;
+        workSpace.invLink.linkExpiration = undefined;
 
         const user = await User.findOne({email: req.session.user.email});
 
@@ -163,7 +161,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
             acknowledgment: {
                 type: 'success',
                 message: 'Succesfully Connected the Workspace!',
-                link: linkIsValid
+                link: link
             }
         })
 
@@ -237,6 +235,8 @@ exports.workSpaceFunctions = async(req, res, next) => {
         }
 
         await Room.findByIdAndRemove(roomId);
+
+        await workSpace.save();
 
         nsp.emit('roomDeleted', {
             roomId: roomId,
@@ -336,7 +336,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 }
 
                 await workSpace.save();
-                await user.save();
+                // await user.save();  // -- Changed here
 
 
                 // Fetch all rooms
@@ -348,6 +348,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 
 
                 nsSocket.on('joinDefaultRoom', async(dataNs, callback) => {
+
+                    const user = await User.findOne({email: req.session.user.email});
                     console.log('Joining Default Room');
                     
                     const workSpace = await WorkSpace.findOne({endPoint: dataNs.nsEndPoint});
@@ -383,6 +385,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                             });
                           });
                     }
+                    // await user.save();
                 })
 
                 nsSocket.on('joinRoom', async (data, callback) => {

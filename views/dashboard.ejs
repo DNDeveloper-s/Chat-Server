@@ -51,7 +51,17 @@
             </div>
             <div class="nameSpaceDetails-Room_container">
                 <div class="namespace-name">
-                    <h3><%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : "" %></h3><i class="material-icons">arrow_drop_down</i>
+                    <div class="namespace-event">
+                        <h3><%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : "" %></h3><i class="material-icons">arrow_drop_down</i>
+                    </div>
+                    <div class="ns-options dropdown">
+                        <div class="ns-option">
+                            <p class="red">Settings</p>
+                        </div>
+                        <div class="ns-option invite-friend removeBackDropOnClick">
+                            <p class="green">Invite Friend</p>
+                        </div>
+                    </div>
                 </div>
                 <!-- Room Container -->
                 <div class="roomContainer">
@@ -158,13 +168,29 @@
                 <button class="pointer" type="submit">Send<i class="material-icons">send</i></button>
             </form>
         </div>
+
+        <div class="friends-list">
+            <div class="friend pointer" data-status="online" data-profileurl="http://localhost:3000/dashboard/home">
+                <span class="status"></span>
+                <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+            </div>
+            <div class="friend pointer" data-status="idle" data-profileurl="http://localhost:3000/dashboard/home">
+                <span class="status"></span>
+                <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+            </div>
+            <div class="friend pointer" data-status="offline" data-profileurl="http://localhost:3000/dashboard/home">
+                <span class="status"></span>
+                <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+            </div>
+        </div>
+
         <!--  Modal with BackDrop  -->
 <!--        <div class="back-drop"></div>-->
 <!--        <div class="modal max-width-500" data-id="addRoom">-->
 <!--            <h4>Are you sure?... You want to delete the room!</h4>-->
 <!--            <div class="flex align btns">-->
-<!--                <button class="pointer redLinear" type="button">Yes</button>-->
-<!--                <button class="pointer" type="button">No</button>-->
+<!--                <button class="pointer redLinear yes" type="button">Yes</button>-->
+<!--                <button class="pointer no" type="button">No</button>-->
 <!--            </div>-->
 <!--        </div>-->
     </div>

@@ -48,11 +48,10 @@ const workSpaceSchema = new Schema({
             ref: 'Room'
         }
     ],
-    invLinks: [
-        {
-            type: String
-        }
-    ],
+    invLink: {
+        link: String,
+        linkExpiration: Date
+    },
     connectedClients: [
         {
             type: Schema.Types.ObjectID,

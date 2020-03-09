@@ -45,12 +45,16 @@ async function connectToNs(nsEndPoint) {
         showRooms(data.rooms, data.workSpace);
 
         nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
+            console.log(roomData);
+            
             loadRoom(roomData);
         });
 
         // Injecting the Namespace Name
-        const nameSpaceNameHolder = document.querySelector('.namespace-name > h3');
+        const nameSpaceNameHolder = document.querySelector('.namespace-name > .namespace-event > h3');
+        const nsOptions = document.querySelector('.namespace-name > .ns-options.dropdown');
         nameSpaceNameHolder.innerHTML = data.workSpace.title.toUpperCase();
+        nsOptions.dataset.id =  data.workSpace.endPoint;
 
         // Removing the blur effect
         root.classList.remove('namespace-interchange');
@@ -111,7 +115,9 @@ async function nsListeners() {
 
     console.log(data);
        
-    connectToNs(data.acknowledgment.config.defaultWorkSpace.endPoint);
+    if(data.acknowledgment.config.defaultWorkSpace) {
+        connectToNs(data.acknowledgment.config.defaultWorkSpace.endPoint);
+    }
 
     nameSpaces.forEach(ns => {
         ns.addEventListener('click', async (e) => {
