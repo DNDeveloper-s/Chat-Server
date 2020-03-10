@@ -591,14 +591,19 @@ exports.postAddFriend = async(req, res, next) => {
         return next('Already in friends list!');
     }
 
+    newFriend.notifications.count++;
+
+    newFriend.notifications.list.push({message: `${curUser.name} has sent you friend request.`});
+
+    await newFriend.save();
+    
     io.of(newFriend.connectedDetails.endPoint).to(newFriend.connectedDetails.socketId).emit('notification', {
         type: 'frnd_req',
-        sentUser: curUser
+        sentUser: curUser,
+        curUser: newFriend
     });
     
     // curUser.friendsList.push(newFriend._id);
-
-    // await curUser.save();
 
     return res.json({
         acknowledgment: {

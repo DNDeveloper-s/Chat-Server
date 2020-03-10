@@ -1,4 +1,5 @@
 const io = require('socket.io-client');
+const { updateNotificationCount } = require('../User/friend'); 
 
 const { showRooms, loadRoom, addNewRoom, deleteRooom, updateClients } = require('../Room/roomUI'); 
 // const { joinRoom } = require('../Room/addRoom');
@@ -60,6 +61,8 @@ async function connectToNs(nsEndPoint) {
     });
 
     nsSocket.on('notification', data => {
+        updateNotificationCount(data.curUser.notifications.count);
+        console.clear();
         console.log(data);
     })
 

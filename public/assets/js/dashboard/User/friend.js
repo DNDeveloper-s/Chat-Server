@@ -12,4 +12,11 @@ async function addFriend(friendId) {
     console.log(data);
 }
 
-module.exports = { addFriend };
+function updateNotificationCount(notificationCount) {
+    const notificationCounter = document.querySelector('.notification-count');
+    
+    notificationCounter.innerHTML = notificationCount;
+    console.log(notificationCount);
+}
+
+module.exports = { addFriend, updateNotificationCount };

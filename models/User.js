@@ -12,6 +12,17 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    notifications: {
+        count: {
+            type: Number,
+            default: 0
+        },
+        list: [
+            {
+                message: String
+            }
+        ]
+    },
     connectedDetails: {
         socketId: String,
         endPoint: String
