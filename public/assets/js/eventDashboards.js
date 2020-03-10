@@ -1,4 +1,5 @@
 const { addModal } = require('./dashboard/Modal/addModal');
+const { addUserModal } = require('./dashboard/User/userUI');
 
 module.exports = () => {
     const addNameSpaceBtn = document.querySelector('.add-name_space');
@@ -49,8 +50,6 @@ module.exports = () => {
             backDrop.remove();
         }
     });
-    
-    
     const getInvCode = nsDropdown.querySelector('.invite-friend');
     getInvCode.addEventListener('click', async(e) => {
         e.preventDefault();
@@ -66,5 +65,28 @@ module.exports = () => {
             addModal(`GETINVCODE=${data.acknowledgment.link}`, );
         }, 200);
     })
-    
+    const workspaceSettings = nsDropdown.querySelector('.workspace-settings');
+    workspaceSettings.addEventListener('click', async(e) => {
+        e.preventDefault();
+        const nsEndPoint = workspaceSettings.closest('.ns-options').dataset.id;
+        const res = await fetch(`${window.location.origin}/dashboard/workspace?nsEndPoint=${nsEndPoint}&getWorkspaceDetails=true`, {
+            method: "GET"
+        });
+
+        const data = await res.json();
+
+        console.log(data);
+        setTimeout(() => {
+            addModal(`WORKSPACESETTINGS`, {
+                workSpace: data.acknowledgment.workSpace
+            });
+        }, 200);
+    })
+    const userLinks = document.querySelectorAll('.userLink');
+    userLinks.forEach(userLink => {
+        userLink.addEventListener('click', function(e) {
+            const userId = userLink.dataset.userid;
+            addUserModal(userId); 
+        })
+    })
 }

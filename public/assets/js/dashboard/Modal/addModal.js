@@ -2,7 +2,7 @@ const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
 const { copyToClipboard } = require('../../utilities');
 
-const addModal = (el, roomDetails) => {
+const addModal = (el, options) => {
     const rootEl = document.getElementById('root');
     const backDropHTML = `<div class="back-drop"></div>`;
     let addModalHTML;
@@ -37,40 +37,114 @@ const addModal = (el, roomDetails) => {
     } else if(el === 'ROOM') {
         addModalHTML = `
             <div class="modal" data-id="addRoom" tabindex="0">
-                <label for="roomTitle">
-                    <input name="roomTitle" type="text" placeholder="Room Title">
-                </label>
-                <div class="check-boxes">
-                    <label class="checkbox-control" for="roomMode">
-                        <input type="radio" value="Private" name="roomMode">
-                        Private
+                <div class="first-choice alone">  
+                    <label for="roomTitle">
+                        <input name="roomTitle" type="text" placeholder="Room Title">
                     </label>
-                    <label class="checkbox-control" for="roomMode">
-                        <input type="radio" value="Public" name="roomMode">
-                        Public
-                    </label>
+                    <div class="check-boxes">
+                        <label class="checkbox-control" for="roomMode">
+                            <input type="radio" value="Private" name="roomMode">
+                            Private
+                        </label>
+                        <label class="checkbox-control" for="roomMode">
+                            <input type="radio" value="Public" name="roomMode">
+                            Public
+                        </label>
+                    </div>
+                    <button class="pointer yes" type="button">Create</button>
                 </div>
-                <button class="pointer yes" type="button">Create</button>
             </div>
         `;
     } else if(el === 'CONFIRM') {
         addModalHTML = `
-            <div class="modal max-width-500" tabindex="0" data-id="deleteRoom" data-roomId="${roomDetails.roomId}" data-nsEndPoint="${roomDetails.nsEndPoint}" data-nsId="${roomDetails.roomNsId}">
-                <h4 class="pl-10">Are you sure?... You want to delete the room <span style="color: red">#${roomDetails.roomName}</span>!</h4>
-                <div class="flex align btns">
-                    <button class="pointer redLinear yes" type="button">Yes</button>
-                    <button class="pointer no" type="button">No</button>
+            <div class="modal max-width-500" tabindex="0" data-id="deleteRoom" data-roomId="${options.roomDetails.roomId}" data-nsEndPoint="${options.roomDetails.nsEndPoint}" data-nsId="${options.roomDetails.roomNsId}">
+                <div class="first-choice alone">  
+                    <h4 class="pl-10">Are you sure?... You want to delete the room <span style="color: red">#${options.roomDetails.roomName}</span>!</h4>
+                    <div class="flex align btns">
+                        <button class="pointer redLinear yes" type="button">Yes</button>
+                        <button class="pointer no" type="button">No</button>
+                    </div>
                 </div>
             </div>
         `;
     } else if(el.split('=')[0] === 'GETINVCODE') {
         addModalHTML = `
             <div class="modal" data-id="getInvCode" tabindex="0">
-                <h5>Invite Code</h5>
-                <div class="invite-code">
-                    <p>${el.split('=')[1]}</p>
+                <div class="first-choice alone">  
+                    <h5>Invite Code</h5>
+                    <div class="invite-code">
+                        <p>${el.split('=')[1]}</p>
+                    </div>
+                    <button class="copy-invite-code pointer yes">Copy to Clipboard</button>
                 </div>
-                <button class="copy-invite-code pointer yes">Copy to Clipboard</button>
+            </div>
+        `;
+    } else if(el === 'WORKSPACESETTINGS') {
+        addModalHTML = `
+            <div class="modal" data-id="workspace_settings" tabindex="0">
+                <div class="first-choice center-content alone">  
+                    <h5 class="bigger">Your Workspace</h5>
+                    <div class="nsImage">
+                        <input name="image" type="file" class="input__file input__dp">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
+                        </figure>
+                        <label for="image" class="dp__name"></label>
+                        <img src="${options.workSpace.image}" alt="DNDeveloper">
+                    </div>
+                    <div class="input-control">
+                        <label for="">Edit workspace name</label>
+                        <input type="text" name="" value="${options.workSpace.title}" placeholder="Enter Workspace name...">
+                    </div>
+                    <div class="input-control">
+                        <label for="" class="small">Edit Your Workspace EndPoint</label>
+                        <input type="text" name="" value="${options.workSpace.endPoint.slice(1)}" placeholder="Enter Workspace name...">
+                    </div>
+                    <div class="input-control">
+                        <label class="finalize" for="">Finalize changes</label>
+                        <button class="pointer blueLienar yes">Save Changes</button>
+                    </div>
+                </div>
+                <div class="option-choice center-content">
+                    <div class="input-control">
+                        <label class="strict-action" for="">Strict Action</label>
+                        <button class="pointer redLinear another">Delete Workspace</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if(el === 'USER_PROFILE') {
+        addModalHTML = `
+            <div class="modal" data-id="user_profile" tabindex="0">
+                <div class="first-choice center-content alone">  
+                    <h5 class="bigger">User Profile</h5>
+                    <div class="nsImage">
+                        <input name="image" type="file" class="input__file input__dp">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
+                        </figure>
+                        <label for="image" class="dp__name"></label>
+                        <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+                    </div>
+                    <div class="input-control">
+                        <label class="finalize" for="">Full Name</label>
+                        <input type="text" name="" value="boys" placeholder="Enter Workspace name..." readonly>
+                    </div>
+                    <div class="input-control">
+                        <label for="" class="finalize">Unique userId</label>
+                        <input type="text" name="" value="boys8068659" placeholder="Enter Workspace name...">
+                    </div>
+                    <div class="input-control">
+                        <label class="finalize" for="">Write a Message</label>
+                        <button class="pointer blueLienar">Send Message</button>
+                    </div>
+                </div>
+                <div class="option-choice center-content">
+                    <div class="input-control">
+                        <label class="strict-action" for="">Such Action</label>
+                        <button class="pointer redLinear">Add as a Friend</button>
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -79,7 +153,11 @@ const addModal = (el, roomDetails) => {
     const backDropEl = rootEl.querySelector('.back-drop');
     const modalEl = rootEl.querySelector('.modal');
     modalEl.focus();
-    if(!roomDetails) {
+    if(!options) {
+        if(modalEl.querySelector('input')) {
+            modalEl.querySelector('input').focus();
+        }
+    } else if(!options.roomDetails) {
         if(modalEl.querySelector('input')) {
             modalEl.querySelector('input').focus();
         }
@@ -109,7 +187,9 @@ const addModal = (el, roomDetails) => {
     });
 
     const inModalButtonEl = modalEl.querySelector('button.yes');
-    inModalButtonEl.addEventListener('click', modalButtonHandler);
+    if(inModalButtonEl) {
+        inModalButtonEl.addEventListener('click', modalButtonHandler);
+    }
 
      async function modalButtonHandler (e) {
         if(modalEl.dataset.id === 'addNs') {
@@ -150,6 +230,10 @@ const addModal = (el, roomDetails) => {
         } else if(modalEl.dataset.id === 'getInvCode') {
             const strToCopy = modalEl.querySelector('.invite-code > p').innerText;
             copyToClipboard(strToCopy);
+        } else if(modalEl.dataset.id === 'workspace_settings') {
+
+        } else if(modalEl.dataset.id === 'user_profile') {
+
         }
         removeModal();
     }

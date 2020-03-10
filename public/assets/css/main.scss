@@ -277,6 +277,21 @@ body {
         background: linear-gradient(0deg, rgba(233,81,81,1) 0%, rgba(180,5,5,1) 100%) !important;
     }
 }
+.blackLinear {
+    background: linear-gradient(180deg, #303030 0%, #0e0d0d 100%) !important;
+
+    &:hover {
+        background: linear-gradient(0deg, #303030 0%, #0e0d0d 100%) !important;
+    }
+}
+.blueLinear {
+    background: linear-gradient(180deg, #49a0b1 0%, #1b5e6b 100%) !important;
+
+    &:hover {
+        background: linear-gradient(0deg, #49a0b1 0%, #1b5e6b 100%) !important;
+    }
+}
+
 
 .pl-10 {
     padding-left: 10px;
@@ -947,6 +962,83 @@ body {
             justify-content: center;
             flex-direction: column;
             padding: 0 20px;
+
+            &.alone {
+                padding: 0 20px 20px;
+            }
+
+            &.center-content {
+                align-items: center;
+            }
+
+            > h5.bigger {
+                font-size: 22px;
+            }
+
+            > .nsImage {
+                position: relative;
+                width: 100px;
+                height: 100px;
+                border-radius: 200px;
+                overflow: hidden;
+                border: 2px solid lightgrey;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+
+                > .input__file {
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    position: absolute;
+                    cursor: pointer;
+                    z-index: 11;
+                }
+
+                > .input__file + figure  > svg {
+                    fill: rgba(191, 48, 83, 0.04);
+                    transform: translateY(50px);
+                    transition: .3s ease-in-out;
+                }
+
+                > .input__file:hover + figure  > svg,
+                > .input__file.active + figure  > svg  {
+                    fill: rgba(31, 100, 113, 0.66);
+                    transform: translateY(0px);
+                }
+
+                > .input__file:hover + figure {
+                    background: rgba(117, 117, 117, 0.3);
+                }
+
+                > figure {
+                    width: 100%;
+                    position: absolute;
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0;
+                    background: rgba(117, 117, 117, 0.1);
+                    transition: .3s;
+                }
+
+                > .dp__name {
+                    position: absolute;
+                    top: 80%;
+                    color: rgba(0, 0, 0, 0.66);
+                    font-weight: 700;
+                    max-width: 200px;
+                    white-space: pre-wrap;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: .3s;
+                }
+
+                > img {
+                    width: 100%;
+                    height: 100%;
+                    transform: translateY(9px);
+                }
+            }
         }
 
         > .option-choice {
@@ -956,12 +1048,102 @@ body {
             padding: 10px 20px 20px;
             background: #2a7481;
 
+            &.center-content {
+                align-items: center;
+            }
+
             > h5 {
                 color: #fff;
             }
 
             > button {
                 background-image: linear-gradient(0deg, rgba(11,11,11,1) 0%, rgba(32,32,32,1) 100%);
+
+                &:hover {
+                    background-image: linear-gradient(0deg, #303030 0%, #0e0d0d 100%);
+                }
+            }
+
+             label {
+                color: #63acb9 !important;
+                 &::before,
+                 &::after {
+                    background: #63acb9 !important;
+                 }
+             }
+        }
+
+         .input-control {
+            width: 90%;
+            margin: 20px 0 0;
+            text-align: center;
+
+            > label {
+                position: relative;
+                font-size: 13px;
+                font-weight: 800;
+                margin-left: 2px;
+                font-family: 'Montserrat_Regular', sans-serif;
+                margin-bottom: 12px;
+                color: darkgrey;
+                display: block;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 60%;
+                    left: 0;
+                    width: 18%;
+                    height: 1px;
+                    background: lightgrey;
+                }
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 60%;
+                    right: 0;
+                    width: 18%;
+                    height: 1px;
+                    background: lightgrey;
+                }
+
+                &.strict-action {
+
+                    &::before {
+                        width: 30%;
+                    }
+    
+                    &::after {
+                        width: 30%;
+                    }
+                }
+
+                &.finalize {
+
+                    &::before {
+                        width: 25%;
+                    }
+    
+                    &::after {
+                        width: 25%;
+                    }
+                }
+
+                &.small {
+
+                    &::before {
+                        width: 7%;
+                    }
+    
+                    &::after {
+                        width: 7%;
+                    }
+                }
+            }
+
+            > input {
+                margin: 0;
             }
         }
 

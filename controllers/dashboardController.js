@@ -15,7 +15,7 @@ exports.getDashboard = async (req, res, next) => {
     .exec(function(err, user){
         res.render('dashboard', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
-            userName: req.session.user.name,
+            user: req.session.user,
             workSpaces: user.workSpaces,
             config: user.config,
             // friendsList: user.friendsList
@@ -62,7 +62,8 @@ exports.postWorkspace = async (req, res, next) => {
         },
         rooms: [
             room._id
-        ]
+        ],
+        image: '/assets/images/Saurabh_DP_square.jpg'
     });
 
     await workSpace.save();
@@ -270,6 +271,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
     let nsEndPoint = req.query.nsEndPoint;
     const defaultOne = req.query.defaultOne;
     const joinRoom = req.query.joinRoom;
+    const getWorkspaceDetails = req.query.getWorkspaceDetails;
+    const showUserModal = req.query.showUserModal;
 
     if(defaultOne) {
         
@@ -291,6 +294,46 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
         })
 
+    }
+
+    if(getWorkspaceDetails) {
+        const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+
+        if(!workSpace) {
+            throw new Error('Invalid Workspace, Check your endpoint!');
+        }
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Got the Workspace!',
+                workSpace: workSpace
+            }
+        })
+    }
+
+    if(showUserModal) {
+        const userId = req.query.userId;
+
+        const user = await User.findById(userId);
+        let isItAuthenticatedUser = false;
+
+        if(!user) {
+            throw new Error('Invalid User, Check your userId!');
+        }
+
+        if(user.email === req.session.user.email) {
+            isItAuthenticatedUser = true;
+        }
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Got the User!',
+                user: user,
+                isItAuthenticatedUser: isItAuthenticatedUser
+            }
+        })
     }
 
     if(isLoad) {
@@ -465,7 +508,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
             .exec(function(err, user){
                 return res.render('dashboard', {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
-                    userName: req.session.user.name,
+                    user: req.session.user,
                     workSpaces: user.workSpaces,
                     config: user.config
                 });
@@ -484,9 +527,3 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         // });
     }
 }
-
-// function getClients(room) {
-//     nsp.in(data.roomId).clients((err, clients) => {
-//         return clients.length;
-//     });
-// }

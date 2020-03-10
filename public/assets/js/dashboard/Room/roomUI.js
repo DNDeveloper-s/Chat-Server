@@ -40,10 +40,12 @@ function addNewRoom(roomDetails, workSpace) {
 
     lastRoom.querySelector('i.delete-room').addEventListener('click', function(e) {
         addModal('CONFIRM', {
-            roomId: this.parentElement.dataset.id,
-            roomNsId: this.parentElement.dataset.nsid,
-            nsEndPoint: this.parentElement.dataset.ns,
-            roomName: this.parentElement.querySelector('.roomName').innerText
+            roomDetails: {
+                roomId: this.parentElement.dataset.id,
+                roomNsId: this.parentElement.dataset.nsid,
+                nsEndPoint: this.parentElement.dataset.ns,
+                roomName: this.parentElement.querySelector('.roomName').innerText
+            }
         });
     });
 

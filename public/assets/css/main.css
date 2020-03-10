@@ -369,6 +369,26 @@ body {
   background: linear-gradient(0deg, #e95151 0%, #b40505 100%) !important;
 }
 
+.blackLinear {
+  background: -webkit-gradient(linear, left top, left bottom, from(#303030), to(#0e0d0d)) !important;
+  background: linear-gradient(180deg, #303030 0%, #0e0d0d 100%) !important;
+}
+
+.blackLinear:hover {
+  background: -webkit-gradient(linear, left bottom, left top, from(#303030), to(#0e0d0d)) !important;
+  background: linear-gradient(0deg, #303030 0%, #0e0d0d 100%) !important;
+}
+
+.blueLinear {
+  background: -webkit-gradient(linear, left top, left bottom, from(#49a0b1), to(#1b5e6b)) !important;
+  background: linear-gradient(180deg, #49a0b1 0%, #1b5e6b 100%) !important;
+}
+
+.blueLinear:hover {
+  background: -webkit-gradient(linear, left bottom, left top, from(#49a0b1), to(#1b5e6b)) !important;
+  background: linear-gradient(0deg, #49a0b1 0%, #1b5e6b 100%) !important;
+}
+
 .pl-10 {
   padding-left: 10px;
 }
@@ -1170,6 +1190,99 @@ body {
   padding: 0 20px;
 }
 
+#root > .modal > .first-choice.alone {
+  padding: 0 20px 20px;
+}
+
+#root > .modal > .first-choice.center-content {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .modal > .first-choice > h5.bigger {
+  font-size: 22px;
+}
+
+#root > .modal > .first-choice > .nsImage {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 200px;
+  overflow: hidden;
+  border: 2px solid lightgrey;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+#root > .modal > .first-choice > .nsImage > .input__file {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+  z-index: 11;
+}
+
+#root > .modal > .first-choice > .nsImage > .input__file + figure > svg {
+  fill: rgba(191, 48, 83, 0.04);
+  -webkit-transform: translateY(50px);
+          transform: translateY(50px);
+  -webkit-transition: .3s ease-in-out;
+  transition: .3s ease-in-out;
+}
+
+#root > .modal > .first-choice > .nsImage > .input__file:hover + figure > svg,
+#root > .modal > .first-choice > .nsImage > .input__file.active + figure > svg {
+  fill: rgba(31, 100, 113, 0.66);
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
+}
+
+#root > .modal > .first-choice > .nsImage > .input__file:hover + figure {
+  background: rgba(117, 117, 117, 0.3);
+}
+
+#root > .modal > .first-choice > .nsImage > figure {
+  width: 100%;
+  position: absolute;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0;
+  background: rgba(117, 117, 117, 0.1);
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+#root > .modal > .first-choice > .nsImage > .dp__name {
+  position: absolute;
+  top: 80%;
+  color: rgba(0, 0, 0, 0.66);
+  font-weight: 700;
+  max-width: 200px;
+  white-space: pre-wrap;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+#root > .modal > .first-choice > .nsImage > img {
+  width: 100%;
+  height: 100%;
+  -webkit-transform: translateY(9px);
+          transform: translateY(9px);
+}
+
 #root > .modal > .option-choice {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1185,6 +1298,12 @@ body {
   background: #2a7481;
 }
 
+#root > .modal > .option-choice.center-content {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 #root > .modal > .option-choice > h5 {
   color: #fff;
 }
@@ -1192,6 +1311,84 @@ body {
 #root > .modal > .option-choice > button {
   background-image: -webkit-gradient(linear, left bottom, left top, from(#0b0b0b), to(#202020));
   background-image: linear-gradient(0deg, #0b0b0b 0%, #202020 100%);
+}
+
+#root > .modal > .option-choice > button:hover {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#303030), to(#0e0d0d));
+  background-image: linear-gradient(0deg, #303030 0%, #0e0d0d 100%);
+}
+
+#root > .modal > .option-choice label {
+  color: #63acb9 !important;
+}
+
+#root > .modal > .option-choice label::before, #root > .modal > .option-choice label::after {
+  background: #63acb9 !important;
+}
+
+#root > .modal .input-control {
+  width: 90%;
+  margin: 20px 0 0;
+  text-align: center;
+}
+
+#root > .modal .input-control > label {
+  position: relative;
+  font-size: 13px;
+  font-weight: 800;
+  margin-left: 2px;
+  font-family: 'Montserrat_Regular', sans-serif;
+  margin-bottom: 12px;
+  color: darkgrey;
+  display: block;
+}
+
+#root > .modal .input-control > label::before {
+  content: '';
+  position: absolute;
+  top: 60%;
+  left: 0;
+  width: 18%;
+  height: 1px;
+  background: lightgrey;
+}
+
+#root > .modal .input-control > label::after {
+  content: '';
+  position: absolute;
+  top: 60%;
+  right: 0;
+  width: 18%;
+  height: 1px;
+  background: lightgrey;
+}
+
+#root > .modal .input-control > label.strict-action::before {
+  width: 30%;
+}
+
+#root > .modal .input-control > label.strict-action::after {
+  width: 30%;
+}
+
+#root > .modal .input-control > label.finalize::before {
+  width: 25%;
+}
+
+#root > .modal .input-control > label.finalize::after {
+  width: 25%;
+}
+
+#root > .modal .input-control > label.small::before {
+  width: 7%;
+}
+
+#root > .modal .input-control > label.small::after {
+  width: 7%;
+}
+
+#root > .modal .input-control > input {
+  margin: 0;
 }
 
 #root > .modal .check-boxes {

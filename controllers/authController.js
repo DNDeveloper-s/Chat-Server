@@ -51,7 +51,8 @@ exports.postRegAuth = async (req, res, next) => {
         user = new User({
             name: name,
             email: email,
-            password: hashedPw
+            password: hashedPw,
+            image: '/assets/images/Saurabh_DP_square.jpg'
         })
 
         await user.save();

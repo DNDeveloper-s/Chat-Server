@@ -10,8 +10,8 @@
         <div class="nav_bar">
             <div class="userDetails-NameSpace_container">
                 <!-- User Details Container -->
-                <div class="user_dp image_holder">
-                     <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+                <div class="user_dp image_holder userLink" data-userId="<%= user._id %>">
+                     <img src="<%= user.image %>" alt="DNDeveloper">
                 </div>
                 <hr>
                 <!-- Add New NameSpace Container -->
@@ -55,8 +55,8 @@
                         <h3><%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : "" %></h3><i class="material-icons">arrow_drop_down</i>
                     </div>
                     <div class="ns-options dropdown">
-                        <div class="ns-option">
-                            <p class="red">Settings</p>
+                        <div class="ns-option workspace-settings removeBackDropOnClick">
+                            <p class="red">Workspace Settings</p>
                         </div>
                         <div class="ns-option invite-friend removeBackDropOnClick">
                             <p class="green">Invite Friend</p>
@@ -108,7 +108,7 @@
                 <!-- Left Bar on top message -->
                 <div class="keepItLeft">
                     <div class="current-room-name">
-                        <span><%= userName %></span>
+                        <span><%= user.name %></span>
                     </div>
                     <div class="users-online" title="No. of online users">
                         <p></p>
@@ -185,6 +185,38 @@
         </div>
 
         <!--  Modal with BackDrop  -->
+        <!-- <div class="back-drop"></div>
+        <div class="modal" data-id="user_profile" tabindex="0">
+            <div class="first-choice center-content alone">  
+                <h5 class="bigger">User Profile</h5>
+                <div class="nsImage">
+                    <input name="image" type="file" class="input__file input__dp">
+                    <figure>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
+                    </figure>
+                    <label for="image" class="dp__name"></label>
+                    <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+                </div>
+                <div class="input-control">
+                    <label class="finalize" for="">Full Name</label>
+                    <input type="text" name="" value="boys" placeholder="Enter Workspace name..." readonly>
+                </div>
+                <div class="input-control">
+                    <label for="" class="finalize">Unique userId</label>
+                    <input type="text" name="" value="boys8068659" placeholder="Enter Workspace name...">
+                </div>
+                <div class="input-control">
+                    <label class="finalize" for="">Write a Message</label>
+                    <button class="pointer blueLienar">Send Message</button>
+                </div>
+            </div>
+            <div class="option-choice center-content">
+                <div class="input-control">
+                    <label class="strict-action" for="">Such Action</label>
+                    <button class="pointer redLinear">Add as a Friend</button>
+                </div>
+            </div>
+        </div> -->
 <!--        <div class="back-drop"></div>-->
 <!--        <div class="modal max-width-500" data-id="addRoom">-->
 <!--            <h4>Are you sure?... You want to delete the room!</h4>-->
