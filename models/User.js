@@ -12,6 +12,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    connectedDetails: {
+        socketId: String,
+        endPoint: String
+    },
     password: {
         type: String,
         required: true

@@ -11,8 +11,7 @@ function getNsSocket() {
 
 async function connectToNs(nsEndPoint) {
 
-
-    if (window.history.replaceState) {
+    if (!window.location.search.split('&').includes('showUserModalDefault=true') && window.history.replaceState) {
         //prevents browser from storing history with each change:
         window.history.replaceState('Workspace', `${nsEndPoint.slice(1)}`, `/dashboard/workspace?isLoad=true&nsEndPoint=${nsEndPoint.slice(1)}`);
      }
@@ -59,6 +58,10 @@ async function connectToNs(nsEndPoint) {
         // Removing the blur effect
         root.classList.remove('namespace-interchange');
     });
+
+    nsSocket.on('notification', data => {
+        console.log(data);
+    })
 
     nsSocket.on('roomCreated', data => {
         console.log(data);

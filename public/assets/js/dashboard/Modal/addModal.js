@@ -1,6 +1,7 @@
 const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
 const { copyToClipboard } = require('../../utilities');
+const { addFriend } = require('../User/friend');
 
 const addModal = (el, options) => {
     const rootEl = document.getElementById('root');
@@ -115,7 +116,7 @@ const addModal = (el, options) => {
         `;
     } else if(el === 'USER_PROFILE') {
         addModalHTML = `
-            <div class="modal" data-id="user_profile" tabindex="0">
+            <div class="modal" data-id="user_profile" data-userId="${options.user._id}" tabindex="0">
                 <div class="first-choice center-content alone">  
                     <h5 class="bigger">User Profile</h5>
                     <div class="nsImage">
@@ -124,27 +125,19 @@ const addModal = (el, options) => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
                         </figure>
                         <label for="image" class="dp__name"></label>
-                        <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+                        <img src="${options.user.image}" alt="${options.user.name}">
                     </div>
                     <div class="input-control">
                         <label class="finalize" for="">Full Name</label>
-                        <input type="text" name="" value="boys" placeholder="Enter Workspace name..." readonly>
+                        <input type="text" name="" value="${options.user.name}" placeholder="Enter Workspace name..." ${options.isItAuthenticatedUser ? '' : 'readonly'}>
                     </div>
                     <div class="input-control">
                         <label for="" class="finalize">Unique userId</label>
-                        <input type="text" name="" value="boys8068659" placeholder="Enter Workspace name...">
+                        <input type="text" name="" value="${options.user._id}" placeholder="Enter Workspace name..." ${options.isItAuthenticatedUser ? '' : 'readonly'}>
                     </div>
-                    <div class="input-control">
-                        <label class="finalize" for="">Write a Message</label>
-                        <button class="pointer blueLienar">Send Message</button>
-                    </div>
+                    ${options.isItAuthenticatedUser ? '<div class="input-control"><label class="finalize" for="">Finalize Changes</label><button class="pointer blueLienar yes">Save Changes</button></div>' : '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes">Send Message</button></div>'}
                 </div>
-                <div class="option-choice center-content">
-                    <div class="input-control">
-                        <label class="strict-action" for="">Such Action</label>
-                        <button class="pointer redLinear">Add as a Friend</button>
-                    </div>
-                </div>
+                ${options.isItAuthenticatedUser ? '' : '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>'}
             </div>
         `;
     }
@@ -166,10 +159,24 @@ const addModal = (el, options) => {
         cancelBtn.addEventListener('click', removeModal);
     }
     console.log(backDropEl);
-    
-    backDropEl.addEventListener('click', removeModal);
+    if(el === 'USER_PROFILE') {
+        backDropEl.addEventListener('click', () => {
+            removeModal({
+                updateUrl: true
+            });
+        });
+    } else {
+        backDropEl.addEventListener('click', removeModal);
+    }
 
-    function removeModal() {
+    function removeModal(options) {
+        if(options !== undefined && options.updateUrl) {
+            const nsEndPoint = window.location.search.split('&')[1].split('=')[1];
+            if (window.history.replaceState) {
+                //prevents browser from storing history with each change:
+                window.history.replaceState('Workspace', `${nsEndPoint}`, `/dashboard/workspace?isLoad=true&nsEndPoint=${nsEndPoint}`);
+            }
+        }
         backDropEl.classList.add('remove');
         modalEl.classList.add('remove');
         setTimeout(() => {
@@ -253,6 +260,9 @@ const addModal = (el, options) => {
         if(anothermodalEl.dataset.id === 'joinUsingLink') {
             const link = anothermodalEl.querySelector('input[name="joiningLink"]').value;
             joinUsingLink(link);
+        } else if(anothermodalEl.dataset.id === 'add_friend') {
+            const friendId = modalEl.dataset.userid;
+            addFriend(friendId);
         }
         removeModal();
     }

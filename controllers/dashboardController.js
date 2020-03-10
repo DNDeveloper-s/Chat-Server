@@ -16,6 +16,7 @@ exports.getDashboard = async (req, res, next) => {
         res.render('dashboard', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
             user: req.session.user,
+            loadOnDefault: false,
             workSpaces: user.workSpaces,
             config: user.config,
             // friendsList: user.friendsList
@@ -148,6 +149,10 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
         const user = await User.findOne({email: req.session.user.email});
 
+        if(!user.workSpaces.length > 0) {
+            user.config.defaultWorkSpace = workSpace._id;
+        }
+    
         user.workSpaces.push(workSpace._id);
 
         nsp.emit('connectedByLink', {data: {
@@ -273,6 +278,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
     const joinRoom = req.query.joinRoom;
     const getWorkspaceDetails = req.query.getWorkspaceDetails;
     const showUserModal = req.query.showUserModal;
+    const showUserModalDefault = req.query.showUserModalDefault;
 
     if(defaultOne) {
         
@@ -336,6 +342,38 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         })
     }
 
+    if(showUserModalDefault) {
+        const userId = req.query.userId;
+        console.log('Line 343 ', userId);
+        
+        const gotUser = await User.findById(userId);
+        let isItAuthenticatedUser = false;
+
+        if(!gotUser) {
+            return next('Invalid User, Check your userId!');
+        }
+
+        if(gotUser && gotUser.email === req.session.user.email) {
+            isItAuthenticatedUser = true;
+        }
+            
+
+        await User.findOne({ email: req.session.user.email})
+        .populate('workSpaces')
+        .populate('config.defaultWorkSpace') // <==
+        .exec(function(err, user){
+            return res.render('dashboard', {
+                pageTitle: `Dashboard | ${req.session.user.name}`,
+                gotUser: gotUser,
+                user: user,
+                workSpaces: user.workSpaces,
+                loadOnDefault: true,
+                isItAuthenticatedUser: isItAuthenticatedUser,
+                config: user.config,
+            });
+        });
+    }
+
     if(isLoad) {
             
         try {
@@ -345,9 +383,12 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
             const nsp = io.of(nsEndPoint);
 
+
             nsp.on('connection', async (nsSocket) => {
 
                 const user = await User.findOne({email: req.session.user.email});
+                user.connectedDetails.socketId = nsSocket.id;
+                user.connectedDetails.endPoint = nsEndPoint;
 
                 if(!user) {
                     throw new Error('Invalid User From Line 282 in dashboardController.js!');
@@ -379,7 +420,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 }
 
                 await workSpace.save();
-                // await user.save();  // -- Changed here
+                await user.save();  // -- Changed here
 
 
                 // Fetch all rooms
@@ -474,6 +515,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
                 // On Disconnection, Updating Namespace clients
                 nsSocket.on('disconnect', async () => {
+
                     nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
                     
                     const clients = nsSocket.adapter.rooms[user.joinedRoom];
@@ -485,6 +527,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                         throw new Error('Invalid Workspace From Line 322 in dashboardController.js!');
                     }
 
+                    user.connectedDetails = undefined;
                     user.joinedRoom = undefined;
                     
                     await user.save();
@@ -509,6 +552,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 return res.render('dashboard', {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
                     user: req.session.user,
+                    loadOnDefault: false,
                     workSpaces: user.workSpaces,
                     config: user.config
                 });
@@ -526,4 +570,41 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         //     }
         // });
     }
+}
+
+exports.postAddFriend = async(req, res, next) => {
+    const io = req.app.get('socketio');
+
+    const friendId = req.query.friendId;
+
+    const newFriend = await User.findById(friendId);
+
+    if(!newFriend) {
+        return next('Invalid User, Check your friendId!');
+    }
+
+    const curUser = await User.findOne({email: req.session.user.email});
+
+    const similarFriend = curUser.friendsList.filter(userId => userId === friendId);
+
+    if(similarFriend.length > 0) {
+        return next('Already in friends list!');
+    }
+
+    io.of(newFriend.connectedDetails.endPoint).to(newFriend.connectedDetails.socketId).emit('notification', {
+        type: 'frnd_req',
+        sentUser: curUser
+    });
+    
+    // curUser.friendsList.push(newFriend._id);
+
+    // await curUser.save();
+
+    return res.json({
+        acknowledgment: {
+            type: 'success',
+            message: 'Added as a friend!',
+            newFriend: newFriend
+        }
+    })
 }

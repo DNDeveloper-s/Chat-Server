@@ -17,6 +17,8 @@ router.post('/workspace', auth.isAuth, dashboardController.workSpaceFunctions);
 
 router.get('/workspace', auth.isAuth, dashboardController.getWorkSpaceFunctions);
 
+router.post('/add-friend', auth.isAuth, dashboardController.postAddFriend);
+
 // router.post('/workspace/connectByLink', auth.isAuth, dashboardController.connectByLinkToWorkspace);
 
 module.exports = router;
