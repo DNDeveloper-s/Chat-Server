@@ -1,7 +1,7 @@
 const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
-const { copyToClipboard } = require('../../utilities');
-const { addFriend } = require('../User/friend');
+const { copyToClipboard, loader } = require('../../utilities');
+const { addFriend, loadNotifications } = require('../User/friend');
 
 const addModal = (el, options) => {
     const rootEl = document.getElementById('root');
@@ -140,6 +140,19 @@ const addModal = (el, options) => {
                 ${options.isItAuthenticatedUser ? '' : '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>'}
             </div>
         `;
+    } else if(el === 'NOTIFICATIONS') {
+        addModalHTML = `
+            <div class="modal blueBg" data-id="notifications" tabindex="0">
+                <div class="first-choice center-content alone noRightPadding">  
+                    <h5 class="bigger bottomMarginInc white">Notifications</h5>
+                    <div class="loader-container">
+                        <svg width="40" height="40">
+                            <circle class="loader" cx="20" cy="20" r="17"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        `;
     }
     rootEl.insertAdjacentHTML('beforeend', backDropHTML);
     rootEl.insertAdjacentHTML('beforeend', addModalHTML);
@@ -165,6 +178,10 @@ const addModal = (el, options) => {
                 updateUrl: true
             });
         });
+    } else if(el === 'NOTIFICATIONS') {
+        loader();
+        loadNotifications(options.userId);
+        backDropEl.addEventListener('click', removeModal);
     } else {
         backDropEl.addEventListener('click', removeModal);
     }
@@ -240,6 +257,8 @@ const addModal = (el, options) => {
         } else if(modalEl.dataset.id === 'workspace_settings') {
 
         } else if(modalEl.dataset.id === 'user_profile') {
+
+        } else if(modalEl.dataset.id === 'notifications') {
 
         }
         removeModal();

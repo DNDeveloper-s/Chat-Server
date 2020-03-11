@@ -54,13 +54,23 @@ module.exports = () => {
     getInvCode.addEventListener('click', async(e) => {
         e.preventDefault();
         const nsEndPoint = getInvCode.closest('.ns-options').dataset.id.slice(1);
-        const res = await fetch(`${window.location.origin}/dashboard/workspace?nsName=${nsEndPoint}&genInvLink=true`, {
-            method: "POST"
-        });
+        
+        // const dataString = sessionStorage.getItem('invcode');
+        // let data = JSON.parse(dataString);
 
-        const data = await res.json();
 
-        console.log(data);
+
+        // if(!dataString) {
+            // console.log('Fetching!');
+            const res = await fetch(`${window.location.origin}/dashboard/workspace?nsName=${nsEndPoint}&genInvLink=true`, {
+                method: "POST"
+            });
+    
+            data = await res.json();
+        // }
+
+        // sessionStorage.setItem('invcode', JSON.stringify(data));  
+
         setTimeout(() => {
             addModal(`GETINVCODE=${data.acknowledgment.link}`, );
         }, 200);
@@ -81,12 +91,19 @@ module.exports = () => {
                 workSpace: data.acknowledgment.workSpace
             });
         }, 200);
-    })
-    const userLinks = document.querySelectorAll('.userLink');
+    });
+    const userLinks = document.querySelectorAll('.userLink > img');
     userLinks.forEach(userLink => {
         userLink.addEventListener('click', function(e) {
-            const userId = userLink.dataset.userid;
+            const userId = userLink.closest('.userLink').dataset.userid;
             addUserModal(userId); 
         })
-    })
+    });
+    const notificationCount = document.querySelector('.notification-count');
+    notificationCount.addEventListener('click', function () {
+        const userId = notificationCount.closest('.userLink').dataset.userid;
+        addModal('NOTIFICATIONS', {
+            userId: userId
+        });
+    });
 }

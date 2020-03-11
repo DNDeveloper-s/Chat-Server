@@ -19,7 +19,16 @@ const userSchema = new Schema({
         },
         list: [
             {
-                message: String
+                message: String,
+                notificationType: String,
+                userDetails: {
+                    image: String,
+                    userId: {
+                        type: Schema.Types.ObjectID,
+                        ref: 'User'
+                    },
+                    userName: String
+                }
             }
         ]
     },

@@ -1,5 +1,7 @@
 // import { submitRegForm } from './auth';
-const { regHandle, loginHandle } = require('./auth')
+const { regHandle, loginHandle } = require('./auth');
+
+const { Moveit } = require('./moveIt');
 
 // Background animation
 const bgAnim = () => {
@@ -86,9 +88,41 @@ const copyToClipboard = str => {
     
 };
 
+const loader = () => {
+    const loaderEl = document.querySelectorAll('.loader');
+
+    loaderEl.forEach(cur => {
+        const loadingAnimation = new Moveit(cur, {
+            start: '0%',
+            end: '1%'
+        });
+
+        function animateLoader() {
+            loadingAnimation.set({
+                start: '1%',
+                end: '70%',
+                duration: 0.5,
+                callback: function() {
+                    loadingAnimation.set({
+                        start: '100%',
+                        end: '101%',
+                        duration: 0.8,
+                        follow: true,
+                        callback: function () {
+                            animateLoader();
+                        }
+                    })
+                }
+            })
+        }
+        animateLoader();
+    })
+};
+
 
 module.exports = { 
     bgAnim, 
     toggleAuthFormUI ,
-    copyToClipboard
+    copyToClipboard,
+    loader
 }

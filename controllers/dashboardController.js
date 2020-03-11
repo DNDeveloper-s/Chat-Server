@@ -105,10 +105,21 @@ exports.workSpaceFunctions = async(req, res, next) => {
     
 
     if(genInvLink) {
-        const randomNum = Math.ceil(Math.random() * 487749);
-        const link = `${nsName}-${randomNum}`;
 
         const workSpace = await WorkSpace.findOne({endPoint: `/${nsName}`});
+
+        if(workSpace.invLink.link && workSpace.invLink.linkExpiration > Date.now()) {
+            return res.json({
+                acknowledgment: {
+                    type: 'success',
+                    message: 'Succesfully Got the inv link!',
+                    link: workSpace.invLink.link
+                }
+            })
+        }
+
+        const randomNum = Math.ceil(Math.random() * 487749);
+        const link = `${nsName}-${randomNum}`;
 
         workSpace.invLink.link = link;
         workSpace.invLink.linkExpiration = Date.now() + 1 * 60 * 60 * 1000;
@@ -118,7 +129,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
         return res.json({
             acknowledgment: {
                 type: 'success',
-                message: 'Succesfully Posted the Workspace!',
+                message: 'Succesfully Got the inv link!',
                 link: link
             }
         })
@@ -279,6 +290,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
     const getWorkspaceDetails = req.query.getWorkspaceDetails;
     const showUserModal = req.query.showUserModal;
     const showUserModalDefault = req.query.showUserModalDefault;
+    const getNotifications = req.query.getNotifications;
 
     if(defaultOne) {
         
@@ -300,6 +312,24 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
         })
 
+    }
+
+    if(getNotifications) {
+        const userId = req.query.userId;
+
+        const user = await User.findById(userId);
+
+        if(!user) {
+            throw new Error('Invalid User, Check your userId!');
+        }
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Got the Notifications!',
+                notifications: user.notifications
+            }
+        })
     }
 
     if(getWorkspaceDetails) {
@@ -542,16 +572,16 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
                 });
 
-            })
-            
+            });          
 
             await User.findOne({ email: req.session.user.email})
             .populate('workSpaces')
             .populate('config.defaultWorkSpace') // <==
             .exec(function(err, user){
+
                 return res.render('dashboard', {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
-                    user: req.session.user,
+                    user: user,
                     loadOnDefault: false,
                     workSpaces: user.workSpaces,
                     config: user.config
@@ -593,12 +623,22 @@ exports.postAddFriend = async(req, res, next) => {
 
     newFriend.notifications.count++;
 
-    newFriend.notifications.list.push({message: `${curUser.name} has sent you friend request.`});
+    const objToPush = {
+        message: `${curUser.name} has sent you friend request.`, 
+        notificationType: 'Friend Requests', 
+        userDetails: {
+            image: curUser.image, 
+            userId: curUser._id, 
+            userName: curUser.name
+        }
+    };
+
+    newFriend.notifications.list.push(objToPush);
 
     await newFriend.save();
     
     io.of(newFriend.connectedDetails.endPoint).to(newFriend.connectedDetails.socketId).emit('notification', {
-        type: 'frnd_req',
+        notificationType: 'frnd_req',
         sentUser: curUser,
         curUser: newFriend
     });
