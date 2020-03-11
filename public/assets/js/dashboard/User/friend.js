@@ -11,6 +11,17 @@ async function addFriend(friendId) {
     console.log(data);
 }
 
+async function removeFriend(friendId) {
+
+}
+
+async function updateStatus(friendDetails) {
+    const friendsListContainer = document.querySelector('.friends-list');
+    const friendToUpdate = document.querySelector(`.friend.userLink[data-userid="${friendDetails._id}"]`);
+    console.log(friendDetails._id, friendToUpdate);
+    friendToUpdate.dataset.status = friendDetails.status;
+}
+
 function updateNotificationCount(notificationCount) {
     const notificationCounter = document.querySelector('.notification-count');
     
@@ -87,6 +98,13 @@ async function loadNotifications(userId) {
                 declineFriendRequest(friendId);
             });
         })
+
+        const closeNotificationBtns = firstChoiceContainer.querySelector('.delete-notification');
+        closeNotificationBtns.forEach(closeBtn => {
+            closeBtn.addEventListener('click', function(e) {
+                deleteNotification()
+            });
+        })
     }
 
 }
@@ -113,4 +131,4 @@ async function declineFriendRequest(friendId) {
     console.log(data);
 }
 
-module.exports = { addFriend, updateNotificationCount, loadNotifications };
+module.exports = { addFriend, removeFriend, updateNotificationCount, loadNotifications, updateStatus };

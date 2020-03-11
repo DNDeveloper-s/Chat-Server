@@ -1,7 +1,7 @@
 const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
 const { copyToClipboard, loader } = require('../../utilities');
-const { addFriend, loadNotifications } = require('../User/friend');
+const { addFriend, loadNotifications, removeFriend } = require('../User/friend');
 
 const addModal = (el, options) => {
     const rootEl = document.getElementById('root');
@@ -139,7 +139,8 @@ const addModal = (el, options) => {
                     ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes">Send Message</button></div>' : ''}
                 </div>
                 ${ !options.isItAuthenticatedUser && !options.isFriend  ? '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>' : ''}
-            </div>
+                ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="option-choice center-content" data-id="remove_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Remove Friend</button></div></div>' : '' }
+                </div>
         `;
     } else if(el === 'NOTIFICATIONS') {
         addModalHTML = `
@@ -283,6 +284,9 @@ const addModal = (el, options) => {
         } else if(anothermodalEl.dataset.id === 'add_friend') {
             const friendId = modalEl.dataset.userid;
             addFriend(friendId);
+        } else if(anothermodalEl.dataset.id === 'remove_friend') {
+            const friendId = modalEl.dataset.userid;
+            removeFriend(friendId);
         }
         removeModal();
     }

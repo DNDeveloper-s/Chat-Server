@@ -12,6 +12,7 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    status: String,
     notifications: {
         count: {
             type: Number,

@@ -1464,6 +1464,7 @@ body {
                     height: 100%;
                     background: rgba(0,0,0,0.6);
                     z-index: 1;
+                    pointer-events: none;
                 }
                 > .status {
                     background: #9c9e9a;

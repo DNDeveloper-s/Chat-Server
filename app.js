@@ -38,6 +38,13 @@ app.use(session({
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 
+app.use('/', (req, res, next) => {
+    if(!req.session.isLoggedIn) {
+        return res.redirect('/auth/ui');
+    } 
+    return res.redirect('/dashboard/home');
+});
+
 app.use((error, req, res, next) => {
     err = error.message;
     if(!err) {

@@ -17,7 +17,8 @@ exports.getDashboard = async (req, res, next) => {
             return {
                 _id: cur._id,
                 name: cur.name,
-                image: cur.image
+                image: cur.image,
+                status: cur.status
             }
         });
         res.render('dashboard', {
@@ -414,7 +415,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         .populate('config.defaultWorkSpace')
         .populate('friendsList') // <==
         .exec(function(err, user){
-            const isItFriend = user.friendsList.filter(cur => cur.toString() === gotUser._id.toString());
+            const isItFriend = user.friendsList.filter(cur => cur._id.toString() === gotUser._id.toString());
             let isFriend = false;
             if(isItFriend.length > 0) {
                 isFriend = true;
@@ -423,9 +424,11 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 return {
                     _id: cur._id,
                     name: cur.name,
-                    image: cur.image
+                    image: cur.image,
+                    status: cur.status
                 }
             });
+            // console.log('Line 429, isFriend', user.friendsList, gotUser._id);
             return res.render('dashboard', {
                 pageTitle: `Dashboard | ${req.session.user.name}`,
                 gotUser: gotUser,
@@ -455,6 +458,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 const user = await User.findOne({email: req.session.user.email});
                 user.connectedDetails.socketId = nsSocket.id;
                 user.connectedDetails.endPoint = nsEndPoint;
+                user.status = 'online';
 
                 if(!user) {
                     throw new Error('Invalid User From Line 282 in dashboardController.js!');
@@ -487,6 +491,29 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
                 await workSpace.save();
                 await user.save();  // -- Changed here
+
+                // Update your status to all of your friends
+                await User.findOne({email: req.session.user.email})
+                .populate('friendsList')
+                .exec(function (err, user) {
+                    const friendsSocket = user.friendsList.map(cur => {
+                        return {
+                            endPoint: cur.connectedDetails.endPoint,
+                            socketId: cur.connectedDetails.socketId
+                        }
+                    });
+
+                    friendsSocket.forEach(cur => {
+                        io.of(cur.endPoint).to(cur.socketId).emit('statusUpdate', {
+                            user: {
+                                _id: user._id,
+                                name: user.name,
+                                image: user.image,
+                                status: user.status
+                            }
+                        })
+                    })
+                });
 
 
                 // Fetch all rooms
@@ -595,8 +622,34 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
                     user.connectedDetails = undefined;
                     user.joinedRoom = undefined;
+                    user.status = 'offline';
                     
                     await user.save();
+
+                    setTimeout(async() => {
+                        // Update your status to all of your friends
+                        await User.findOne({email: req.session.user.email})
+                        .populate('friendsList')
+                        .exec(function (err, user) {
+                            const friendsSocket = user.friendsList.map(cur => {
+                                return {
+                                    endPoint: cur.connectedDetails.endPoint,
+                                    socketId: cur.connectedDetails.socketId
+                                }
+                            });
+        
+                            friendsSocket.forEach(cur => {
+                                io.of(cur.endPoint).to(cur.socketId).emit('statusUpdate', {
+                                    user: {
+                                        _id: user._id,
+                                        name: user.name,
+                                        image: user.image,
+                                        status: user.status
+                                    }
+                                })
+                            });
+                        });
+                    }, 1000);
 
                     const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
             
@@ -619,7 +672,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     return {
                         _id: cur._id,
                         name: cur.name,
-                        image: cur.image
+                        image: cur.image,
+                        status: cur.status
                     }
                 });
                 return res.render('dashboard', {

@@ -173,7 +173,7 @@
 
         <div class="friends-list">
             <% for(let friend of friends) { %>
-                <div class="friend pointer userLink" data-userId="<%= friend._id %>" data-status="online" data-profileurl="http://localhost:3000/dashboard/home">
+                <div class="friend pointer userLink" data-userId="<%= friend._id %>" data-status="<%= friend.status %>" data-profileurl="http://localhost:3000/dashboard/home">
                     <span class="status"></span>
                     <img src="<%= friend.image %>" alt="<%= friend.name %>">
                 </div>
@@ -226,6 +226,13 @@
                         <div class="input-control">
                             <label class="strict-action" for="">Such Action</label>
                             <button class="pointer redLinear another">Add as a Friend</button>
+                        </div>
+                    </div>
+                <% } else if(!isItAuthenticatedUser) { %>
+                    <div class="option-choice center-content" data-id="remove_friend">
+                        <div class="input-control">
+                            <label class="strict-action" for="">Such Action</label>
+                            <button class="pointer redLinear another">Remove Friend</button>
                         </div>
                     </div>
                 <% } %>
