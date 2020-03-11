@@ -133,11 +133,12 @@ const addModal = (el, options) => {
                     </div>
                     <div class="input-control">
                         <label for="" class="finalize">Unique userId</label>
-                        <input type="text" name="" value="${options.user._id}" placeholder="Enter Workspace name..." ${options.isItAuthenticatedUser ? '' : 'readonly'}>
+                        <input type="text" name="" value="${options.user._id}" placeholder="Enter Workspace name..." disabled>
                     </div>
-                    ${options.isItAuthenticatedUser ? '<div class="input-control"><label class="finalize" for="">Finalize Changes</label><button class="pointer blueLienar yes">Save Changes</button></div>' : '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes">Send Message</button></div>'}
+                    ${options.isItAuthenticatedUser ? '<div class="input-control"><label class="finalize" for="">Finalize Changes</label><button class="pointer blueLienar yes">Save Changes</button></div>' : ''}
+                    ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes">Send Message</button></div>' : ''}
                 </div>
-                ${options.isItAuthenticatedUser ? '' : '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>'}
+                ${ !options.isItAuthenticatedUser && !options.isFriend  ? '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>' : ''}
             </div>
         `;
     } else if(el === 'NOTIFICATIONS') {

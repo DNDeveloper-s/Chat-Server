@@ -11,14 +11,22 @@ exports.getDashboard = async (req, res, next) => {
     await User.findOne({ email: req.session.user.email})
     .populate('workSpaces')
     .populate('config.defaultWorkSpace')
-    // .populate('friendsList')
+    .populate('friendsList')
     .exec(function(err, user){
+        const friendsDetails = user.friendsList.map((cur) => {
+            return {
+                _id: cur._id,
+                name: cur.name,
+                image: cur.image
+            }
+        });
         res.render('dashboard', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
             user: req.session.user,
             loadOnDefault: false,
             workSpaces: user.workSpaces,
             config: user.config,
+            friends: friendsDetails
             // friendsList: user.friendsList
         });
     });
@@ -362,11 +370,24 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
             isItAuthenticatedUser = true;
         }
 
+        const curUser = await User.findOne({email: req.session.user.email});
+
+        const isItFriend = curUser.friendsList.filter(cur => cur.toString() === user._id.toString());
+        let isFriend = false;
+        if(isItFriend.length > 0) {
+            isFriend = true;
+        }
+
         return res.json({
             acknowledgment: {
                 type: 'success',
                 message: 'Succesfully Got the User!',
-                user: user,
+                user: {
+                    name: user.name,
+                    _id: user._id,
+                    image: user.image
+                },
+                isFriend: isFriend,
                 isItAuthenticatedUser: isItAuthenticatedUser
             }
         })
@@ -390,14 +411,29 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
         await User.findOne({ email: req.session.user.email})
         .populate('workSpaces')
-        .populate('config.defaultWorkSpace') // <==
+        .populate('config.defaultWorkSpace')
+        .populate('friendsList') // <==
         .exec(function(err, user){
+            const isItFriend = user.friendsList.filter(cur => cur.toString() === gotUser._id.toString());
+            let isFriend = false;
+            if(isItFriend.length > 0) {
+                isFriend = true;
+            }
+            const friendsDetails = user.friendsList.map((cur) => {
+                return {
+                    _id: cur._id,
+                    name: cur.name,
+                    image: cur.image
+                }
+            });
             return res.render('dashboard', {
                 pageTitle: `Dashboard | ${req.session.user.name}`,
                 gotUser: gotUser,
                 user: user,
                 workSpaces: user.workSpaces,
                 loadOnDefault: true,
+                friends: friendsDetails,
+                isFriend: isFriend,
                 isItAuthenticatedUser: isItAuthenticatedUser,
                 config: user.config,
             });
@@ -576,14 +612,22 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
             await User.findOne({ email: req.session.user.email})
             .populate('workSpaces')
-            .populate('config.defaultWorkSpace') // <==
+            .populate('config.defaultWorkSpace')
+            .populate('friendsList') // <==
             .exec(function(err, user){
-
+                const friendsDetails = user.friendsList.map((cur) => {
+                    return {
+                        _id: cur._id,
+                        name: cur.name,
+                        image: cur.image
+                    }
+                });
                 return res.render('dashboard', {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
                     user: user,
                     loadOnDefault: false,
                     workSpaces: user.workSpaces,
+                    friends: friendsDetails,
                     config: user.config
                 });
             });
@@ -606,50 +650,116 @@ exports.postAddFriend = async(req, res, next) => {
     const io = req.app.get('socketio');
 
     const friendId = req.query.friendId;
+    const sendRequest = req.query.sendRequest;
+    const respondToRequest = req.query.respondToRequest;
 
-    const newFriend = await User.findById(friendId);
+    if(sendRequest) {
+        const newFriend = await User.findById(friendId);
 
-    if(!newFriend) {
-        return next('Invalid User, Check your friendId!');
+        if(!newFriend) {
+            return next('Invalid User, Check your friendId!');
+        }
+
+        const curUser = await User.findOne({email: req.session.user.email});
+
+        const similarFriend = curUser.friendsList.filter(userId => userId === friendId);
+
+        if(similarFriend.length > 0) {
+            return next('Already in friends list!');
+        }
+
+        newFriend.notifications.count++;
+
+        const objToPush = {
+            message: `${curUser.name} has sent you friend request.`, 
+            notificationType: 'frnd_req', 
+            userDetails: {
+                image: curUser.image, 
+                userId: curUser._id, 
+                userName: curUser.name
+            }
+        };
+
+        newFriend.notifications.list.push(objToPush);
+
+        await newFriend.save();
+        
+        io.of(newFriend.connectedDetails.endPoint).to(newFriend.connectedDetails.socketId).emit('notification', {
+            notificationType: 'frnd_req',
+            sentUser: curUser,
+            curUser: newFriend
+        });
+        
+        // curUser.friendsList.push(newFriend._id);
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Added as a friend!',
+                newFriend: newFriend
+            }
+        })
     }
 
-    const curUser = await User.findOne({email: req.session.user.email});
+    if(respondToRequest) {
+        const accept = req.query.accept;
+        
+        // if(accept) {
+            const newFriend = await User.findById(friendId);
+            const curUser = await User.findOne({email: req.session.user.email});  
 
-    const similarFriend = curUser.friendsList.filter(userId => userId === friendId);
+            const isItAlreadyInFriendList = curUser.friendsList.filter(cur => cur.toString() === friendId.toString());
 
-    if(similarFriend.length > 0) {
-        return next('Already in friends list!');
+            if(isItAlreadyInFriendList.length > 0) {
+
+                curUser.notifications.list = curUser.notifications.list.filter(cur => cur.notificationType !== 'frnd_req' && cur.userDetails.userId !== friendId);
+                curUser.notifications.count = curUser.notifications.list.length;
+
+                await curUser.save();
+
+                return next('Already in your friend list!');
+            }
+            
+            const requests = curUser.notifications.list.filter(cur => cur.notificationType === 'frnd_req');
+
+            // console.log(requests);
+
+            const isItPending = requests.filter(cur => cur.userDetails.userId.toString() === friendId.toString());
+
+            if(isItPending.length > 0) {
+
+                curUser.notifications.list = curUser.notifications.list.filter(cur => cur.notificationType !== 'frnd_req' && cur.userDetails.userId !== friendId);
+                curUser.notifications.count = curUser.notifications.list.length;
+
+                if(accept) {
+                    curUser.friendsList.push(newFriend._id);
+                    newFriend.friendsList.push(curUser._id);
+                }
+
+                await curUser.save();
+                await newFriend.save();
+
+                if(!accept) {
+
+                    return res.json({
+                        acknowledgment: {
+                            type: 'success',
+                            message: 'Declined the request!',
+                        }
+                    })
+                }
+
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        message: 'Added as a friend',
+                    }
+                })
+            }
+
+            return next('Invalid Request');
+
+        // }
+
     }
-
-    newFriend.notifications.count++;
-
-    const objToPush = {
-        message: `${curUser.name} has sent you friend request.`, 
-        notificationType: 'Friend Requests', 
-        userDetails: {
-            image: curUser.image, 
-            userId: curUser._id, 
-            userName: curUser.name
-        }
-    };
-
-    newFriend.notifications.list.push(objToPush);
-
-    await newFriend.save();
-    
-    io.of(newFriend.connectedDetails.endPoint).to(newFriend.connectedDetails.socketId).emit('notification', {
-        notificationType: 'frnd_req',
-        sentUser: curUser,
-        curUser: newFriend
-    });
-    
-    // curUser.friendsList.push(newFriend._id);
-
-    return res.json({
-        acknowledgment: {
-            type: 'success',
-            message: 'Added as a friend!',
-            newFriend: newFriend
-        }
-    })
 }

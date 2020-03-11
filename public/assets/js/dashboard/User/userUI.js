@@ -17,7 +17,8 @@ async function addUserModal(userId) {
 
     addModal('USER_PROFILE', {
         user: data.acknowledgment.user,
-        isItAuthenticatedUser: data.acknowledgment.isItAuthenticatedUser
+        isItAuthenticatedUser: data.acknowledgment.isItAuthenticatedUser,
+        isFriend: data.acknowledgment.isFriend
     });
     
 }

@@ -48,6 +48,4 @@ function defaultModal() {
     }
 }
 
-
-
 defaultModal();

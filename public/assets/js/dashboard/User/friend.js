@@ -1,9 +1,8 @@
 
 
 async function addFriend(friendId) {
-    console.log(friendId);
     
-    const res = await fetch(`${window.location.origin}/dashboard/add-friend?friendId=${friendId}`, {
+    const res = await fetch(`${window.location.origin}/dashboard/add-friend?friendId=${friendId}&sendRequest=true`, {
         method: "POST"
     });
 
@@ -46,22 +45,72 @@ async function loadNotifications(userId) {
         }
         data.acknowledgment.notifications.list.forEach((cur, ind) => {
             const htmlToInject = `
-                <div class="notification pointer">
-                    <div class="delete-notification">
+                <div class="notification" data-type="${cur.notificationType}">
+                    <div class="delete-notification pointer">
                         <img src="/assets/images/remove.svg" alt="close">
                     </div>
-                    <div class="image">
+                    <div class="image pointer" data-userId="${cur.userDetails.userId}">
                         <img src="${cur.userDetails.image}" alt="DNDeveloper">
                     </div>
                     <div class="body">
                         <p>${cur.message}</p>
                     </div>
+                    <div class="confirm">
+                        <div class="action_btn pointer yes">
+                            <img src="/assets/images/check.svg" alt="">
+                        </div>
+                        <div class="action_btn pointer no">
+                            <img src="/assets/images/close.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="loader-container hidden noMargin">
+                        <svg width="40" height="40">
+                            <circle class="loader" cx="20" cy="20" r="17"></circle>
+                        </svg>
+                    </div>
                 </div>
             `;
             firstChoiceContainer.insertAdjacentHTML('beforeend', htmlToInject);
         });
+
+        const acceptReqLinks = firstChoiceContainer.querySelectorAll('.notification[data-type="frnd_req"] > .confirm > .action_btn.yes');
+        const declineReqLinks = firstChoiceContainer.querySelectorAll('.notification[data-type="frnd_req"] > .confirm > .action_btn.no');
+        acceptReqLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const friendId = this.closest('.notification').querySelector('.image').dataset.userid;
+                acceptFriendRequest(friendId);
+            });
+        })
+        declineReqLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const friendId = this.closest('.notification').querySelector('.image').dataset.userid;
+                declineFriendRequest(friendId);
+            });
+        })
     }
 
+}
+
+async function acceptFriendRequest(friendId) {
+    console.log(friendId);
+    const res = await fetch(`${window.location.origin}/dashboard/add-friend?friendId=${friendId}&respondToRequest=true&accept=true`, {
+        method: "POST"
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+}
+
+async function declineFriendRequest(friendId) {
+    console.log(friendId);
+    const res = await fetch(`${window.location.origin}/dashboard/add-friend?friendId=${friendId}&respondToRequest=true&accept=false`, {
+        method: "POST"
+    });
+
+    const data = await res.json();
+
+    console.log(data);
 }
 
 module.exports = { addFriend, updateNotificationCount, loadNotifications };

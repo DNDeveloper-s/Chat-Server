@@ -172,18 +172,20 @@
         </div>
 
         <div class="friends-list">
-            <div class="friend pointer" data-status="online" data-profileurl="http://localhost:3000/dashboard/home">
-                <span class="status"></span>
-                <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
-            </div>
-            <div class="friend pointer" data-status="idle" data-profileurl="http://localhost:3000/dashboard/home">
+            <% for(let friend of friends) { %>
+                <div class="friend pointer userLink" data-userId="<%= friend._id %>" data-status="online" data-profileurl="http://localhost:3000/dashboard/home">
+                    <span class="status"></span>
+                    <img src="<%= friend.image %>" alt="<%= friend.name %>">
+                </div>
+            <% } %>
+            <!-- <div class="friend pointer" data-status="idle" data-profileurl="http://localhost:3000/dashboard/home">
                 <span class="status"></span>
                 <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
             </div>
             <div class="friend pointer" data-status="offline" data-profileurl="http://localhost:3000/dashboard/home">
                 <span class="status"></span>
                 <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
-            </div>
+            </div> -->
         </div>
 
         <% if( loadOnDefault ) { %>
@@ -205,21 +207,21 @@
                     </div>
                     <div class="input-control">
                         <label for="" class="finalize">Unique userId</label>
-                        <input type="text" name="" value="<%= gotUser._id %>" placeholder="Enter Workspace name..." <%= isItAuthenticatedUser ? '' : 'readonly' %>>
+                        <input type="text" name="" value="<%= gotUser._id %>" placeholder="Enter Workspace name..." disabled>
                     </div>
                     <% if(isItAuthenticatedUser) { %>
                         <div class="input-control">
                             <label class="finalize" for="Finalize Changes">Finalize Changes</label>
                             <button class="pointer blueLienar yes">Save Changes</button>
                         </div>
-                    <% } else { %>
+                    <% } else if(isFriend) { %>
                         <div class="input-control">
                             <label class="finalize" for="">Write a Message</label>
                             <button class="pointer blueLienar yes">Send Message</button>
                         </div>
                     <% } %>
                 </div>
-                <% if(!isItAuthenticatedUser) { %>
+                <% if(!isItAuthenticatedUser && !isFriend) { %>
                     <div class="option-choice center-content" data-id="add_friend">
                         <div class="input-control">
                             <label class="strict-action" for="">Such Action</label>
@@ -235,8 +237,8 @@
         <div class="modal blueBg" data-id="notifications" tabindex="0">
             <div class="first-choice center-content alone noRightPadding">  
                 <h5 class="bigger bottomMarginInc white">Notifications</h5>
-                <div class="notification pointer">
-                    <div class="delete-notification">
+                <div class="notification">
+                    <div class="delete-notification pointer">
                         <img src="/assets/images/remove.svg" alt="DNDeveloper">
                     </div>
                     <div class="image">
@@ -245,9 +247,17 @@
                     <div class="body">
                         <p>Suraj Singh has sent you friend request.</p>
                     </div>
+                    <div class="confirm">
+                        <div class="action_btn yes">
+                            <img src="/assets/images/check.svg" alt="">
+                        </div>
+                        <div class="action_btn no">
+                            <img src="/assets/images/close.svg" alt="">
+                        </div>
+                    </div>
                 </div>
-                <div class="notification pointer">
-                    <div class="delete-notification">
+                <div class="notification">
+                    <div class="delete-notification pointer">
                         <img src="/assets/images/remove.svg" alt="DNDeveloper">
                     </div>
                     <div class="image">
@@ -256,9 +266,17 @@
                     <div class="body">
                         <p>Radhika Sharma has sent you friend request.</p>
                     </div>
+                    <div class="confirm">
+                        <div class="action_btn yes">
+                            <img src="/assets/images/check.svg" alt="">
+                        </div>
+                        <div class="action_btn no">
+                            <img src="/assets/images/close.svg" alt="">
+                        </div>
+                    </div>
                 </div>
-                <div class="notification pointer">
-                    <div class="delete-notification">
+                <div class="notification">
+                    <div class="delete-notification pointer">
                         <img src="/assets/images/remove.svg" alt="DNDeveloper">
                     </div>
                     <div class="image">
@@ -266,6 +284,14 @@
                     </div>
                     <div class="body">
                         <p>Hina has sent you friend request.</p>
+                    </div>
+                    <div class="confirm">
+                        <div class="action_btn yes">
+                            <img src="/assets/images/check.svg" alt="">
+                        </div>
+                        <div class="action_btn no">
+                            <img src="/assets/images/close.svg" alt="">
+                        </div>
                     </div>
                 </div>
             </div>
