@@ -1212,7 +1212,7 @@ body {
 }
 
 #root > .modal.blueBg {
-  background: #d7476e !important;
+  background: #206ba0 !important;
 }
 
 #root > .modal.remove {
@@ -1232,7 +1232,7 @@ body {
 
 #root > .modal h5.bottomMarginInc {
   margin: 10px 0 20px !important;
-  color: white !important;
+  color: #206ba0 !important;
 }
 
 #root > .modal[data-id="getInvCode"] > h5 {
@@ -1490,12 +1490,12 @@ body {
 #root > .modal .nothing_to_show {
   width: 100%;
   text-align: center;
-  color: lightblue;
+  color: #000;
   margin: 10px 0;
 }
 
 #root > .modal .nothing_to_show > hr {
-  border: 0.8px solid rgba(255, 255, 255, 0.14);
+  border: 0.8px solid rgba(0, 0, 0, 0.12);
   margin-bottom: 10px;
 }
 

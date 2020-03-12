@@ -41,7 +41,7 @@ async function loadNotifications(userId) {
     console.log(data);
 
     if(data.acknowledgment.type === 'success') {
-        const modalEl = document.querySelector('.modal.blueBg');
+        const modalEl = document.querySelector('.modal');
         const firstChoiceContainer = modalEl.querySelector('.first-choice');
         const loaderContainer = modalEl.querySelector('.loader-container');
         loaderContainer.remove();

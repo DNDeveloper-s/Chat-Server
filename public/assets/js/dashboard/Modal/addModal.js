@@ -136,7 +136,7 @@ const addModal = (el, options) => {
                         <input type="text" name="" value="${options.user._id}" placeholder="Enter Workspace name..." disabled>
                     </div>
                     ${options.isItAuthenticatedUser ? '<div class="input-control"><label class="finalize" for="">Finalize Changes</label><button class="pointer blueLienar yes">Save Changes</button></div>' : ''}
-                    ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes" data-closemodal="false">Toggle Chatbox</button></div>' : ''}
+                    ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes" data-togglechat="true" data-closemodal="false">Toggle Chatbox</button></div>' : ''}
                 </div>
                 ${ !options.isItAuthenticatedUser && !options.isFriend  ? '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>' : ''}
                 ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="option-choice center-content" data-id="remove_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Remove Friend</button></div></div>' : '' }
@@ -144,7 +144,7 @@ const addModal = (el, options) => {
         `;
     } else if(el === 'NOTIFICATIONS') {
         addModalHTML = `
-            <div class="modal blueBg" data-id="notifications" tabindex="0">
+            <div class="modal" data-id="notifications" tabindex="0">
                 <div class="first-choice center-content alone noRightPadding">  
                     <h5 class="bigger bottomMarginInc white">Notifications</h5>
                     <div class="loader-container">
@@ -263,9 +263,11 @@ const addModal = (el, options) => {
         } else if(modalEl.dataset.id === 'workspace_settings') {
 
         } else if(modalEl.dataset.id === 'user_profile') {
-            e.preventDefault();
-            const userId = modalEl.dataset.userid;
-            addMessageModal(userId);
+            if(this.dataset.togglechat === 'true') {
+                e.preventDefault();
+                const userId = modalEl.dataset.userid;
+                addMessageModal(userId);
+            }
         } else if(modalEl.dataset.id === 'notifications') {
 
         }

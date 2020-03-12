@@ -220,16 +220,6 @@ exports.workSpaceFunctions = async(req, res, next) => {
         const userId = req.body.userId;
 
         const user = await User.findById(userId);
-        
-        // const notiticationObj = {
-        //     message: `${curUser.name} has sent you a message!`,
-        //     notificationType: 'rcvd_msg',
-        //     userDetails: {
-        //         image: curUser.image,
-        //         userId: curUser._id,
-        //         userName: curUser.name
-        //     }
-        // }
 
         console.log(notificationObj);
 

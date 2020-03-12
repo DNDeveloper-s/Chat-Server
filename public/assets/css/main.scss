@@ -1009,7 +1009,7 @@ body {
         }
 
         &.blueBg {
-            background: #d7476e !important;
+            background: #206ba0 !important;
         }
 
         &.remove {
@@ -1026,7 +1026,7 @@ body {
 
             &.bottomMarginInc {
                 margin: 10px 0 20px !important;
-                color: white !important;
+                color: #206ba0 !important;
             }
         }
         &[data-id="getInvCode"] {
@@ -1244,10 +1244,10 @@ body {
          .nothing_to_show {
             width: 100%;
             text-align: center;
-            color: lightblue;
+            color: #000;
             margin: 10px 0;   
             > hr {
-                border: 0.8px solid rgba(255, 255, 255, 0.14);
+                border: 0.8px solid rgba(0, 0, 0, 0.12);
                 margin-bottom: 10px;
             }     
          }
