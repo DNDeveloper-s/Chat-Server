@@ -23,7 +23,7 @@ exports.getDashboard = async (req, res, next) => {
         });
         res.render('dashboard', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
-            user: req.session.user,
+            user: user,
             loadOnDefault: false,
             workSpaces: user.workSpaces,
             config: user.config,
@@ -109,6 +109,8 @@ exports.workSpaceFunctions = async(req, res, next) => {
     const createRoom = req.query.createRoom;
     const deleteRoom = req.query.deleteRoom;
     const joinRoom = req.query.joinRoom;
+    const deleteNotifications = req.query.deleteNotifications;
+    const postNotification = req.query.postNotification;
 
     let nsp = io.of(`/${nsName}`);
     
@@ -188,6 +190,59 @@ exports.workSpaceFunctions = async(req, res, next) => {
                 type: 'success',
                 message: 'Succesfully Connected the Workspace!',
                 link: link
+            }
+        })
+
+    }
+
+    if(deleteNotifications) {
+        const notificationId = req.query.notificationId;
+
+        const user = await User.findOne({email: req.session.user.email});
+
+        user.notifications.list = user.notifications.list.filter(cur => cur._id.toString() !== notificationId.toString());
+        user.notifications.count = user.notifications.list.length;
+
+        await user.save();
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Deleted the notification!',
+                notificationCount: user.notifications.count
+            }
+        })
+
+    }
+
+    if(postNotification) {
+        const notificationObj = req.body.notificationObj;
+        const userId = req.body.userId;
+
+        const user = await User.findById(userId);
+        
+        // const notiticationObj = {
+        //     message: `${curUser.name} has sent you a message!`,
+        //     notificationType: 'rcvd_msg',
+        //     userDetails: {
+        //         image: curUser.image,
+        //         userId: curUser._id,
+        //         userName: curUser.name
+        //     }
+        // }
+
+        console.log(notificationObj);
+
+        user.notifications.list.push(notificationObj);
+        user.notifications.count = user.notifications.list.length;
+
+        await user.save();
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Deleted the notification!',
+                notificationCount: user.notifications.count
             }
         })
 
@@ -515,6 +570,42 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     })
                 });
 
+                // Typing Events //
+                // Started Typing
+                nsSocket.on('message', async function (data) {
+                    if(data.type === 'typing') {
+                        const userId = data.userId;
+                        const sendingUser = data.sendingUser;
+
+                        // Fetching User
+                        const user = await User.findById(userId);
+                        
+                        io.of(user.connectedDetails.endPoint).to(user.connectedDetails.socketId).emit('message', {
+                            type: 'typing',
+                            userId: user._id,
+                            sendingUser: sendingUser
+                        })
+
+                    }
+                })
+                // Stopped Typing
+                nsSocket.on('message', async function (data) {
+                    if(data.type === 'stopped_typing') {
+                        const userId = data.userId;
+                        const sendingUser = data.sendingUser;
+
+                        // Fetching User
+                        const user = await User.findById(userId);
+                        
+                        io.of(user.connectedDetails.endPoint).to(user.connectedDetails.socketId).emit('message', {
+                            type: 'stopped_typing',
+                            userId: user._id,
+                            sendingUser: sendingUser
+                        })
+
+                    }
+                })
+
 
                 // Fetch all rooms
                 await WorkSpace.findOne({endPoint: nsEndPoint})
@@ -722,22 +813,18 @@ exports.postAddFriend = async(req, res, next) => {
             return next('Already in friends list!');
         }
 
-        let uniqueId;
+        // let uniqueId;
 
-        while(true) {
-
-            uniqueId = Math.ceil(Math.random() * 23653);
-    
-            const isItDuplicate = newFriend.notifications.list.filter(cur => _id.toString() === uniqueId.toString());
-    
-            if(isItDuplicate.length > 0) {
-                continue;
-            }
-            break;
-        }
+        // while(true) {
+        //     uniqueId = Math.ceil(Math.random() * 23653);
+        //     const isItDuplicate = newFriend.notifications.list.filter(cur => cur._id.toString() === uniqueId.toString());
+        //     if(isItDuplicate.length > 0) {
+        //         continue;
+        //     }
+        //     break;
+        // }
 
         const objToPush = {
-            _id: uniqueId,
             message: `${curUser.name} has sent you friend request.`, 
             notificationType: 'frnd_req', 
             userDetails: {

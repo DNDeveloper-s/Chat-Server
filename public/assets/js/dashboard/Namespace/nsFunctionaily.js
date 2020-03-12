@@ -1,5 +1,5 @@
 const io = require('socket.io-client');
-const { updateNotificationCount, pushRecievedMessageToUI, updateStatus } = require('../User/friend'); 
+const { updateNotificationCount, pushRecievedMessageToUI, updateStatus, showTypingStatus } = require('../User/friend'); 
 
 const { showRooms, loadRoom, addNewRoom, deleteRooom, updateClients } = require('../Room/roomUI'); 
 // const { joinRoom } = require('../Room/addRoom');
@@ -73,8 +73,12 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket.on('message', function(data) {
         if(data.type === 'recieved') {
-            console.log('Message Recieved', data.messageObj);
-            pushRecievedMessageToUI(data.messageObj);
+            console.log('Message Recieved', data);
+            pushRecievedMessageToUI(data);
+        } else if(data.type === 'typing') {
+            showTypingStatus(data.type, data.sendingUser);
+        } else if(data.type === 'stopped_typing') {
+            showTypingStatus(data.type, data.sendingUser);
         }
     });
 

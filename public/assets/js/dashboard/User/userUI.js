@@ -1,6 +1,6 @@
 const { addModal } = require('../Modal/addModal');
 
-async function addUserModal(userId) {
+async function addUserModal(userId, fn) {
     const nsEndPoint = window.location.search.split('&')[1].split('=')[1];
     if (window.history.replaceState) {
         //prevents browser from storing history with each change:
@@ -15,11 +15,20 @@ async function addUserModal(userId) {
 
     console.log(data);
 
-    addModal('USER_PROFILE', {
-        user: data.acknowledgment.user,
-        isItAuthenticatedUser: data.acknowledgment.isItAuthenticatedUser,
-        isFriend: data.acknowledgment.isFriend
-    });
+    if(fn) {
+        addModal('USER_PROFILE', {
+            user: data.acknowledgment.user,
+            isItAuthenticatedUser: data.acknowledgment.isItAuthenticatedUser,
+            isFriend: data.acknowledgment.isFriend,
+            openChat: true
+        });
+    } else {
+        addModal('USER_PROFILE', {
+            user: data.acknowledgment.user,
+            isItAuthenticatedUser: data.acknowledgment.isItAuthenticatedUser,
+            isFriend: data.acknowledgment.isFriend
+        });
+    }
     
 }
 

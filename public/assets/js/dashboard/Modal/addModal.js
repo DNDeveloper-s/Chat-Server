@@ -175,6 +175,10 @@ const addModal = (el, options) => {
     }
     console.log(backDropEl);
     if(el === 'USER_PROFILE') {
+        if(options.openChat) {
+            const userId = modalEl.dataset.userid;
+            addMessageModal(userId);
+        }
         backDropEl.addEventListener('click', () => {
             removeModal({
                 updateUrl: true
@@ -206,11 +210,11 @@ const addModal = (el, options) => {
 
     console.log(window.location.origin);
 
-    modalEl.addEventListener('keydown', e => {
-        if(e.key === 'Enter') {
-            modalButtonHandler(e);
-        }
-    });
+    // modalEl.addEventListener('keydown', e => {
+    //     if(e.key === 'Enter') {
+    //         modalButtonHandler(e);
+    //     }
+    // });
 
     const inModalButtonEl = modalEl.querySelector('button.yes');
     if(inModalButtonEl) {
@@ -259,6 +263,7 @@ const addModal = (el, options) => {
         } else if(modalEl.dataset.id === 'workspace_settings') {
 
         } else if(modalEl.dataset.id === 'user_profile') {
+            e.preventDefault();
             const userId = modalEl.dataset.userid;
             addMessageModal(userId);
         } else if(modalEl.dataset.id === 'notifications') {

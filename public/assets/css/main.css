@@ -73,6 +73,43 @@ body {
           transform: translateX(-50px);
 }
 
+/*Typing Loader*/
+@-webkit-keyframes typing {
+  0% {
+    background-color: white;
+    -webkit-box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+            box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+  }
+  25% {
+    background-color: rgba(255, 255, 255, 0.4);
+    -webkit-box-shadow: 12px 0px 0px 0px white, 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+            box-shadow: 12px 0px 0px 0px white, 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+  }
+  75% {
+    background-color: rgba(255, 255, 255, 0.4);
+    -webkit-box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px white;
+            box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px white;
+  }
+}
+
+@keyframes typing {
+  0% {
+    background-color: white;
+    -webkit-box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+            box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+  }
+  25% {
+    background-color: rgba(255, 255, 255, 0.4);
+    -webkit-box-shadow: 12px 0px 0px 0px white, 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+            box-shadow: 12px 0px 0px 0px white, 24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+  }
+  75% {
+    background-color: rgba(255, 255, 255, 0.4);
+    -webkit-box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px white;
+            box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2), 24px 0px 0px 0px white;
+  }
+}
+
 @-webkit-keyframes comeIn {
   0% {
     opacity: 0;
@@ -1416,6 +1453,21 @@ body {
   padding: 4px 30px;
 }
 
+#root > .modal .confirm > .action_btn.reply {
+  width: auto;
+  line-height: 40px;
+  font-size: 27px;
+  background: #767b7b73;
+  color: #270016;
+  border-radius: 10px 10px 0 10px;
+  padding: 4px 42px;
+  font-family: 'Montserrat_Bold', sans-serif;
+}
+
+#root > .modal .confirm > .action_btn.reply:hover {
+  background: #00fff244;
+}
+
 #root > .modal .confirm > .action_btn.no {
   height: 40px;
   -webkit-box-sizing: content-box;
@@ -1831,6 +1883,34 @@ body {
 
 #root > .modal > .attached-modal > .body > .message[data-id="self"] > .body > .time {
   color: rgba(0, 0, 0, 0.829);
+}
+
+#root > .modal > .attached-modal > .body > .typing-loader {
+  position: relative;
+  width: 170px;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  margin: 5px;
+}
+
+#root > .modal > .attached-modal > .body > .typing-loader > .span {
+  width: 100%;
+  background: #de4242;
+  border-radius: 8px 8px 0 0;
+}
+
+#root > .modal > .attached-modal > .body > .typing-loader > .span > .typing_loader {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  -webkit-animation: typing 1s linear infinite alternate;
+  animation: typing 1s linear infinite alternate;
+  margin: 12px 36px;
 }
 
 #root > .modal > .attached-modal > .controls {

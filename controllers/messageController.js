@@ -58,12 +58,33 @@ exports.postMessages = async(req, res, next) => {
             curUser.messages.direct.push(selfMessageObj);
             toUser.messages.direct.push(otherMessageObj);
 
+            if(toUser.status === "offline") {
+        
+                const notiticationObj = {
+                    message: `${curUser.name} has sent you a message!`,
+                    notificationType: 'rcvd_msg',
+                    userDetails: {
+                        image: curUser.image,
+                        userId: curUser._id,
+                        userName: curUser.name
+                    }
+                }
+                toUser.notifications.list.push(notiticationObj);
+                toUser.notifications.count = toUser.notifications.list.length;
+            }
+
             await curUser.save();
             await toUser.save();
 
             io.of(toUser.connectedDetails.endPoint).to(toUser.connectedDetails.socketId).emit('message', {
                 type: 'recieved',
-                messageObj: otherMessageObj
+                messageObj: otherMessageObj,
+                sender: {
+                    name: curUser.name,
+                    image: curUser.image,
+                    _id: curUser._id,
+                    status: curUser.status
+                }
             })
 
 

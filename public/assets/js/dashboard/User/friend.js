@@ -56,7 +56,7 @@ async function loadNotifications(userId) {
         }
         data.acknowledgment.notifications.list.forEach((cur, ind) => {
             const htmlToInject = `
-                <div class="notification" data-type="${cur.notificationType}">
+                <div class="notification" data-id="${cur._id}" data-type="${cur.notificationType}">
                     <div class="delete-notification pointer">
                         <img src="/assets/images/remove.svg" alt="close">
                     </div>
@@ -67,12 +67,8 @@ async function loadNotifications(userId) {
                         <p>${cur.message}</p>
                     </div>
                     <div class="confirm">
-                        <div class="action_btn pointer yes">
-                            <img src="/assets/images/check.svg" alt="">
-                        </div>
-                        <div class="action_btn pointer no">
-                            <img src="/assets/images/close.svg" alt="">
-                        </div>
+                        ${cur.notificationType === 'frnd_req' ? '<div class="action_btn pointer yes"> <img src="/assets/images/check.svg" alt=""> </div><div class="action_btn pointer no"> <img src="/assets/images/close.svg" alt=""> </div>' : ''}
+                        ${cur.notificationType === 'rcvd_msg' ? '<div class="action_btn pointer yes reply">Reply</div>' : ''}
                     </div>
                     <div class="loader-container hidden noMargin">
                         <svg width="40" height="40">
@@ -91,24 +87,77 @@ async function loadNotifications(userId) {
                 const friendId = this.closest('.notification').querySelector('.image').dataset.userid;
                 acceptFriendRequest(friendId);
             });
-        })
+        });
         declineReqLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 const friendId = this.closest('.notification').querySelector('.image').dataset.userid;
                 declineFriendRequest(friendId);
             });
-        })
+        });
+        const replyBtns = firstChoiceContainer.querySelectorAll('.notification[data-type="rcvd_msg"] > .confirm > .action_btn.reply');
+        replyBtns.forEach(replyBtn => {
+            replyBtn.addEventListener('click', function(e) {
+                const notificationId = replyBtn.closest('.notification').dataset.id;
+                deleteNotification(notificationId, false);
+                const friendId = this.closest('.notification').querySelector('.image').dataset.userid;
+                addReplyModal(friendId);
+            });
+        });
 
-        const closeNotificationBtns = firstChoiceContainer.querySelector('.delete-notification');
+        const closeNotificationBtns = firstChoiceContainer.querySelectorAll('.delete-notification');
         if(closeNotificationBtns) {
             closeNotificationBtns.forEach(closeBtn => {
                 closeBtn.addEventListener('click', function(e) {
-                    deleteNotification()
+                    const notificationId = closeBtn.closest('.notification').dataset.id;
+                    deleteNotification(notificationId, true);
                 });
             })  
         }
     }
 
+}
+
+async function deleteNotification(notificationId, instantRemove) {
+    const res = await fetch(`${window.location.origin}/dashboard/workspace?deleteNotifications=true&notificationId=${notificationId}`, {
+        method: "POST"
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+    if(instantRemove) {
+        const notificationToDelete = document.querySelector(`.notification[data-id="${notificationId}"]`);
+        notificationToDelete.remove();
+    }
+
+    // Update notification count on user dp
+    const notificationCount = document.querySelector('.notification-count');
+    notificationCount.innerHTML = data.acknowledgment.notificationCount;
+
+    if(data.acknowledgment.notificationCount == 0) {
+        const firstChoiceContainer = document.querySelector('.first-choice');
+        const htmlToInject = `
+            <div class="nothing_to_show">
+                <hr>
+                No New Notifications
+            </div>
+        `;
+        firstChoiceContainer.insertAdjacentHTML('beforeend', htmlToInject);
+    }
+}
+
+async function addReplyModal(friendId) {
+    const modalEl = document.querySelector('.modal[data-id="notifications"]');
+    const backDrop = document.querySelector('.back-drop');
+
+    modalEl.remove();
+    backDrop.remove();
+
+
+    const { addUserModal } = require('./userUI');
+
+    addUserModal(friendId, 'openChat');
 }
 
 async function acceptFriendRequest(friendId) {
@@ -166,6 +215,10 @@ async function addMessageModal(userId) {
             </div>
         `;
         modalEl.insertAdjacentHTML('beforeend', attachedModalHtml);
+        
+        const messageInput = document.querySelector('.attached-modal .input_message');
+        messageInput.focus();
+
         loader();
 
         // Fetching and posting user details to UI
@@ -179,7 +232,41 @@ async function addMessageModal(userId) {
         const attachedModal = modalEl.querySelector('.attached-modal');
         const sendMessageBtn = attachedModal.querySelector('.send_direct_message');
 
-        sendMessageBtn.addEventListener('click', function(e) {
+        const {getNsSocket} = require('../Namespace/nsFunctionaily');
+        const nsSocket = getNsSocket();
+
+        let timer;
+        const curUserId = document.querySelector('.user_dp').dataset.userid;
+
+        messageInput.addEventListener('keydown', function(e) {
+            if(e.key === "Enter") {
+                console.log("enter pressed");
+                postMessage();
+            } else if(e.key !== "Tab" && e.key !== "Alt" && e.key !== "Shift" && e.key !== "Control") {
+                if(timer) {
+                    clearTimeout(timer);
+                }
+                nsSocket.emit('message', {
+                    type: 'typing',
+                    userId: userId,
+                    sendingUser: curUserId
+                })
+            }
+        });
+
+        messageInput.addEventListener('keyup', function(e) {
+            timer = setTimeout(() => {
+                nsSocket.emit('message', {
+                    type: 'stopped_typing',
+                    userId: userId,
+                    sendingUser: curUserId
+                })
+            }, 5000);
+        });
+
+        sendMessageBtn.addEventListener('click', postMessage);
+
+        function postMessage() {
             const messageInput = attachedModal.querySelector('.input_message').value;
             const curTime = new Date();
             const timeObj = {
@@ -189,33 +276,70 @@ async function addMessageModal(userId) {
             const time = `${timeObj.hours}:${timeObj.minutes}`;
             const convertedTime = tConvert (time);
             postMessages(userId, messageInput, convertedTime);
-        })
+        }
     }
 
 }
 
-async function pushRecievedMessageToUI(messageObj) {
-    const attachedModal = document.querySelector(`.attached-modal[data-userid="${messageObj.userId}"]`); 
+async function pushRecievedMessageToUI(data) {
+    const attachedModal = document.querySelector(`.attached-modal[data-userid="${data.messageObj.userId}"]`); 
     if(attachedModal) {
         const messageBodyContainer = document.querySelector('.attached-modal > .body');
+        const typing_loader = messageBodyContainer.querySelector('.typing-loader');
         const messageHTML = `
-            <div class="message" data-id="${messageObj.sender}">
+            <div class="message" data-id="${data.messageObj.sender}">
                 <div class="body">
-                    ${messageObj.body}
+                    ${data.messageObj.body}
                     <div class="time">
-                        ${messageObj.time}
-                        ${messageObj.sender === 'self' ? '<img src="/assets/images/send-tick.svg" alt="DNDeveloper">' : ''}
+                        ${data.messageObj.time}
+                        ${data.messageObj.sender === 'self' ? '<img src="/assets/images/send-tick.svg" alt="DNDeveloper">' : ''}
                     </div>
                 </div>
             </div>
         `;
+        if(typing_loader) {
+            typing_loader.remove();
+        }
         messageBodyContainer.insertAdjacentHTML('beforeend', messageHTML);
         messageBodyContainer.scrollTo({
             left: 0,
             top: messageBodyContainer.scrollHeight,
             behavior: "smooth"
         });
+    } else {
+        console.log(data);
+        const curUserId = document.querySelector('.user_dp').dataset.userid;
+        const notificationObj = {
+            message: `${data.sender.name} has sent you a message!`,
+            notificationType: 'rcvd_msg',
+            userDetails: {
+                image: data.sender.image,
+                userId: data.sender._id,
+                userName: data.sender.name
+            }
+        }
+        postNotificationToSelf(notificationObj, curUserId);
     }
+}
+
+async function postNotificationToSelf(notificationObj, userId) {
+    // Posting Notification to Database
+    const res = await fetch(`${window.location.origin}/dashboard/workspace?postNotification=true`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            notificationObj: notificationObj,
+            userId: userId
+        })
+    });
+    const data = await res.json();
+    console.log(data);
+
+    // Update notification count on user dp
+    const notificationCount = document.querySelector('.notification-count');
+    notificationCount.innerHTML = data.acknowledgment.notificationCount;
 }
 
 async function updateUserDetails(userId) {
@@ -309,6 +433,35 @@ function showMessageToUI(messages) {
     });
 }
 
+function showTypingStatus(type, userId) {
+    const attachedModal = document.querySelector(`.attached-modal[data-userid="${userId}"]`); 
+    const messageBodyContainer = document.querySelector(`.attached-modal[data-userid="${userId}"] > .body`);
+    if(messageBodyContainer) {
+        const typing_loader = messageBodyContainer.querySelector('.typing-loader');
+        if(type === 'typing') {
+            if(attachedModal && !typing_loader) {
+                const typingHTML = `
+                    <div class="typing-loader">
+                        <div class="span">
+                            <div class="typing_loader"></div>
+                        </div>
+                    </div>
+                `;
+                messageBodyContainer.insertAdjacentHTML('beforeend', typingHTML);
+            }
+            messageBodyContainer.scrollTo({
+                left: 0,
+                top: messageBodyContainer.scrollHeight,
+                behavior: "smooth"
+            });
+        } else if(type === 'stopped_typing') {
+            if(typing_loader) {
+                typing_loader.remove();
+            }
+        }
+    }
+}
+
 module.exports = { 
     addFriend, 
     removeFriend, 
@@ -316,7 +469,8 @@ module.exports = {
     loadNotifications, 
     updateStatus, 
     addMessageModal,
-    pushRecievedMessageToUI
+    pushRecievedMessageToUI,
+    showTypingStatus
 };
 
 function tConvert (time) {
