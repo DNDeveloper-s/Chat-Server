@@ -935,7 +935,7 @@ body {
         position: fixed;
         top: 50%;
         left: 50%;
-        background: #fff;
+        background: url('/assets/images/blue-snow.png');
         display: flex;
         justify-content: flex-start;
         flex-direction: column;
@@ -1484,6 +1484,7 @@ body {
                 overflow: auto;
                 display: flex;
                 flex-direction: column;
+                        background: url('/assets/images/email-pattern.png');
 
                 > .loader-container {
                     margin: 40px auto;
