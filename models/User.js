@@ -12,6 +12,19 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    messages: {
+        direct: [
+            {
+                userId: {
+                    type: Schema.Types.ObjectID,
+                    ref: 'User'
+                },
+                body: String,
+                time: String,
+                sender: String
+            }
+        ]
+    },
     status: String,
     notifications: {
         count: {

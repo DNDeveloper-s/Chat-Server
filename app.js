@@ -11,6 +11,7 @@ const app = express();
 
 const authRoutes = require('./routes/authRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@cluster0-zlxgj.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
@@ -19,9 +20,11 @@ const store = new MongoDbStore({
     collection: 'sessions'
 })
 
+// View Engines
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+// Utility Middlewares
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/material-design-icons'));
@@ -35,9 +38,12 @@ app.use(session({
     }
 }))
 
+// Application Routes
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
+app.use('/message', messageRoutes);
 
+// Redirecting to correct page even on bad URL
 app.use('/', (req, res, next) => {
     if(!req.session.isLoggedIn) {
         return res.redirect('/auth/ui');
@@ -45,6 +51,7 @@ app.use('/', (req, res, next) => {
     return res.redirect('/dashboard/home');
 });
 
+// Every single error will go through this middleware (Error One !Special)
 app.use((error, req, res, next) => {
     err = error.message;
     if(!err) {
@@ -57,17 +64,13 @@ app.use((error, req, res, next) => {
         }
     });
 })
-// console.log('Server is listening on 3000');       
-// app.listen( process.env.PORT || 3000);
 
+// Connection to Mongo DB and Socet.io and Server
 mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true })
     .then(result => {
         console.log('Server is listening on 3000');
         const server = app.listen( process.env.PORT || 3000);
         const io = require('./socket').init(server);
-        // io.on('connection', socket => {
-        //     console.log(socket.id + ' is connected')
-        // })
         app.set('socketio', io);
     })
     .catch(err => console.log(err));

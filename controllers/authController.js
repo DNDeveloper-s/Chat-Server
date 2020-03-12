@@ -1,6 +1,29 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
+exports.fetchUser = async (req, res, next) => {
+    const userId = req.query.userId;
+    
+    const user = await User.findById(userId);
+
+    if(!user) {
+        return next('Invalid User');
+    }
+
+    return res.json({
+        acknowledgment: {
+            type: 'success',
+            message: 'Succesfully fetched the user',
+            user: {
+                name: user.name,
+                _id: user._id,
+                image: user.image,
+                status: user.status,
+            }
+        }
+    });
+}
+
 exports.getAuth = async (req, res, next) => {
 
     // let users = await User.find();

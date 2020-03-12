@@ -27,6 +27,7 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden !important;
+  scroll-behavior: smooth;
 }
 
 .green {
@@ -1157,13 +1158,12 @@ body {
           flex-direction: column;
   padding: 20px 0 0;
   z-index: 201;
-  border-radius: 4px;
+  border-radius: 4px 0 0 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
   opacity: 0;
   -webkit-transform: translate(-50%, -50%) scale(0.95);
           transform: translate(-50%, -50%) scale(0.95);
-  overflow: hidden;
   -webkit-animation: addPopupModal .19s ease-in-out forwards;
           animation: addPopupModal .19s ease-in-out forwards;
   min-height: 200px;
@@ -1341,6 +1341,7 @@ body {
           flex-direction: column;
   padding: 10px 20px 20px;
   background: #2a7481;
+  border-bottom-left-radius: 4px;
 }
 
 #root > .modal > .option-choice.center-content {
@@ -1677,6 +1678,185 @@ body {
   width: 45%;
   height: 1px;
   background: lightgrey;
+}
+
+#root > .modal > .attached-modal {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+  -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  border-radius: 0 4px 4px 0;
+}
+
+#root > .modal > .attached-modal > .head {
+  height: 80px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  background: #1f6471c7;
+}
+
+#root > .modal > .attached-modal > .head > .user_details {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .modal > .attached-modal > .head > .user_details:hover > h5 {
+  color: rgba(255, 255, 255, 0.753);
+}
+
+#root > .modal > .attached-modal > .head > .user_details > img {
+  margin-right: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 200px;
+  border: 2px solid lightgrey;
+  -webkit-box-shadow: 0 2px 3px rgba(22, 136, 62, 0.4);
+          box-shadow: 0 2px 3px rgba(22, 136, 62, 0.4);
+}
+
+#root > .modal > .attached-modal > .head > .user_details > h5 {
+  -webkit-transition: .13s;
+  transition: .13s;
+  color: #fff;
+  font-family: 'Montserrat_Regular', sans-serif;
+  font-size: 18px;
+}
+
+#root > .modal > .attached-modal > .head > .options > i {
+  color: #fff;
+  -webkit-transition: .13s;
+  transition: .13s;
+}
+
+#root > .modal > .attached-modal > .head > .options:hover > i {
+  color: rgba(255, 255, 255, 0.753);
+}
+
+#root > .modal > .attached-modal > .body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
+  overflow: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#root > .modal > .attached-modal > .body > .loader-container {
+  margin: 40px auto;
+}
+
+#root > .modal > .attached-modal > .body > .message {
+  display: block;
+  padding: 5px;
+}
+
+#root > .modal > .attached-modal > .body > .message > .body {
+  position: relative;
+  max-width: 250px;
+  min-width: 80px;
+  display: inline-block;
+  border-radius: 9px 9px 9px 0;
+  padding: 10px 10px 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background: lightblue;
+  font-size: 14px;
+  font-family: 'Montserrat_Bold', sans-serif;
+}
+
+#root > .modal > .attached-modal > .body > .message > .body > .time {
+  position: absolute;
+  right: 10px;
+  bottom: 3px;
+  font-size: 8px;
+  color: darkgray;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .modal > .attached-modal > .body > .message > .body > .time > img {
+  width: 8px;
+  height: 8px;
+  margin-left: 4px;
+}
+
+#root > .modal > .attached-modal > .body > .message[data-id="other"] > .body {
+  float: left;
+}
+
+#root > .modal > .attached-modal > .body > .message[data-id="other"] > .body > .time {
+  color: rgba(0, 0, 0, 0.829);
+}
+
+#root > .modal > .attached-modal > .body > .message[data-id="self"] > .body {
+  float: right;
+  border-radius: 9px 9px 0 9px;
+  background: lightgrey;
+}
+
+#root > .modal > .attached-modal > .body > .message[data-id="self"] > .body > .time {
+  color: rgba(0, 0, 0, 0.829);
+}
+
+#root > .modal > .attached-modal > .controls {
+  padding: 0 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background: #dedede;
+}
+
+#root > .modal > .attached-modal > .controls > button {
+  margin-left: 4px;
+  height: 32px;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  cursor: pointer;
+}
+
+#root > .modal > .attached-modal > .controls > button > i {
+  font-size: 15px;
 }
 
 #root > .friends-list {

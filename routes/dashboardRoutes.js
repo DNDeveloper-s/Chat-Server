@@ -4,8 +4,9 @@ const router = express.Router();
 
 const auth = require('../middleware/isAuth');
 
-const authController = require('../controllers/authController');
 const dashboardController = require('../controllers/dashboardController');
+
+// EndPoint comes under "/dashboard"
 
 router.get('/home', auth.isAuth, dashboardController.getDashboard);
 

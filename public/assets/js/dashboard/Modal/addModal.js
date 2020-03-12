@@ -1,7 +1,7 @@
 const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
 const { copyToClipboard, loader } = require('../../utilities');
-const { addFriend, loadNotifications, removeFriend } = require('../User/friend');
+const { addFriend, loadNotifications, removeFriend, addMessageModal } = require('../User/friend');
 
 const addModal = (el, options) => {
     const rootEl = document.getElementById('root');
@@ -21,7 +21,7 @@ const addModal = (el, options) => {
                     <label for="defaultRoomTitle">
                         <input name="defaultRoomTitle" type="text" placeholder="Default Room Title">
                     </label>
-                    <button class="pointer yes" type="button">Create</button>
+                    <button class="pointer yes" data-closemodal="true" type="button">Create</button>
                     <div class="or">
                         <p>or</p>
                     </div>
@@ -52,7 +52,7 @@ const addModal = (el, options) => {
                             Public
                         </label>
                     </div>
-                    <button class="pointer yes" type="button">Create</button>
+                    <button class="pointer yes" data-closemodal="true" type="button">Create</button>
                 </div>
             </div>
         `;
@@ -62,7 +62,7 @@ const addModal = (el, options) => {
                 <div class="first-choice alone">  
                     <h4 class="pl-10">Are you sure?... You want to delete the room <span style="color: red">#${options.roomDetails.roomName}</span>!</h4>
                     <div class="flex align btns">
-                        <button class="pointer redLinear yes" type="button">Yes</button>
+                        <button class="pointer redLinear yes" type="button" data-closemodal="true">Yes</button>
                         <button class="pointer no" type="button">No</button>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ const addModal = (el, options) => {
                     <div class="invite-code">
                         <p>${el.split('=')[1]}</p>
                     </div>
-                    <button class="copy-invite-code pointer yes">Copy to Clipboard</button>
+                    <button class="copy-invite-code pointer yes" data-closemodal="true">Copy to Clipboard</button>
                 </div>
             </div>
         `;
@@ -103,7 +103,7 @@ const addModal = (el, options) => {
                     </div>
                     <div class="input-control">
                         <label class="finalize" for="">Finalize changes</label>
-                        <button class="pointer blueLienar yes">Save Changes</button>
+                        <button class="pointer blueLienar yes" data-closemodal="true">Save Changes</button>
                     </div>
                 </div>
                 <div class="option-choice center-content">
@@ -136,7 +136,7 @@ const addModal = (el, options) => {
                         <input type="text" name="" value="${options.user._id}" placeholder="Enter Workspace name..." disabled>
                     </div>
                     ${options.isItAuthenticatedUser ? '<div class="input-control"><label class="finalize" for="">Finalize Changes</label><button class="pointer blueLienar yes">Save Changes</button></div>' : ''}
-                    ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes">Send Message</button></div>' : ''}
+                    ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes" data-closemodal="false">Toggle Chatbox</button></div>' : ''}
                 </div>
                 ${ !options.isItAuthenticatedUser && !options.isFriend  ? '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>' : ''}
                 ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="option-choice center-content" data-id="remove_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Remove Friend</button></div></div>' : '' }
@@ -259,11 +259,15 @@ const addModal = (el, options) => {
         } else if(modalEl.dataset.id === 'workspace_settings') {
 
         } else if(modalEl.dataset.id === 'user_profile') {
-
+            const userId = modalEl.dataset.userid;
+            addMessageModal(userId);
         } else if(modalEl.dataset.id === 'notifications') {
 
         }
-        removeModal();
+        
+        if(this.dataset.closemodal === 'true') {
+            removeModal();
+        }
     }
 
     // Extra for joining namespace using link 

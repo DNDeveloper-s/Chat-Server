@@ -217,7 +217,7 @@
                     <% } else if(isFriend) { %>
                         <div class="input-control">
                             <label class="finalize" for="">Write a Message</label>
-                            <button class="pointer blueLienar yes">Send Message</button>
+                            <button class="pointer blueLienar yes">Toggle Chatbox</button>
                         </div>
                     <% } %>
                 </div>
@@ -333,13 +333,52 @@
                 </div>
                 <div class="input-control">
                     <label class="finalize" for="">Write a Message</label>
-                    <button class="pointer blueLienar">Send Message</button>
+                    <button class="pointer blueLienar">Toggle Chatbox</button>
                 </div>
             </div>
             <div class="option-choice center-content">
                 <div class="input-control">
                     <label class="strict-action" for="">Such Action</label>
-                    <button class="pointer redLinear">Add as a Friend</button>
+                    <button class="pointer redLinear">Remove Friend</button>
+                </div>
+            </div>
+            <div class="attached-modal">
+                <div class="head">
+                    <div class="user_details pointer">
+                        <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+                        <h5>Saurabh Singh</h5>
+                    </div>
+                    <div class="options pointer">
+                        <i class="material-icons">more_vert</i>
+                    </div>
+                </div>
+                <div class="body">
+                    <div class="loader-container">
+                        <svg width="40" height="40">
+                            <circle class="loader" cx="20" cy="20" r="17"></circle>
+                        </svg>
+                    </div>
+                    <div class="message" data-id="self">
+                        <div class="body">
+                            O
+                            <div class="time">
+                                4:53 am
+                                <img src="/assets/images/seen-tick.svg" alt="DNDeveloper">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message" data-id="other">
+                        <div class="body">
+                            O
+                            <div class="time">
+                                4:53 am
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="controls">
+                    <input type="text" placeholder="Enter your message!">
+                    <button type="button">Send<i class="material-icons">send</i></button>
                 </div>
             </div>
         </div> -->

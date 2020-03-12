@@ -7,6 +7,8 @@ const auth = require('../middleware/isAuth');
 
 // EndPoint comes under "/auth"
 
+router.get('/fetch', auth.isAuth, authController.fetchUser);
+
 router.get('/ui', auth.isNotAuth, authController.getAuth);
 
 router.post('/register', authController.postRegAuth);

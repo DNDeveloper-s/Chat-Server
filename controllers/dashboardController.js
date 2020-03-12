@@ -722,9 +722,22 @@ exports.postAddFriend = async(req, res, next) => {
             return next('Already in friends list!');
         }
 
-        newFriend.notifications.count++;
+        let uniqueId;
+
+        while(true) {
+
+            uniqueId = Math.ceil(Math.random() * 23653);
+    
+            const isItDuplicate = newFriend.notifications.list.filter(cur => _id.toString() === uniqueId.toString());
+    
+            if(isItDuplicate.length > 0) {
+                continue;
+            }
+            break;
+        }
 
         const objToPush = {
+            _id: uniqueId,
             message: `${curUser.name} has sent you friend request.`, 
             notificationType: 'frnd_req', 
             userDetails: {
@@ -735,6 +748,7 @@ exports.postAddFriend = async(req, res, next) => {
         };
 
         newFriend.notifications.list.push(objToPush);
+        newFriend.notifications.count = newFriend.notifications.list.length;
 
         await newFriend.save();
         
