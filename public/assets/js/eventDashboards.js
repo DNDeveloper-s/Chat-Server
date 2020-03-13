@@ -1,5 +1,6 @@
 const { addModal } = require('./dashboard/Modal/addModal');
 const { addUserModal } = require('./dashboard/User/userUI');
+const { messageToRoomHandler } = require('./dashBoard/User/message');
 
 module.exports = () => {
     const addNameSpaceBtn = document.querySelector('.add-name_space');
@@ -106,4 +107,24 @@ module.exports = () => {
             userId: userId
         });
     });
+    const roomDetailsContainer = document.querySelector('.room-details');
+    const sendMessageToRoomBtn = document.querySelector('.send-message > button');
+    const inputBox = document.querySelector('.send-message > input');
+    const form = document.querySelector('.send-message');
+    const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+    })
+    inputBox.addEventListener('keydown', function(e) {
+        if(e.key === "Enter") {
+            const nsEndPoint = nsContainer.dataset.nsendpoint;
+            const roomId = roomDetailsContainer.dataset.roomid;
+            messageToRoomHandler(roomId, nsEndPoint);
+        }
+    })
+    sendMessageToRoomBtn.addEventListener('click', function() {
+        const nsEndPoint = nsContainer.dataset.nsendpoint;
+        const roomId = roomDetailsContainer.dataset.roomid;
+        messageToRoomHandler(roomId, nsEndPoint);
+    })
 }

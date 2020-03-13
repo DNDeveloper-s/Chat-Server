@@ -16,10 +16,16 @@ const roomSchema = new Schema({
     },
     messages: [
         {
-            id: {
-                type: Schema.Types.ObjectID,
-                ref: 'Message'
+            user: {
+                id: {
+                    type: Schema.Types.ObjectID,
+                    ref: 'User'
+                },
+                name: String,
+                image: String
             },
+            body: String,
+            time: String
         }
     ]
 }, {timestamps: true});

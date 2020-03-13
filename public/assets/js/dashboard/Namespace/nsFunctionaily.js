@@ -2,6 +2,7 @@ const io = require('socket.io-client');
 const { updateStatus } = require('../User/friend'); 
 const { updateNotificationCount } = require('../User/notification'); 
 const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
+const { addMessageToRoom } = require('../Room/roomUI'); 
 
 const { showRooms, loadRoom, addNewRoom, deleteRooom, updateClients } = require('../Room/roomUI'); 
 // const { joinRoom } = require('../Room/addRoom');
@@ -22,6 +23,10 @@ async function connectToNs(nsEndPoint) {
     // Blurring the whole Workspace area between interchanging the workspace
     const root = document.getElementById('root');
     root.classList.add('namespace-interchange');
+
+    // Injecting nsid to page
+    const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
+    nsContainer.dataset.nsendpoint = nsEndPoint;
     
     await fetch(`${window.location.origin}/dashboard/workspace?isLoad=true&nsEndPoint=${nsEndPoint}`, {
         method: "GET"
@@ -48,7 +53,6 @@ async function connectToNs(nsEndPoint) {
 
         nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
             console.log(roomData);
-            
             loadRoom(roomData);
         });
 
@@ -107,13 +111,19 @@ async function connectToNs(nsEndPoint) {
         // console.clear();
         console.log(data);
         updateClients(data.clients.length);
-    })
+    });
 
     nsSocket.on('roomLeft', data => {
         // console.clear();
         console.log(data.clients);
         updateClients(data.clients.length);
-    })
+    });
+
+    nsSocket.on('messageToRoom', data => {
+        if(data.type === "toAllConnectedClients") {
+            addMessageToRoom(data.messageObj, data.roomId, data.nsEndPoint);
+        }
+    });
     
 }
 

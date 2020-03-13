@@ -12,6 +12,7 @@ exports.getDashboard = async (req, res, next) => {
     .populate('config.defaultWorkSpace')
     .populate('friendsList')
     .exec(function(err, user){
+        // Preparing Friends Details
         const friendsDetails = user.friendsList.map((cur) => {
             const arr = user.notifications.list.filter(cur1 => {
                 return (cur1.notificationType === 'rcvd_msg' && cur1.userDetails.userId.toString() === cur._id.toString());
@@ -24,6 +25,27 @@ exports.getDashboard = async (req, res, next) => {
                 notificationCount: arr.length
             }
         });
+        // Preparing Workspaces
+        const workSpaceDetails = user.workSpaces.map(cur => {
+            const newRoomMessageCount = user.notifications.list.filter(cur1 => cur.endPoint === cur1.nsEndPoint && cur1.notificationType === 'msgToRoom');
+            if(newRoomMessageCount.length > 0) {
+                return {
+                    title: cur.title,
+                    image: cur.image,
+                    _id: cur._id,
+                    endPoint: cur.endPoint,
+                    nothing: false
+                }
+            }
+            return {
+                title: cur.title,
+                image: cur.image,
+                _id: cur._id,
+                endPoint: cur.endPoint,
+                nothing: true
+            }
+        })
+        // Preparing User Notifications
         const userNotificationCount = user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length;
         const userDetails  = {
             name: user.name,
@@ -36,7 +58,7 @@ exports.getDashboard = async (req, res, next) => {
             pageTitle: `Dashboard | ${req.session.user.name}`,
             user: userDetails,
             loadOnDefault: false,
-            workSpaces: user.workSpaces,
+            workSpaces: workSpaceDetails,
             config: user.config,
             friends: friendsDetails,
             // friendsList: user.friendsList
@@ -86,6 +108,8 @@ exports.postWorkspace = async (req, res, next) => {
         ],
         image: '/assets/images/Saurabh_DP_square.jpg'
     });
+
+    workSpace.roles.members.push(req.session.user._id);
 
     await workSpace.save();
 
@@ -532,6 +556,26 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     notificationCount: arr.length
                 }
             });
+            // Preparing Workspaces
+            const workSpaceDetails = user.workSpaces.map(cur => {
+                const newRoomMessageCount = user.notifications.list.filter(cur1 => cur.endPoint === cur1.nsEndPoint && cur1.notificationType === 'msgToRoom');
+                if(newRoomMessageCount.length > 0) {
+                    return {
+                        title: cur.title,
+                        image: cur.image,
+                        _id: cur._id,
+                        endPoint: cur.endPoint,
+                        nothing: false
+                    }
+                }
+                return {
+                    title: cur.title,
+                    image: cur.image,
+                    _id: cur._id,
+                    endPoint: cur.endPoint,
+                    nothing: true
+                }
+            })
             const userNotificationCount = user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length;
             const userDetails  = {
                 name: user.name,
@@ -545,7 +589,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 pageTitle: `Dashboard | ${req.session.user.name}`,
                 gotUser: gotUser,
                 user: userDetails,
-                workSpaces: user.workSpaces,
+                workSpaces: workSpaceDetails,
                 loadOnDefault: true,
                 friends: friendsDetails,
                 isFriend: isFriend,
@@ -668,7 +712,25 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 await WorkSpace.findOne({endPoint: nsEndPoint})
                 .populate('rooms')
                 .exec((err, workSpace) => {
-                    nsp.emit('connectedToNamespace', {rooms: workSpace.rooms, workSpace: workSpace  , type: 'fetchedRooms'});
+                    // Preparing rooms for notifications
+                    const roomDetails = workSpace.rooms.map(cur => {
+                        const msgToRoom = user.notifications.list.filter(cur1 => cur1.roomId.toString() === cur._id.toString() && cur1.notificationType === 'msgToRoom');
+                        if(msgToRoom.length > 0) {
+                            return {
+                                _id: cur._id,
+                                name: cur.name,
+                                privacy: cur.privacy,
+                                nothing: false
+                            }
+                        }
+                        return {
+                            _id: cur._id,
+                            name: cur.name,
+                            privacy: cur.privacy,
+                            nothing: true
+                        }
+                    })
+                    nsSocket.emit('connectedToNamespace', {rooms: roomDetails, workSpace: workSpace  , type: 'fetchedRooms'});
                 })
                 
 
@@ -747,11 +809,6 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 nsSocket.on('disconnect', async () => {
 
                     nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
-                    const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
-
-                    if(!workSpace) {
-                        throw new Error('Invalid Workspace From Line 322 in dashboardController.js!');
-                    }
 
 
                     nsSocket.leave(user.joinedRoom, async() => {
@@ -794,9 +851,13 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                         });
                     }, 1000);
 
-                    const updatedConnectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
-            
-                    workSpace.connectedClients = updatedConnectedClients;
+                    const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+
+                    if(!workSpace) {
+                        throw new Error('Invalid Workspace From Line 322 in dashboardController.js!');
+                    }
+
+                    workSpace.connectedClients = workSpace.connectedClients.filter(cur => cur.toString() !== req.session.user._id.toString());
 
                     await workSpace.save();
 
@@ -823,6 +884,26 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                         notificationCount: arr.length
                     }
                 });
+                // Preparing Workspaces
+                const workSpaceDetails = user.workSpaces.map(cur => {
+                    const newRoomMessageCount = user.notifications.list.filter(cur1 => cur.endPoint === cur1.nsEndPoint && cur1.notificationType === 'msgToRoom');
+                    if(newRoomMessageCount.length > 0) {
+                        return {
+                            title: cur.title,
+                            image: cur.image,
+                            _id: cur._id,
+                            endPoint: cur.endPoint,
+                            nothing: false
+                        }
+                    }
+                    return {
+                        title: cur.title,
+                        image: cur.image,
+                        _id: cur._id,
+                        endPoint: cur.endPoint,
+                        nothing: true
+                    }
+                })
                 const userNotificationCount = user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length;
                 const userDetails  = {
                     name: user.name,
@@ -835,7 +916,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
                     user: userDetails,
                     loadOnDefault: false,
-                    workSpaces: user.workSpaces,
+                    workSpaces: workSpaceDetails,
                     friends: friendsDetails,
                     config: user.config
                 });

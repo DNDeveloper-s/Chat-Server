@@ -1,5 +1,6 @@
 const { loader } = require('../../utilities');
 const { updateUserDetails } = require('./friend');
+const { addMessageToRoom } = require('../Room/roomUI');
 
 async function addReplyModal(friendId) {
     const modalEl = document.querySelector('.modal[data-id="notifications"]');
@@ -266,6 +267,46 @@ function showTypingStatus(type, userId) {
     }
 }
 
+function messageToRoomHandler(roomId, nsEndPoint) {
+    const messageInput = document.querySelector('.send-message > input').value;
+    // Converting Time in a readable format
+    const curTime = new Date();
+    const timeObj = {
+        hours: curTime.getHours(),
+        minutes: curTime.getMinutes()
+    }
+    const time = `${timeObj.hours}:${timeObj.minutes}`;
+    const convertedTime = tConvert (time);
+    // Checking if the input is not empty
+    if(messageInput.length > 0) {
+        const messageInputContainer = document.querySelector('.send-message > input');
+        messageInputContainer.value = "";
+        messageInputContainer.focus();
+        postMessageToRoom(roomId, nsEndPoint, messageInput, convertedTime);
+    }
+}
+
+async function postMessageToRoom(roomId, nsEndPoint, messageInput, time) {
+    const res = await fetch(`${window.location.origin}/message/send?toRoom=true&roomId=${roomId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            message: messageInput,
+            time: time,
+            nsEndPoint: nsEndPoint
+        })
+    });
+
+    const data = await res.json();
+    console.log(data);
+
+    // if(data.acknowledgment.type === "success") {
+    //     addMessageToRoom(data.acknowledgment.messageObj);
+    // }
+}
+
 module.exports = {
     addReplyModal,
     addMessageModal,
@@ -273,7 +314,8 @@ module.exports = {
     fetchMesages,
     postMessages,
     showMessageToUI,
-    showTypingStatus    
+    showTypingStatus,
+    messageToRoomHandler   
 }
 
 function tConvert (time) {

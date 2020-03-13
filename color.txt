@@ -1,0 +1,27 @@
+#195190FF -- Blue
+#616247FF -- Dark-dark-grey
+#76528BFF -- Purple
+#333D79FF -- NavyBlue
+#F93822FF -- Light orange
+#755139FF -- Coffee
+#006B38FF -- Green
+#00539CFF -- Princess Blue
+#DF6589FF -- Rose Pink
+#E10600FF -- Red
+
+Themes 
+
+#No.-1
+Red (#F65058FF) -- Header,
+Yellow (#FBDE44FF) -- Body,
+Navy (#28334AFF) -- Background
+
+#No.-1
+Danger Red (#D9514EFF) -- Header, 
+Tap Shoe (#2A2B2DFF) -- Background,
+Blue Blossom (#2DA8D8FF) -- Body
+
+#No.-1
+Crimson (#AE0E36FF) -- Header, 
+White (#FCF6F5FF) -- Background,
+Warm Gray (#A59C94FF) -- Body

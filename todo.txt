@@ -1,0 +1,2 @@
+Handling room to message where members of workspace are online,
+Put notifications to all the members of workspace once room has got new message and message is not rendered on the page

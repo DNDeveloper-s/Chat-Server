@@ -42,7 +42,12 @@ const userSchema = new Schema({
                         ref: 'User'
                     },
                     userName: String
-                }
+                },
+                roomId: {
+                    type: Schema.Types.ObjectID,
+                    ref: 'Room'
+                },
+                nsEndPoint: String
             }
         ]
     },

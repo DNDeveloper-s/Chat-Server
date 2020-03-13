@@ -22,8 +22,10 @@ function addNewRoom(roomDetails, workSpace) {
     const roomHTML = `
         <div class="room anim" data-id="${roomDetails._id}" data-nsId="${workSpace._id}" data-ns="${workSpace.endPoint}" data-animtochilds="false" data-animDelay="${0.1}" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px">
             <div class="room-name">
-            ${mode}                    
-            <span># </span><span class="roomName">${roomDetails.name}</span></div>
+                ${mode}                    
+                <span># </span><span class="roomName">${roomDetails.name}</span>
+                <div class="room-notification" data-nothing="${roomDetails.nothing}"></div>
+            </div>
             <i class="pointer material-icons delete-room">delete</i>
             <hr>
         </div>
@@ -69,11 +71,114 @@ function deleteRooom(roomDetails) {
 }
 
 function loadRoom(roomDetails) {
-    const roomContainer = document.querySelector('.room-details');
     const curRoomName = document.querySelector('.current-room-name > span');
 
+    loadMessageToRoom(roomDetails.messages);
     curRoomName.innerHTML = roomDetails.name.toUpperCase();
+
+    // Injecting Room Id
+    const roomContainer = document.querySelector('.room-details');
+    const msgDispContainer = document.querySelector('.message-display__container');
     roomContainer.dataset.roomid = roomDetails._id.toString();
+    msgDispContainer.dataset.roomid = roomDetails._id.toString();
+}
+
+function loadMessageToRoom(messages) {
+    const messageContainer = document.querySelector('.message-display__container');
+    messageContainer.innerHTML = "";
+    messages.forEach(message => {
+        const messageHtml = `
+            <div class="message">
+                <div class="message-inner">
+                    <div class="user-img">
+                        <img src="${message.user.image}" class="message-user_dp" alt="">
+                    </div>
+                    <div class="message-body">
+                        <div class="message-header">
+                            <div class="user">
+                                <span class="message-user_name">${message.user.name}</span>
+                            </div>
+                            <div class="options pointer">
+                                <i class="material-icons">more_vert</i>
+                            </div>
+                        </div>
+                        <div class="message-data">
+                            <p>${message.body}</p>
+                        </div>
+                        <span class="message-time_stamp">${message.time}</span>
+                        <div class="message-status">
+                            <i class="material-icons">done_all</i>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        `;
+        messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
+    });
+    messageContainer.scrollTo({
+        left: 0,
+        top: messageContainer.scrollHeight,
+        behavior: "smooth"
+    });
+}
+
+function addMessageToRoom(messageObj, roomId, nsEndPoint) {
+    const messageContainer = document.querySelector(`.message-display__container[data-roomid="${roomId}"]`);
+    if(messageContainer) {
+        const messageHtml = `
+            <div class="message">
+                <div class="message-inner">
+                    <div class="user-img">
+                        <img src="${messageObj.user.image}" class="message-user_dp" alt="">
+                    </div>
+                    <div class="message-body">
+                        <div class="message-header">
+                            <div class="user">
+                                <span class="message-user_name">${messageObj.user.name}</span>
+                            </div>
+                            <div class="options pointer">
+                                <i class="material-icons">more_vert</i>
+                            </div>
+                        </div>
+                        <div class="message-data">
+                            <p>${messageObj.body}</p>
+                        </div>
+                        <span class="message-time_stamp">${messageObj.time}</span>
+                        <div class="message-status">
+                            <i class="material-icons">done_all</i>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        `;
+        messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
+        messageContainer.scrollTo({
+            left: 0,
+            top: messageContainer.scrollHeight,
+            behavior: "smooth"
+        });
+    } else {
+        // Handling the case where client is not in the same room
+        // Two Cases are here
+
+        // Checking case in two of those
+        const nsContainer = document.querySelector(`.nameSpaceDetails-Room_container[data-nsendpoint="${nsEndPoint}"]`);
+        const roomContainer = document.querySelector('.roomContainer');
+        const nameSpaceContainer = document.querySelector('.nameSpaceContainer');
+
+        // 1. When the client is in the same workspace but same room
+        // if(nsContainer) {
+            const room = roomContainer.querySelector(`.room[data-id="${roomId}"]`);
+            room.querySelector('.room-notification').dataset.nothing = "false";
+            const ns = nameSpaceContainer.querySelector(`.name_space[data-ns="${nsEndPoint}"]`);
+            console.log(ns, nsEndPoint);
+            ns.querySelector('.ns-notification').dataset.nothing = "false";
+        // }
+
+        // 2. When the client is completely in another workspace 
+    }
 }
 
 function updateClients(numOfClients) {
@@ -82,4 +187,4 @@ function updateClients(numOfClients) {
     curRoomName.innerHTML = numOfClients;    
 }
 
-module.exports = { showRooms, addNewRoom, deleteRooom, loadRoom, updateClients };
+module.exports = { showRooms, addNewRoom, deleteRooom, loadRoom, updateClients, addMessageToRoom };
