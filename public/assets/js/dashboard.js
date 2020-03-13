@@ -2,7 +2,7 @@ require('./eventDashboards')();
 
 const { nsListeners } = require('./dashboard/Namespace/nsFunctionaily');
 const { addUserModal } = require('./dashboard/User/userUI'); 
-const { addFriend } = require('./dashboard/User/friend');
+const { addFriend, addMessageModal } = require('./dashboard/User/friend');
 
 nsListeners();
 
@@ -29,6 +29,15 @@ function defaultModal() {
         backDropEl.addEventListener('click', removeModal);
     }
     
+    if(modalEl) {
+        const toggleChat = modalEl.querySelector('button.yes[data-togglechat="true"]');
+        if(toggleChat) {
+            toggleChat.addEventListener('click', e => {
+                const userId = modalEl.dataset.userid;
+                addMessageModal(userId);
+            })
+        }
+    }
     
     if(modalEl) {
         const anothermodalEl = modalEl.querySelector('.option-choice');

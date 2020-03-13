@@ -592,6 +592,11 @@ body {
   text-align: center;
 }
 
+#root > .nav_bar > .userDetails-NameSpace_container > .user_dp > .notification-count[data-nothing="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
 #root > .nav_bar > .userDetails-NameSpace_container > .user_dp > .notification-count:hover {
   background: #c6633c;
 }
@@ -1970,6 +1975,35 @@ body {
 #root > .friends-list > .friend > img {
   width: 100%;
   height: 100%;
+}
+
+#root > .friends-list > .friend > .new-notification {
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+  bottom: -5px;
+  left: -4px;
+  color: #ece742;
+  font-size: 10px;
+  font-family: 'Montserrat_Bold', sans-serif;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  background: #c63c62;
+  border-radius: 200px;
+  width: 13px;
+  height: 13px;
+  line-height: 13px;
+  text-align: center;
+}
+
+#root > .friends-list > .friend > .new-notification[data-nothing="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#root > .friends-list > .friend > .new-notification:hover {
+  background: #c6633c;
 }
 
 #root > .friends-list > .friend > .status {

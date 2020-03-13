@@ -13,7 +13,7 @@
                 <div class="user_dp image_holder userLink" data-userId="<%= user._id %>">
                     <img src="<%= user.image %>" alt="DNDeveloper">
                     <!-- Notification Count -->
-                    <div class="notification-count"><%= user.notifications.count %></div>
+                    <div class="notification-count" data-nothing="<%= user.notificationCount == 0 ? 'true' : 'false' %>" ><%= user.notificationCount %></div>
                 </div>
                 <hr>
                 <!-- Add New NameSpace Container -->
@@ -176,11 +176,16 @@
                 <div class="friend pointer userLink" data-userId="<%= friend._id %>" data-status="<%= friend.status %>" data-profileurl="http://localhost:3000/dashboard/home">
                     <span class="status"></span>
                     <img src="<%= friend.image %>" alt="<%= friend.name %>">
+                    <div class="new-notification" data-nothing="<%= friend.notificationCount == 0 ? 'true' : 'false' %>" ><%= friend.notificationCount %></div>
                 </div>
             <% } %>
+            <!-- data-nothing="0" -->
             <!-- <div class="friend pointer" data-status="idle" data-profileurl="http://localhost:3000/dashboard/home">
                 <span class="status"></span>
                 <img src="/assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">
+                <div class="new-notification">
+                    2
+                </div>
             </div>
             <div class="friend pointer" data-status="offline" data-profileurl="http://localhost:3000/dashboard/home">
                 <span class="status"></span>
@@ -217,7 +222,7 @@
                     <% } else if(isFriend) { %>
                         <div class="input-control">
                             <label class="finalize" for="">Write a Message</label>
-                            <button class="pointer blueLienar yes">Toggle Chatbox</button>
+                            <button class="pointer blueLienar yes" data-togglechat="true" data-closemodal="false">Toggle Chatbox</button>
                         </div>
                     <% } %>
                 </div>

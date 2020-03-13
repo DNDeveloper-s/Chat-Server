@@ -48,9 +48,14 @@ async function postDeleteRoom(roomDetails) {
 async function joinRoom(roomDetails) {
 
     const nsSocket = getNsSocket();
+    const leaveRoomId = document.querySelector('.room-details').dataset.roomid;
 
-    nsSocket.emit('joinRoom', {roomId: roomDetails.roomId}, (roomData) => {
-        loadRoom(roomData);
+    nsSocket.emit('leaveRoom', {roomId: leaveRoomId}, (data) => {
+        if(data.type === "success") {
+            nsSocket.emit('joinRoom', {roomId: roomDetails.roomId}, (roomData) => {
+                loadRoom(roomData);
+            });
+        }
     });
 }
 

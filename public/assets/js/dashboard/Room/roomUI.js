@@ -69,9 +69,11 @@ function deleteRooom(roomDetails) {
 }
 
 function loadRoom(roomDetails) {
+    const roomContainer = document.querySelector('.room-details');
     const curRoomName = document.querySelector('.current-room-name > span');
 
     curRoomName.innerHTML = roomDetails.name.toUpperCase();
+    roomContainer.dataset.roomid = roomDetails._id.toString();
 }
 
 function updateClients(numOfClients) {

@@ -7,27 +7,38 @@ const User = require('../models/User');
 exports.getDashboard = async (req, res, next) => {
     console.log('Rendering Dashboard');
 
-    const user = await User.findOne({email: req.session.user.email});
     await User.findOne({ email: req.session.user.email})
     .populate('workSpaces')
     .populate('config.defaultWorkSpace')
     .populate('friendsList')
     .exec(function(err, user){
         const friendsDetails = user.friendsList.map((cur) => {
+            const arr = user.notifications.list.filter(cur1 => {
+                return (cur1.notificationType === 'rcvd_msg' && cur1.userDetails.userId.toString() === cur._id.toString());
+            });
             return {
                 _id: cur._id,
                 name: cur.name,
                 image: cur.image,
-                status: cur.status
+                status: cur.status,
+                notificationCount: arr.length
             }
         });
+        const userNotificationCount = user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length;
+        const userDetails  = {
+            name: user.name,
+            _id: user._id,
+            status: user.status,
+            image: user.image,
+            notificationCount: userNotificationCount
+        };
         res.render('dashboard', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
-            user: user,
+            user: userDetails,
             loadOnDefault: false,
             workSpaces: user.workSpaces,
             config: user.config,
-            friends: friendsDetails
+            friends: friendsDetails,
             // friendsList: user.friendsList
         });
     });
@@ -109,7 +120,8 @@ exports.workSpaceFunctions = async(req, res, next) => {
     const createRoom = req.query.createRoom;
     const deleteRoom = req.query.deleteRoom;
     const joinRoom = req.query.joinRoom;
-    const deleteNotifications = req.query.deleteNotifications;
+    const deleteNotificationById = req.query.deleteNotificationById;
+    const deleteNotificationByType = req.query.deleteNotificationByType;
     const postNotification = req.query.postNotification;
 
     let nsp = io.of(`/${nsName}`);
@@ -152,7 +164,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
         const workSpace = await WorkSpace.findOne({endPoint: `/${nsName}`});
 
         if(!workSpace) {
-            next('Invalid Workspace!');
+            return next('Invalid Workspace!');
         }
 
         if(link !== workSpace.invLink.link || !workSpace.invLink.linkExpiration > Date.now()) {
@@ -195,7 +207,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
     }
 
-    if(deleteNotifications) {
+    if(deleteNotificationById) {
         const notificationId = req.query.notificationId;
 
         const user = await User.findOne({email: req.session.user.email});
@@ -215,6 +227,33 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
     }
 
+    if(deleteNotificationByType) {
+        const userId = req.body.userId;
+        const notificationType = req.body.type;
+
+        const user = await User.findOne({email: req.session.user.email});
+
+        if(!user) {
+            return next('Invalid User');
+        }
+
+        user.notifications.list = user.notifications.list.filter(cur => {
+            return ( cur.notificationType !== notificationType || cur.userDetails.userId.toString() !== userId.toString() );
+        });
+
+        user.notifications.count = user.notifications.list.length;
+
+        await user.save();
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Deleted the notification!'
+            }
+        })
+
+    }
+
     if(postNotification) {
         const notificationObj = req.body.notificationObj;
         const userId = req.body.userId;
@@ -228,10 +267,24 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
         await user.save();
 
+        if(notificationObj.notificationType === 'rcvd_msg') {
+            const arr = user.notifications.list.filter(cur => {
+                return (cur.notificationType === 'rcvd_msg' && cur.userDetails.userId.toString() === notificationObj.userDetails.userId.toString());
+            })
+
+            return res.json({
+                acknowledgment: {
+                    type: 'success',
+                    message: 'Succesfully Posted the notification!',
+                    notificationCount: arr.length
+                }
+            })
+        }
+
         return res.json({
             acknowledgment: {
                 type: 'success',
-                message: 'Succesfully Deleted the notification!',
+                message: 'Succesfully Posted the notification!',
                 notificationCount: user.notifications.count
             }
         })
@@ -377,11 +430,13 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
             throw new Error('Invalid User, Check your userId!');
         }
 
+        const notifications = user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg');
+
         return res.json({
             acknowledgment: {
                 type: 'success',
                 message: 'Succesfully Got the Notifications!',
-                notifications: user.notifications
+                notifications: notifications
             }
         })
     }
@@ -466,18 +521,30 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 isFriend = true;
             }
             const friendsDetails = user.friendsList.map((cur) => {
+                const arr = user.notifications.list.filter(cur1 => {
+                    return (cur1.notificationType === 'rcvd_msg' && cur1.userDetails.userId.toString() === cur._id.toString());
+                });
                 return {
                     _id: cur._id,
                     name: cur.name,
                     image: cur.image,
-                    status: cur.status
+                    status: cur.status,
+                    notificationCount: arr.length
                 }
             });
+            const userNotificationCount = user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length;
+            const userDetails  = {
+                name: user.name,
+                _id: user._id,
+                status: user.status,
+                image: user.image,
+                notificationCount: userNotificationCount
+            };
             // console.log('Line 429, isFriend', user.friendsList, gotUser._id);
             return res.render('dashboard', {
                 pageTitle: `Dashboard | ${req.session.user.name}`,
                 gotUser: gotUser,
-                user: user,
+                user: userDetails,
                 workSpaces: user.workSpaces,
                 loadOnDefault: true,
                 friends: friendsDetails,
@@ -612,78 +679,67 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     
                     const workSpace = await WorkSpace.findOne({endPoint: dataNs.nsEndPoint});
                     const roomId = workSpace.rooms[0].toString();
-                    if(user.joinedRoom !== undefined) {
+                    if(user.joinedRoom !== undefined && user.joinedRoom.toString() !== roomId.toString()) {
+                        const user = await User.findOne({email: req.session.user.email});
+
                         nsSocket.leave(user.joinedRoom, async() => {
-                            // const clients = nsSocket.adapter.rooms[user.joinedRoom];
-                            // io.of(user.lastNsEndPoint).to(user.joinedRoom).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
-                            user.joinedRoom = roomId;
-                            await user.save();
                             nsSocket.join(roomId, async () => {
                                 const room = await Room.findById(roomId);
                                 let rooms = Object.keys(nsSocket.rooms);
                                 // console.log(rooms); // [ <socket.id>, 'room 237' ]
-                                callback(room);
+                                user.joinedRoom = roomId;
+                                await user.save();
                                 nsp.in(roomId).clients((err, clients) => {
                                     // nsSocket.broadcast.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
                                     nsp.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
                                 });
+                                callback(room);
                             });
                         });
                     } else {
-                        user.joinedRoom = roomId;
-                        await user.save();
                         nsSocket.join(roomId, async () => {
+                            const user = await User.findOne({email: req.session.user.email});
                             const room = await Room.findById(roomId);
-                            let rooms = Object.keys(nsSocket.rooms);
-                            // console.log(rooms); // [ <socket.id>, 'room 237' ]
-                            callback(room);
+                            user.joinedRoom = roomId;
+                            await user.save();
                             nsp.in(roomId).clients((err, clients) => {
                                 // nsSocket.broadcast.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
                                 nsp.to(roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
                             });
+                            callback(room);
                           });
                     }
-                    // await user.save();
                 })
 
-                nsSocket.on('joinRoom', async (data, callback) => {
-                    console.log('Line 350', nsSocket.id);
-                    
-                    if(!user.joinedRoom) {
+                nsSocket.on('leaveRoom', async (data, callback) => {
+                    nsSocket.leave(data.roomId, async() => {
+                        const user = await User.findOne({email: req.session.user.email});
+                        const clients = nsSocket.adapter.rooms[user.joinedRoom];
+                        nsp.to(data.roomId).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
+                        user.joinedRoom = undefined;
+                        await user.save();
+                        callback({type: "success"});
+                    })
+                })
+
+                nsSocket.on('roomClients', async(data, callback) => {
+                    nsp.in(data.roomId).clients((err, clients) => {
+                        callback(clients);
+                    });
+                })
+
+                nsSocket.on('joinRoom', async(data, callback) => {
+                    nsSocket.join(data.roomId, async () => {
+                        const user = await User.findOne({email: req.session.user.email});
+                        const room = await Room.findById(data.roomId);
+                        nsp.in(data.roomId).clients((err, clients) => {
+                            // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                            nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                        });
                         user.joinedRoom = data.roomId;
                         await user.save();
-                        nsSocket.join(data.roomId, async () => {
-                            const room = await Room.findById(data.roomId);
-                            let rooms = Object.keys(nsSocket.rooms);
-                            // console.log(rooms); // [ <socket.id>, 'room 237' ]
-                            callback(room);
-                            nsp.in(data.roomId).clients((err, clients) => {
-                                // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
-                                nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
-                            });
-                          });
-                    } else {
-                        
-                        // console.log('Line 360', user.joinedRoom.toString(), data.roomId.toString());
-                        if(user.joinedRoom.toString() !== data.roomId.toString()) {
-                            nsSocket.leave(user.joinedRoom, async() => {
-                                const clients = nsSocket.adapter.rooms[user.joinedRoom];
-                                nsp.to(user.joinedRoom).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
-                                user.joinedRoom = data.roomId;
-                                await user.save();
-                                nsSocket.join(data.roomId, async () => {
-                                    const room = await Room.findById(data.roomId);
-                                    let rooms = Object.keys(nsSocket.rooms);
-                                    // console.log(rooms); // [ <socket.id>, 'room 237' ]
-                                    callback(room);
-                                    nsp.in(data.roomId).clients((err, clients) => {
-                                        // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
-                                        nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
-                                    });
-                                });
-                            });
-                        }
-                    }
+                        callback(room);
+                    })
                 })
 
 
@@ -691,21 +747,27 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 nsSocket.on('disconnect', async () => {
 
                     nsp.emit('disconnected', {data: 'Disconnected!', user: req.session.user.name});
-                    
-                    const clients = nsSocket.adapter.rooms[user.joinedRoom];
-                    nsp.to(user.joinedRoom).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
-
                     const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
 
                     if(!workSpace) {
                         throw new Error('Invalid Workspace From Line 322 in dashboardController.js!');
                     }
 
+
+                    nsSocket.leave(user.joinedRoom, async() => {
+                        const clients = nsSocket.adapter.rooms[user.joinedRoom];
+                        nsp.to(user.joinedRoom).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
+                    });
+
                     user.connectedDetails = undefined;
                     user.joinedRoom = undefined;
                     user.status = 'offline';
                     
                     await user.save();
+
+                    // setTimeout(async () => {
+                    //     await user.save();
+                    // }, 3000);
 
                     setTimeout(async() => {
                         // Update your status to all of your friends
@@ -750,16 +812,28 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
             .populate('friendsList') // <==
             .exec(function(err, user){
                 const friendsDetails = user.friendsList.map((cur) => {
+                    const arr = user.notifications.list.filter(cur1 => {
+                        return (cur1.notificationType === 'rcvd_msg' && cur1.userDetails.userId.toString() === cur._id.toString());
+                    });
                     return {
                         _id: cur._id,
                         name: cur.name,
                         image: cur.image,
-                        status: cur.status
+                        status: cur.status,
+                        notificationCount: arr.length
                     }
                 });
+                const userNotificationCount = user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length;
+                const userDetails  = {
+                    name: user.name,
+                    _id: user._id,
+                    status: user.status,
+                    image: user.image,
+                    notificationCount: userNotificationCount
+                };
                 return res.render('dashboard', {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
-                    user: user,
+                    user: userDetails,
                     loadOnDefault: false,
                     workSpaces: user.workSpaces,
                     friends: friendsDetails,

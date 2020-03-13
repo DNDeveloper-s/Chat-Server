@@ -1,7 +1,9 @@
 const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
 const { copyToClipboard, loader } = require('../../utilities');
-const { addFriend, loadNotifications, removeFriend, addMessageModal } = require('../User/friend');
+const { addFriend, removeFriend } = require('../User/friend');
+const { loadNotifications } = require('../User/notification');
+const { addMessageModal } = require('../User/message');
 
 const addModal = (el, options) => {
     const rootEl = document.getElementById('root');

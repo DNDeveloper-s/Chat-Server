@@ -1,5 +1,7 @@
 const io = require('socket.io-client');
-const { updateNotificationCount, pushRecievedMessageToUI, updateStatus, showTypingStatus } = require('../User/friend'); 
+const { updateStatus } = require('../User/friend'); 
+const { updateNotificationCount } = require('../User/notification'); 
+const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
 
 const { showRooms, loadRoom, addNewRoom, deleteRooom, updateClients } = require('../Room/roomUI'); 
 // const { joinRoom } = require('../Room/addRoom');
@@ -94,6 +96,11 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket.on('disconnected', function(data) {
         console.log(data);
+        // updateClients(data.clients.length);
+        const roomId = document.querySelector('.room-details').dataset.roomid;
+        nsSocket.emit('roomClients', {roomId: roomId}, (data) => {
+            updateClients(data.length);
+        })
     });
 
     nsSocket.on('roomJoined', data => {
@@ -104,7 +111,7 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket.on('roomLeft', data => {
         // console.clear();
-        console.log(data.clients.length, data.data);
+        console.log(data.clients);
         updateClients(data.clients.length);
     })
     
