@@ -714,7 +714,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 .exec((err, workSpace) => {
                     // Preparing rooms for notifications
                     const roomDetails = workSpace.rooms.map(cur => {
-                        const msgToRoom = user.notifications.list.filter(cur1 => cur1.roomId.toString() === cur._id.toString() && cur1.notificationType === 'msgToRoom');
+                        const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
                         if(msgToRoom.length > 0) {
                             return {
                                 _id: cur._id,
@@ -749,6 +749,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                                 const room = await Room.findById(roomId);
                                 let rooms = Object.keys(nsSocket.rooms);
                                 // console.log(rooms); // [ <socket.id>, 'room 237' ]
+                                user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== roomId);
+                                user.notifications.count = user.notifications.list.length;
                                 user.joinedRoom = roomId;
                                 await user.save();
                                 nsp.in(roomId).clients((err, clients) => {
@@ -762,6 +764,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                         nsSocket.join(roomId, async () => {
                             const user = await User.findOne({email: req.session.user.email});
                             const room = await Room.findById(roomId);
+                            user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== roomId);
+                            user.notifications.count = user.notifications.list.length;
                             user.joinedRoom = roomId;
                             await user.save();
                             nsp.in(roomId).clients((err, clients) => {
@@ -794,6 +798,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     nsSocket.join(data.roomId, async () => {
                         const user = await User.findOne({email: req.session.user.email});
                         const room = await Room.findById(data.roomId);
+                        user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== data.roomId.toString());
+                        user.notifications.count = user.notifications.list.length;
                         nsp.in(data.roomId).clients((err, clients) => {
                             // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
                             nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 

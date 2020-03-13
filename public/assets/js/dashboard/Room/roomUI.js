@@ -76,6 +76,19 @@ function loadRoom(roomDetails) {
     loadMessageToRoom(roomDetails.messages);
     curRoomName.innerHTML = roomDetails.name.toUpperCase();
 
+    // Removing Notifications
+    const room = document.querySelector(`.room[data-id="${roomDetails._id}"]`);
+    if(room) {
+        room.querySelector('.room-notification').dataset.nothing = "true";
+        const notifiedRoom = document.querySelectorAll('.nameSpaceDetails-Room_container .room-notification[data-nothing="false"]');
+        console.log(notifiedRoom);
+        if(notifiedRoom.length === 0) {
+            const currentNs = document.querySelector('.nameSpaceDetails-Room_container').dataset.nsendpoint;
+            const nsToRemove = document.querySelector(`.name_space[data-ns="${currentNs}"]`);
+            nsToRemove.querySelector('.ns-notification').dataset.nothing = "true";
+        }
+    }
+
     // Injecting Room Id
     const roomContainer = document.querySelector('.room-details');
     const msgDispContainer = document.querySelector('.message-display__container');
@@ -171,7 +184,9 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint) {
         // 1. When the client is in the same workspace but same room
         // if(nsContainer) {
             const room = roomContainer.querySelector(`.room[data-id="${roomId}"]`);
-            room.querySelector('.room-notification').dataset.nothing = "false";
+            if(room) {
+                room.querySelector('.room-notification').dataset.nothing = "false";
+            }
             const ns = nameSpaceContainer.querySelector(`.name_space[data-ns="${nsEndPoint}"]`);
             console.log(ns, nsEndPoint);
             ns.querySelector('.ns-notification').dataset.nothing = "false";

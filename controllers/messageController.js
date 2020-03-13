@@ -143,7 +143,6 @@ exports.postMessages = async(req, res, next) => {
                     return next('Invalid Workspace!');
                 }
                 workSpace.roles.members.forEach(async (member) => {
-                    const user = await User.findOne({email: req.session.user.email});
 
                     // Handling cases where members are online     /- Pushing to UI -/
                     io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('messageToRoom', {
@@ -153,13 +152,14 @@ exports.postMessages = async(req, res, next) => {
                         messageObj: messageObj
                     })
 
-                    // Not emitting to the cur User
-                    if(user._id.toString() !== member._id.toString() && member.joinedRoom.toString() !== roomId.toString()) {
 
-                        const memberUser = await User.findById(member._id);
+                    const memberUser = await User.findById(member._id);
+                    
+                    // Not emitting to the cur User
+                    if(memberUser.status === "offline" || (user._id.toString() !== member._id.toString() && member.joinedRoom.toString() !== roomId.toString())) {
 
                         // Checking if the notification is already exists for the same room
-                        const isAlreadyExists = memberUser.notifications.list.filter(cur => cur.roomId.toString() === roomId.toString() && cur.notificationType === 'msgToRoom');
+                        const isAlreadyExists = memberUser.notifications.list.filter(cur => cur.notificationType === 'msgToRoom' && cur.roomId.toString() === roomId.toString());
 
                         if(!isAlreadyExists.length > 0) {
                             // Handling cases where members are offline or online     /- Pushing to notifications -/
