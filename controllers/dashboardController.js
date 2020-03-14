@@ -792,14 +792,14 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 })
 
                 nsSocket.on('leaveRoom', (data, callback) => {
-                    nsSocket.leave(data.roomId, () => {
-                        User.findOne({email: req.session.user.email})
-                            .then(user => {
-                                user.joinedRoom = undefined;
-                                return user.save();
-                            })
-                        const clients = nsSocket.adapter.rooms[user.joinedRoom];
+                    nsSocket.leave(data.roomId, async () => {
+                        const user = await User.findOne({email: req.session.user.email})
+                            // .then(user => {
+                            // })
+                        const clients = nsSocket.adapter.rooms[data.roomId];
                         nsp.to(data.roomId).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
+                        user.joinedRoom = undefined;
+                        user.save();
                         callback({type: "success"});
                     })
                 })

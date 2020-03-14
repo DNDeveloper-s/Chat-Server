@@ -167,33 +167,7 @@ exports.postMessages = async(req, res, next) => {
             const message = req.body.message;
             const time = req.body.time;
 
-            const user = await User.findOne({email: req.session.user.email});
-
-            const messageObj = {
-                user: {
-                    id: user._id,
-                    name: user.name,
-                    image: user.image
-                },
-                body: message,
-                time: time
-            }
-
-            const room = await Room.findById(roomId);
-
-            if(!room) {
-                return next('Invalid Room!');
-            }
-
-            room.messages.push(messageObj);
-            await room.save();
-
-            // io.of(nsEndPoint).to(roomId).emit('messageToRoom', {
-            //     type: "toRoom",
-            //     messageObj: messageObj
-            // });
-
-            await WorkSpace.findOne({endPoint: nsEndPoint})
+            WorkSpace.findOne({endPoint: nsEndPoint})
             .populate('roles.members')
             .exec((err, workSpace) => {
                 if(!workSpace) {
@@ -246,6 +220,32 @@ exports.postMessages = async(req, res, next) => {
                 })
 
             })
+
+            const user = await User.findOne({email: req.session.user.email});
+
+            const messageObj = {
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    image: user.image
+                },
+                body: message,
+                time: time
+            }
+
+            const room = await Room.findById(roomId);
+
+            if(!room) {
+                return next('Invalid Room!');
+            }
+
+            room.messages.push(messageObj);
+            await room.save();
+
+            // io.of(nsEndPoint).to(roomId).emit('messageToRoom', {
+            //     type: "toRoom",
+            //     messageObj: messageObj
+            // });
         }
 
     } catch(e) {

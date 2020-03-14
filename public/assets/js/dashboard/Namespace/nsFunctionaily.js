@@ -158,8 +158,26 @@ async function connectToNs(nsEndPoint) {
         updateClients(data.clients.length);
     });
 
-    nsSocket.on('messageToRoom', data => {
+    nsSocket.on('messageToRoom', async(data) => {
         if(data.type === "toAllConnectedClients") {
+
+            // Working with sessionStorage
+            let jsonRooms = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
+            if(!jsonRooms) {
+                await fetchRooms(data.nsEndPoint);
+                jsonRooms = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
+            }
+            let rooms = JSON.parse(jsonRooms);
+            const room = rooms.filter(cur => cur._id.toString() === data.roomId.toString());
+            rooms = rooms.map(cur => {
+                if(cur._id.toString() === data.roomId.toString()) {
+                    cur.messages.push(data.messageObj);
+                    return cur;
+                }
+                return cur;
+            });
+            sessionStorage.setItem(`nsRooms-${data.nsEndPoint}`, JSON.stringify(rooms));
+
             addMessageToRoom(data.messageObj, data.roomId, data.nsEndPoint);
         }
     });
