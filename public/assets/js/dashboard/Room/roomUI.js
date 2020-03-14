@@ -55,7 +55,8 @@ function addRooms(roomDetails) {
         
         joinRoom({
             nsId: roomDetails.workSpaceId,
-            roomId: roomDetails._id
+            roomId: roomDetails._id,
+            nsEndPoint: roomDetails.endPoint
         });
     })
 

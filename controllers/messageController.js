@@ -7,7 +7,7 @@ const User = require('../models/User');
 exports.fetchMessages = async (req, res, next) => {
     const direct = req.query.direct;
     const userId = req.query.userId;
-    const byNs = req.query.byNs;
+    // const byNs = req.query.byNs;
 
 
     if(direct) {
@@ -27,53 +27,53 @@ exports.fetchMessages = async (req, res, next) => {
         })
     }
 
-    if(byNs) {
-        const nsEndPoint = req.query.nsEndPoint;
-        const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+    // if(byNs) {
+    //     const nsEndPoint = req.query.nsEndPoint;
+    //     const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
 
-        const user = await User.findOne({email: req.session.user.email});
+    //     const user = await User.findOne({email: req.session.user.email});
 
-        if(!workSpace) {    
-            return next('Invalid Workspace');
-        }
+    //     if(!workSpace) {    
+    //         return next('Invalid Workspace');
+    //     }
 
-        if(user.workSpaces.includes(workSpace._id.toString())) {
+    //     if(user.workSpaces.includes(workSpace._id.toString())) {
 
-            await WorkSpace.findOne({endPoint: nsEndPoint})
-            .populate('rooms')
-            .exec((err, workSpace) => {
-                if(err) {
-                    return next('Internal Error!');
-                }
-                const roomMessages = workSpace.rooms.map(cur => {
-                    return {
-                        _id: cur._id,
-                        name: cur.name,
-                        messages: cur.messages
-                    }
-                })
+    //         await WorkSpace.findOne({endPoint: nsEndPoint})
+    //         .populate('rooms')
+    //         .exec((err, workSpace) => {
+    //             if(err) {
+    //                 return next('Internal Error!');
+    //             }
+    //             const roomMessages = workSpace.rooms.map(cur => {
+    //                 return {
+    //                     _id: cur._id,
+    //                     name: cur.name,
+    //                     messages: cur.messages
+    //                 }
+    //             })
 
-                function toObject(arr) {
-                    var rv = {};
-                    for (var i = 0; i < arr.length; ++i)
-                        if (arr[i] !== undefined) {
-                            // const name = arr[i].name
-                            rv[arr[i]._id] = arr[i].messages;
-                        }
-                    return rv;
-                }
+    //             function toObject(arr) {
+    //                 var rv = {};
+    //                 for (var i = 0; i < arr.length; ++i)
+    //                     if (arr[i] !== undefined) {
+    //                         // const name = arr[i].name
+    //                         rv[arr[i]._id] = arr[i].messages;
+    //                     }
+    //                 return rv;
+    //             }
 
-                const msgs = toObject(roomMessages);
+    //             const msgs = toObject(roomMessages);
 
-                return res.json({
-                    acknowledgment: {
-                        type: 'success',
-                        message: 'Succesfully fetched all message of the workspace',
-                        rooms: msgs
-                    }
-                })
-            }); 
-        }
+    //             return res.json({
+    //                 acknowledgment: {
+    //                     type: 'success',
+    //                     message: 'Succesfully fetched all message of the workspace',
+    //                     rooms: msgs
+    //                 }
+    //             })
+    //         }); 
+    //     }
         // return res.json({
         //     acknowledgment: {
         //         type: 'success',
@@ -81,7 +81,7 @@ exports.fetchMessages = async (req, res, next) => {
         //         workSpaces: user.workSpaces
         //     }
         // })
-    }
+    // }
 
 }
 

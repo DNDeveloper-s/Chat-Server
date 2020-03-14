@@ -350,7 +350,8 @@ exports.workSpaceFunctions = async(req, res, next) => {
             workSpaceTitle: workSpace.title,
             name: room.name,
             privacy: room.privacy,
-            nothing: true
+            nothing: true,
+            messages: room.messages
         };
 
         nsp.emit('roomCreated', {
@@ -790,13 +791,15 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     }
                 })
 
-                nsSocket.on('leaveRoom', async (data, callback) => {
-                    nsSocket.leave(data.roomId, async() => {
-                        const user = await User.findOne({email: req.session.user.email});
+                nsSocket.on('leaveRoom', (data, callback) => {
+                    nsSocket.leave(data.roomId, () => {
+                        User.findOne({email: req.session.user.email})
+                            .then(user => {
+                                user.joinedRoom = undefined;
+                                return user.save();
+                            })
                         const clients = nsSocket.adapter.rooms[user.joinedRoom];
                         nsp.to(data.roomId).emit('roomLeft', {clients: clients, data: 'a User left the room!'}); // broadcast to everyone in the room
-                        user.joinedRoom = undefined;
-                        await user.save();
                         callback({type: "success"});
                     })
                 })
@@ -807,21 +810,42 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     });
                 })
 
+                // Updated for session Store
                 nsSocket.on('joinRoom', async(data, callback) => {
                     nsSocket.join(data.roomId, async () => {
-                        const user = await User.findOne({email: req.session.user.email});
-                        const room = await Room.findById(data.roomId);
-                        user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== data.roomId.toString());
-                        user.notifications.count = user.notifications.list.length;
+                        User.findOne({email: req.session.user.email})
+                            .then((user) => {
+                                user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== data.roomId.toString());
+                                user.notifications.count = user.notifications.list.length;
+                                user.joinedRoom = data.roomId;
+                                return user.save();
+                            })
+                            .catch(e => {
+                                return next(e);
+                            })
                         nsp.in(data.roomId).clients((err, clients) => {
                             // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
                             nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
                         });
-                        user.joinedRoom = data.roomId;
-                        await user.save();
-                        callback(room);
+                        callback();
                     })
                 })
+
+                // nsSocket.on('joinRoom', async(data, callback) => {
+                //     nsSocket.join(data.roomId, async () => {
+                //         const user = await User.findOne({email: req.session.user.email});
+                //         const room = await Room.findById(data.roomId);
+                //         user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== data.roomId.toString());
+                //         user.notifications.count = user.notifications.list.length;
+                //         nsp.in(data.roomId).clients((err, clients) => {
+                //             // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                //             nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                //         });
+                //         user.joinedRoom = data.roomId;
+                //         await user.save();
+                //         callback(room);
+                //     })
+                // })
 
 
                 // On Disconnection, Updating Namespace clients
@@ -974,8 +998,12 @@ exports.fetchDetails = async (req, res, next) => {
                         return {
                             _id: cur._id,
                             name: cur.name,
+                            workSpaceId: workSpace._id,
+                            endPoint: nsEndPoint,
+                            workSpaceTitle: workSpace.title,
                             privacy: cur.privacy,
-                            nothing: false
+                            nothing: false,
+                            messages: cur.messages
                         }
                     }
                     return {
@@ -985,7 +1013,8 @@ exports.fetchDetails = async (req, res, next) => {
                         workSpaceTitle: workSpace.title,
                         name: cur.name,
                         privacy: cur.privacy,
-                        nothing: true
+                        nothing: true,
+                        messages: cur.messages
                     }
                 })
 

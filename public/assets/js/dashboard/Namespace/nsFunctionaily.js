@@ -37,11 +37,11 @@ async function connectToNs(nsEndPoint) {
     nsSocket = io(`${window.location.origin}${nsEndPoint}`);
     console.log('Connecting to NS!', nsSocket);
 
-    // Working with sessionStorage
-    const messages = sessionStorage.getItem(`nsMessages-${nsEndPoint}`);
-    if(!messages) {
-        fetchAllMessages(nsEndPoint);
-    }
+    // // Working with sessionStorage
+    // const messages = sessionStorage.getItem(`nsMessages-${nsEndPoint}`);
+    // if(!messages) {
+    //     fetchAllMessages(nsEndPoint);
+    // }
 
     // Listeing all Socket Events
     nsSocket.on('clients', function(data) {
@@ -207,18 +207,18 @@ async function nsListeners() {
     })
 }
 
-async function fetchAllMessages(nsEndPoint) {
+// async function fetchAllMessages(nsEndPoint) {
     
-    const res = await fetch(`${window.location.origin}/message/fetch?byNs=true&nsEndPoint=${nsEndPoint}`, {
-        method: "GET"
-    });
+//     const res = await fetch(`${window.location.origin}/message/fetch?byNs=true&nsEndPoint=${nsEndPoint}`, {
+//         method: "GET"
+//     });
 
-    const data = await res.json();
+//     const data = await res.json();
     
-    console.log(data);
+//     console.log(data);
 
-    sessionStorage.setItem(`nsMessages-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
-}
+//     sessionStorage.setItem(`nsMessages-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
+// }
 
 async function fetchRooms(nsEndPoint) {
     
@@ -234,4 +234,4 @@ async function fetchRooms(nsEndPoint) {
 }
 
 
-module.exports = { connectToNs, nsListeners, getNsSocket };
+module.exports = { connectToNs, nsListeners, fetchRooms, getNsSocket };
