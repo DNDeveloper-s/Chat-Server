@@ -4,7 +4,7 @@ const { updateNotificationCount } = require('../User/notification');
 const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
 const { addMessageToRoom } = require('../Room/roomUI'); 
 
-const { showRooms, loadRoom, addNewRoom, deleteRooom, updateClients } = require('../Room/roomUI'); 
+const { showRooms, loadRoom, addNewRoom, addRooms, deleteRooom, updateClients } = require('../Room/roomUI'); 
 // const { joinRoom } = require('../Room/addRoom');
 
 let nsSocket;
@@ -28,18 +28,22 @@ async function connectToNs(nsEndPoint) {
     const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
     nsContainer.dataset.nsendpoint = nsEndPoint;
     
+    // Loading Connected Namespace
     await fetch(`${window.location.origin}/dashboard/workspace?isLoad=true&nsEndPoint=${nsEndPoint}`, {
         method: "GET"
     });
 
+    // Creating connection to socket.io with custom namespace - 'nsEndPoint'
     nsSocket = io(`${window.location.origin}${nsEndPoint}`);
-
     console.log('Connecting to NS!', nsSocket);
 
-    // nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
-    //     loadRoom(roomData);
-    // });
+    // Working with sessionStorage
+    const messages = sessionStorage.getItem(`nsMessages-${nsEndPoint}`);
+    if(!messages) {
+        fetchAllMessages(nsEndPoint);
+    }
 
+    // Listeing all Socket Events
     nsSocket.on('clients', function(data) {
         console.log(data);
     });
@@ -48,8 +52,17 @@ async function connectToNs(nsEndPoint) {
         console.log(data);
     });
 
-    nsSocket.on('connectedToNamespace', function(data) {
-        showRooms(data.rooms, data.workSpace);
+    nsSocket.on('connectedToNamespace', async function(data) {
+
+        // Working with sessionStorage
+        let jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
+        if(!jsonRooms) {
+            await fetchRooms(nsEndPoint);
+            jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
+        }
+        const rooms = JSON.parse(jsonRooms);
+        console.log(rooms);
+        showRooms(rooms);
 
         nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
             console.log(roomData);
@@ -59,8 +72,8 @@ async function connectToNs(nsEndPoint) {
         // Injecting the Namespace Name
         const nameSpaceNameHolder = document.querySelector('.namespace-name > .namespace-event > h3');
         const nsOptions = document.querySelector('.namespace-name > .ns-options.dropdown');
-        nameSpaceNameHolder.innerHTML = data.workSpace.title.toUpperCase();
-        nsOptions.dataset.id =  data.workSpace.endPoint;
+        nameSpaceNameHolder.innerHTML = rooms[0].workSpaceTitle.toUpperCase();
+        nsOptions.dataset.id =  rooms.endPoint;
 
         // Removing the blur effect
         root.classList.remove('namespace-interchange');
@@ -88,12 +101,38 @@ async function connectToNs(nsEndPoint) {
         }
     });
 
-    nsSocket.on('roomCreated', data => {
+    nsSocket.on('roomCreated', async(data) => {
+
+        // Working with sessionStorage
+        let jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
+        if(!jsonRooms) {
+            await fetchRooms(nsEndPoint);
+            jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
+        }
+        const rooms = JSON.parse(jsonRooms);
+
+        // Same room schema data for session storage
+        rooms.push(data.roomDetails);
+        sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(rooms));
+        console.log(rooms);
+        
         console.log(data);
-        addNewRoom(data.roomDetails, data.workSpace);
+        addRooms(data.roomDetails);
     });
 
-    nsSocket.on('roomDeleted', data => {
+    nsSocket.on('roomDeleted', async(data) => {
+
+        // Working with sessionStorage
+        let jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
+        if(!jsonRooms) {
+            await fetchRooms(nsEndPoint);
+            jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
+        }
+        let rooms = JSON.parse(jsonRooms);
+        console.log(rooms);
+        rooms = rooms.filter(cur => cur._id.toString() !== data.roomId.toString());
+        sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(rooms));
+
         console.log(data);
         deleteRooom(data);
     });
@@ -167,5 +206,32 @@ async function nsListeners() {
         });
     })
 }
+
+async function fetchAllMessages(nsEndPoint) {
+    
+    const res = await fetch(`${window.location.origin}/message/fetch?byNs=true&nsEndPoint=${nsEndPoint}`, {
+        method: "GET"
+    });
+
+    const data = await res.json();
+    
+    console.log(data);
+
+    sessionStorage.setItem(`nsMessages-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
+}
+
+async function fetchRooms(nsEndPoint) {
+    
+    const res = await fetch(`${window.location.origin}/dashboard/fetch?rooms=true&nsEndPoint=${nsEndPoint}`, {
+        method: "GET"
+    });
+
+    const data = await res.json();
+    
+    console.log(data);
+
+    sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
+}
+
 
 module.exports = { connectToNs, nsListeners, getNsSocket };

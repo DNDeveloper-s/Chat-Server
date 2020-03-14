@@ -341,9 +341,20 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
         await workSpace.save();
 
+        // Preapring room details for sessionStorage Schema
+        // Preparing rooms for notifications
+        const roomDetails = {
+            _id: room._id,
+            workSpaceId: workSpace._id,
+            endPoint: nsEndPoint,
+            workSpaceTitle: workSpace.title,
+            name: room.name,
+            privacy: room.privacy,
+            nothing: true
+        };
+
         nsp.emit('roomCreated', {
-            roomDetails: room,
-            workSpace: workSpace
+            roomDetails: roomDetails
         })
 
         return res.json({
@@ -708,30 +719,32 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 })
 
 
-                // Fetch all rooms
-                await WorkSpace.findOne({endPoint: nsEndPoint})
-                .populate('rooms')
-                .exec((err, workSpace) => {
-                    // Preparing rooms for notifications
-                    const roomDetails = workSpace.rooms.map(cur => {
-                        const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
-                        if(msgToRoom.length > 0) {
-                            return {
-                                _id: cur._id,
-                                name: cur.name,
-                                privacy: cur.privacy,
-                                nothing: false
-                            }
-                        }
-                        return {
-                            _id: cur._id,
-                            name: cur.name,
-                            privacy: cur.privacy,
-                            nothing: true
-                        }
-                    })
-                    nsSocket.emit('connectedToNamespace', {rooms: roomDetails, workSpace: workSpace  , type: 'fetchedRooms'});
-                })
+                // // Fetch all rooms
+                // await WorkSpace.findOne({endPoint: nsEndPoint})
+                // .populate('rooms')
+                // .exec((err, workSpace) => {
+                //     // Preparing rooms for notifications
+                //     const roomDetails = workSpace.rooms.map(cur => {
+                //         const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
+                //         if(msgToRoom.length > 0) {
+                //             return {
+                //                 _id: cur._id,
+                //                 name: cur.name,
+                //                 privacy: cur.privacy,
+                //                 nothing: false
+                //             }
+                //         }
+                //         return {
+                //             _id: cur._id,
+                //             name: cur.name,
+                //             privacy: cur.privacy,
+                //             nothing: true
+                //         }
+                //     })
+                //     nsSocket.emit('connectedToNamespace', {rooms: roomDetails, workSpace: workSpace  , type: 'fetchedRooms'});
+                // })
+
+                nsSocket.emit('connectedToNamespace', {type: 'fetchedRooms'});
                 
 
                 nsSocket.on('joinDefaultRoom', async(dataNs, callback) => {
@@ -930,15 +943,74 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         } catch (e) {
             return next(e.message);
         }
+    }
+}
 
+exports.fetchDetails = async (req, res, next) => {
+    const rooms = req.query.rooms;
+    if(rooms) {
+        const nsEndPoint = req.query.nsEndPoint;
+        const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
 
+        const user = await User.findOne({email: req.session.user.email});
 
-        // return res.json({
-        //     acknowledgment: {
-        //         type: 'success',
-        //         message: 'Succesfully Posted the Workspace!'
-        //     }
-        // });
+        if(!workSpace) {    
+            return next('Invalid Workspace');
+        }
+
+        if(user.workSpaces.includes(workSpace._id.toString())) {
+
+            await WorkSpace.findOne({endPoint: nsEndPoint})
+            .populate('rooms')
+            .exec((err, workSpace) => {
+                // Checking for internal error
+                if(err) {
+                    return next('Internal Error!');
+                }
+                // Preparing rooms for notifications
+                const roomDetails = workSpace.rooms.map(cur => {
+                    const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
+                    if(msgToRoom.length > 0) {
+                        return {
+                            _id: cur._id,
+                            name: cur.name,
+                            privacy: cur.privacy,
+                            nothing: false
+                        }
+                    }
+                    return {
+                        _id: cur._id,
+                        workSpaceId: workSpace._id,
+                        endPoint: nsEndPoint,
+                        workSpaceTitle: workSpace.title,
+                        name: cur.name,
+                        privacy: cur.privacy,
+                        nothing: true
+                    }
+                })
+
+                // // Converting array to object
+                // function toObject(arr) {
+                //     var rv = {};
+                //     for (var i = 0; i < arr.length; ++i)
+                //         if (arr[i] !== undefined) {
+                //             // const name = arr[i].name
+                //             rv[arr[i]._id] = arr[i];
+                //         }
+                //     return rv;
+                // }
+                // const rooms = toObject(roomDetails);
+
+                // Response JSON data
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        message: 'Succesfully fetched all rooms of the workspace',
+                        rooms: roomDetails,
+                    }
+                })
+            }); 
+        }
     }
 }
 

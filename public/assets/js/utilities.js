@@ -119,7 +119,6 @@ const loader = () => {
     })
 };
 
-
 module.exports = { 
     bgAnim, 
     toggleAuthFormUI ,

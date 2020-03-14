@@ -6,6 +6,10 @@ const { addFriend, addMessageModal } = require('./dashboard/User/friend');
 
 nsListeners();
 
+Array.prototype.deleteItem = function(item) {
+    return this.filter(cur => cur.toString() !== item.toString())
+}
+
 function defaultModal() {
     const rootEl = document.querySelector('#root');
     const modalEl = rootEl.querySelector('.modal');

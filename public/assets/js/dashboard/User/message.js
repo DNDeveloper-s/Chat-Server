@@ -307,17 +307,6 @@ async function postMessageToRoom(roomId, nsEndPoint, messageInput, time) {
     // }
 }
 
-module.exports = {
-    addReplyModal,
-    addMessageModal,
-    pushRecievedMessageToUI,
-    fetchMesages,
-    postMessages,
-    showMessageToUI,
-    showTypingStatus,
-    messageToRoomHandler   
-}
-
 function tConvert (time) {
     // Check correct time format and split into components
     time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)?$/) || [time];
@@ -328,4 +317,15 @@ function tConvert (time) {
       time[0] = +time[0] % 12 || 12; // Adjust hours
     }
     return time.join (''); // return adjusted time or original string
+}
+
+  module.exports = {
+      addReplyModal,
+      addMessageModal,
+      pushRecievedMessageToUI,
+      fetchMesages,
+      postMessages,
+      showMessageToUI,
+      showTypingStatus,
+      messageToRoomHandler   
   }
