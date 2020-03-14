@@ -73,7 +73,7 @@ async function connectToNs(nsEndPoint) {
         const nameSpaceNameHolder = document.querySelector('.namespace-name > .namespace-event > h3');
         const nsOptions = document.querySelector('.namespace-name > .ns-options.dropdown');
         nameSpaceNameHolder.innerHTML = rooms[0].workSpaceTitle.toUpperCase();
-        nsOptions.dataset.id =  rooms.endPoint;
+        nsOptions.dataset.id =  rooms[0].endPoint;
 
         // Removing the blur effect
         root.classList.remove('namespace-interchange');

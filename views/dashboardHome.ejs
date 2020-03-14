@@ -10,14 +10,14 @@
         <div class="nav_bar">
             <div class="userDetails-NameSpace_container">
                 <!-- User Details Container -->
-                <div class="user_dp image_holder userLink" data-userId="<%= user._id %>">
+                <div class="user_dp image_holder userLink remove_sidebar" data-userId="<%= user._id %>">
                     <img src="<%= user.image %>" alt="DNDeveloper">
                     <!-- Notification Count -->
-                    <div class="notification-count" data-nothing="<%= user.notificationCount == 0 ? 'true' : 'false' %>" ><%= user.notificationCount %></div>
+                    <div class="notification-count remove_sidebar" data-nothing="<%= user.notificationCount == 0 ? 'true' : 'false' %>" ><%= user.notificationCount %></div>
                 </div>
                 <hr>
                 <!-- Add New NameSpace Container -->
-                <div class="add-name_space image_holder">
+                <div class="add-name_space image_holder remove_sidebar">
                     <img src="/assets/images/add.png" alt="add-icon">
                 </div>
                 <hr>
@@ -58,10 +58,10 @@
                         <h3><%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : "" %></h3><i class="material-icons">arrow_drop_down</i>
                     </div>
                     <div class="ns-options dropdown">
-                        <div class="ns-option workspace-settings removeBackDropOnClick">
+                        <div class="ns-option workspace-settings removeBackDropOnClick remove_sidebar">
                             <p class="red">Workspace Settings</p>
                         </div>
-                        <div class="ns-option invite-friend removeBackDropOnClick">
+                        <div class="ns-option invite-friend removeBackDropOnClick remove_sidebar">
                             <p class="green">Invite Friend</p>
                         </div>
                     </div>
@@ -119,6 +119,12 @@
         <div class="main_bar">
             <!-- Room Details on top of the message container -->
             <div class="room-details">
+
+                <!-- Mobile Navigation -->
+                <div class="toggle-btn alignCenter">
+                    <i class="material-icons">menu</i>
+                </div>
+
                 <!-- Left Bar on top message -->
                 <div class="keepItLeft">
                     <div class="current-room-name">
@@ -136,6 +142,12 @@
                 <div class="keepItRight mob-drop-down">
                     <input type="text" class="search-bar" placeholder="Search here!">
                     <button class="pointer">Search</button>
+                </div>
+                <div class="friends-icon alignCenter">
+                    <i class="material-icons">person</i>
+                </div>
+                <div class="options-btn alignCenter">
+                    <i class="material-icons">more_vert</i>
                 </div>
             </div>
             <!-- Message display container -->
@@ -190,7 +202,7 @@
 
         <div class="friends-list">
             <% for(let friend of friends) { %>
-                <div class="friend pointer userLink" data-userId="<%= friend._id %>" data-status="<%= friend.status %>" data-profileurl="http://localhost:3000/dashboard/home">
+                <div class="friend pointer userLink remove_frndslist" data-userId="<%= friend._id %>" data-status="<%= friend.status %>" data-profileurl="http://localhost:3000/dashboard/home">
                     <span class="status"></span>
                     <img src="<%= friend.image %>" alt="<%= friend.name %>">
                     <div class="new-notification" data-nothing="<%= friend.notificationCount == 0 ? 'true' : 'false' %>" ><%= friend.notificationCount %></div>

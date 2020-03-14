@@ -61,6 +61,7 @@ exports.getDashboard = async (req, res, next) => {
             workSpaces: workSpaceDetails,
             config: user.config,
             friends: friendsDetails,
+            loggedIn: true
             // friendsList: user.friendsList
         });
     });
@@ -607,6 +608,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 isFriend: isFriend,
                 isItAuthenticatedUser: isItAuthenticatedUser,
                 config: user.config,
+                loggedIn: true
             });
         });
     }
@@ -961,7 +963,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     loadOnDefault: false,
                     workSpaces: workSpaceDetails,
                     friends: friendsDetails,
-                    config: user.config
+                    config: user.config,
+                    loggedIn: true
                 });
             });
         } catch (e) {

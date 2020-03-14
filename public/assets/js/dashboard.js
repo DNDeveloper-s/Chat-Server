@@ -3,6 +3,7 @@ require('./eventDashboards')();
 const { nsListeners } = require('./dashboard/Namespace/nsFunctionaily');
 const { addUserModal } = require('./dashboard/User/userUI'); 
 const { addFriend, addMessageModal } = require('./dashboard/User/friend');
+const { remove_sidebar } = require('./utilities');
 
 nsListeners();
 
@@ -59,6 +60,60 @@ function defaultModal() {
             removeModal();
         }
     }
+}
+
+function toggle_nav_on_mob() {
+    const rootEl = document.getElementById('root');
+    const toggle_btn = rootEl.querySelector('.toggle-btn');
+    const nav_bar = rootEl.querySelector('.nav_bar');
+    // Backdrop HTML
+    const backDropHtml = `<div class="back-drop sidebar"></div>`;
+
+    toggle_btn.addEventListener('click', function(e) {
+        nav_bar.classList.add('open');
+        rootEl.insertAdjacentHTML('afterbegin', backDropHtml);
+        const backDropEl = rootEl.querySelector('.back-drop.sidebar');
+        backDropEl.addEventListener('click', remove_sidebar);
+
+        const remove_sidebar_links = document.querySelectorAll('.remove_sidebar');
+        remove_sidebar_links.forEach(cur => {
+            cur.addEventListener('click', remove_sidebar);
+        })
+    });
+}
+
+function toggle_frnds_list() {
+    const rootEl = document.getElementById('root');
+    const toggle_frnds = rootEl.querySelector('.friends-icon');
+    // Backdrop HTML
+    const backDropHtml = `<div class="back-drop frndslist"></div>`;
+    
+    toggle_frnds.addEventListener('click', function(e) {
+        const frnds_list_container = rootEl.querySelector('.friends-list');
+        rootEl.insertAdjacentHTML('afterbegin', backDropHtml);
+        frnds_list_container.classList.add('open');
+        const backDropEl = rootEl.querySelector('.back-drop.frndslist');
+        backDropEl.addEventListener('click', remove_frndslist);
+
+        const remove_frndslist_links = document.querySelectorAll('.remove_frndslist');
+        remove_frndslist_links.forEach(cur => {
+            cur.addEventListener('click', remove_frndslist);
+        })
+    });
+
+}
+
+function remove_frndslist() {
+    const rootEl = document.getElementById('root');
+    const frnds_list_container = rootEl.querySelector('.friends-list');
+    const backDropEl = rootEl.querySelector('.back-drop.frndslist');
+    backDropEl.remove();
+    frnds_list_container.classList.remove('open');
+}
+
+if(window.innerWidth < 768) {
+    toggle_nav_on_mob();
+    toggle_frnds_list();
 }
 
 defaultModal();

@@ -40,7 +40,8 @@ exports.getAuth = async (req, res, next) => {
                 exists: true,
                 type: type,
                 message: message
-            }
+            },
+            loggedIn: true
         });
     }
     
@@ -48,7 +49,8 @@ exports.getAuth = async (req, res, next) => {
         pageTitle: 'Chat Authentication',
         acknowledgment: {
             exists: false
-        }
+        },
+        loggedIn: false
     });
 }
 

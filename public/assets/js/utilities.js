@@ -119,9 +119,20 @@ const loader = () => {
     })
 };
 
+function remove_sidebar() {
+    const rootEl = document.getElementById('root');
+    const backDropEl = rootEl.querySelector('.back-drop.sidebar');
+    if(backDropEl) {
+        const nav_bar = rootEl.querySelector('.nav_bar');
+        nav_bar.classList.remove('open');
+        backDropEl.remove();
+    }
+}
+
 module.exports = { 
     bgAnim, 
     toggleAuthFormUI ,
     copyToClipboard,
-    loader
+    loader,
+    remove_sidebar
 }

@@ -25,3 +25,44 @@ Blue Blossom (#2DA8D8FF) -- Body
 Crimson (#AE0E36FF) -- Header, 
 White (#FCF6F5FF) -- Background,
 Warm Gray (#A59C94FF) -- Body
+
+#No.-1
+Dark Green (#0A5E2AFF), 
+Light Green (#6DAC4FFF), 
+Star White (#EFEFE8FF) and 
+Red (#FE0000FF)
+
+#No.-1 -- No match
+Blue Sky (#ABD1C9FF), 
+Elation (#DFDCE5FF), 
+Nugget (#DBB04AFF) and 
+Celestial (#97B3D0FF)
+
+#No.-1
+Soft Pink (#FFDDE2FF), 
+Peach Amber (#FAA094FF), 
+Yucca (#9ED9CCFF) and 
+Arbor Green (#008C76FF)
+
+#No.-1
+Delphinium Blue (#669DB3FF), 
+White (#F0F6F7FF), 
+Atmosphere (#A89C94FF) and 
+Fiery Coral (#FF4F58FF)
+
+#292930
+#3EB650
+#FCC133
+#E12B38
+
+#E40C2B
+#1D1D2C
+#F7F4E9
+#3CBCC3
+#EBA63F
+#438945
+
+#E1F2F7
+#EF0D50
+#EB3A70
+#E5BACE
