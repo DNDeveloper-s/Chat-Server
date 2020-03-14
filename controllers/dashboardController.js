@@ -54,7 +54,7 @@ exports.getDashboard = async (req, res, next) => {
             image: user.image,
             notificationCount: userNotificationCount
         };
-        res.render('dashboard', {
+        res.render('dashboardHome', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
             user: userDetails,
             loadOnDefault: false,
@@ -597,7 +597,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 notificationCount: userNotificationCount
             };
             // console.log('Line 429, isFriend', user.friendsList, gotUser._id);
-            return res.render('dashboard', {
+            return res.render('dashboardHome', {
                 pageTitle: `Dashboard | ${req.session.user.name}`,
                 gotUser: gotUser,
                 user: userDetails,
@@ -955,7 +955,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     image: user.image,
                     notificationCount: userNotificationCount
                 };
-                return res.render('dashboard', {
+                return res.render('dashboardHome', {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
                     user: userDetails,
                     loadOnDefault: false,
