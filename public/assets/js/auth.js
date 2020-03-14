@@ -1,7 +1,8 @@
 const socket = require('socket.io-client');
 
 const { Moveit } = require('./moveIt');
- 
+const { connectToNs } = require('./dashboard/Namespace/nsFunctionaily');
+
 const regHandle = async () => {
     const name = document.getElementsByName('fullName')[0].value;
     const email = document.getElementsByName('email')[0].value;
@@ -76,10 +77,23 @@ const loginHandle = async () => {
 
     if(data.acknowledgment.type === "success") {
         console.log('Done!');
+
+        const res = await fetch(`${window.location.origin}/dashboard/workspace?defaultOne=true`, {
+            method: "GET"
+        });
+    
+        const data = await res.json();
+    
+        console.log(data);
+           
+        if(data.acknowledgment.config.defaultWorkSpace) {
+            window.location = `${location}/dashboard/workspace?isLoad=true&nsEndPoint=${data.acknowledgment.config.defaultWorkSpace.endPoint.slice('1')}`;
+            // connectToNs(data.acknowledgment.config.defaultWorkSpace.endPoint);
+        }
         
-        setTimeout(() => {
-            window.location = `${location}/dashboard/home`;
-        }, 1400);
+        // setTimeout(() => {
+        //     window.location = `${location}/dashboard/home`;
+        // }, 1400);
     }
 }
 
