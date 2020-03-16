@@ -1283,9 +1283,14 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
                 display: flex;
                 flex-wrap: wrap;
 
+                > br {
+                    display: none;
+                }
+
                 > .text {
                     display: inline;
                     // flex-shrink: 0;
+                    min-width: 2px;
                     flex-grow: 0;
                     white-space: pre-wrap; 
                     overflow-wrap: break-word; 
@@ -1508,6 +1513,15 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
                 color: #1d616e;
                 text-align: center;
                 font-size: 14px;
+            }
+        }
+
+        &[data-id="notifications"] {
+            max-width: 600px;
+
+             .notification {
+                justify-content: flex-start;
+                padding-left: 20px;
             }
         }
 
@@ -1750,14 +1764,29 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
                 }
             }
 
+             .primary,
+             .secondary {
+                cursor: pointer;
+                transition: .2s;
+                font-family: 'Montserrat_Bold', sans-serif;
+             }
+
              .primary {
-                color: red;
+                color: #b91909;
                 font-weight: 700;
+
+                &:hover {
+                    color: rgba(230, 10, 10, 0.699)
+                }
              }
 
              .secondary {
                 color: blueviolet;
                 font-weight: 700;
+
+                &:hover {
+                    color: rgba(111, 19, 197, 0.719)
+                }
              }
 
             > .delete-notification {

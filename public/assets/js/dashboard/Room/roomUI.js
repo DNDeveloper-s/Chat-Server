@@ -162,34 +162,40 @@ function loadMessageToRoom(messages) {
     const messageContainer = document.querySelector('.message-display__container');
     messageContainer.innerHTML = "";
     messages.forEach(message => {
-        const messageHtml = `
-            <div class="message">
-                <div class="message-inner">
-                    <div class="user-img">
-                        <img src="${message.user.image}" class="message-user_dp" alt="">
-                    </div>
-                    <div class="message-body">
-                        <div class="message-header">
-                            <div class="user">
-                                <span class="message-user_name">${message.user.name}</span>
+        if(messageContainer.childElementCount > 0 && messageContainer.firstElementChild.dataset.userid.toString() === message.user.id.toString()) {
+            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p>${message.body}</p>`);
+            messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = message.time;
+        } else {
+            
+            const messageHtml = `
+                <div class="message" data-userid=${message.user.id}>
+                    <div class="message-inner">
+                        <div class="user-img userLink pointer" data-userid=${message.user.id}>
+                            <img src="${message.user.image}" class="message-user_dp" alt="">
+                        </div>
+                        <div class="message-body">
+                            <div class="message-header">
+                                <div class="user userLink pointer" data-userid=${message.user.id}>
+                                    <span class="message-user_name">${message.user.name}</span>
+                                </div>
+                                <div class="options pointer">
+                                    <i class="material-icons">more_vert</i>
+                                </div>
                             </div>
-                            <div class="options pointer">
-                                <i class="material-icons">more_vert</i>
+                            <div class="message-data">
+                                <p>${message.body}</p>
+                            </div>
+                            <span class="message-time_stamp">${message.time}</span>
+                            <div class="message-status">
+                                <i class="material-icons">done_all</i>
                             </div>
                         </div>
-                        <div class="message-data">
-                            <p>${message.body}</p>
-                        </div>
-                        <span class="message-time_stamp">${message.time}</span>
-                        <div class="message-status">
-                            <i class="material-icons">done_all</i>
-                        </div>
                     </div>
+                    <hr>
                 </div>
-                <hr>
-            </div>
-        `;
-        messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
+            `;
+            messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
+        }
     });
     messageContainer.scrollTo({
         left: 0,
@@ -198,60 +204,75 @@ function loadMessageToRoom(messages) {
     });
     const userLinks = document.querySelectorAll('.userLink');
     userLinks.forEach(userLink => {
-        userLink.addEventListener('click', function(e) {
-            const userId = userLink.dataset.userid;
-            addUserModal(userId); 
-        })
-    });
-}
-
-function addMessageToRoom(messageObj, roomId, nsEndPoint) {
-    const messageContainer = document.querySelector(`.message-display__container[data-roomid="${roomId}"]`);
-    if(messageContainer) {
-        const messageHtml = `
-            <div class="message">
-                <div class="message-inner">
-                    <div class="user-img">
-                        <img src="${messageObj.user.image}" class="message-user_dp" alt="">
-                    </div>
-                    <div class="message-body">
-                        <div class="message-header">
-                            <div class="user">
-                                <span class="message-user_name">${messageObj.user.name}</span>
-                            </div>
-                            <div class="options pointer">
-                                <i class="material-icons">more_vert</i>
-                            </div>
-                        </div>
-                        <div class="message-data">
-                            <p>${messageObj.body}</p>
-                        </div>
-                        <span class="message-time_stamp">${messageObj.time}</span>
-                        <div class="message-status">
-                            <i class="material-icons">done_all</i>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-            </div>
-        `;
-
-        // Checking for tags to notif them personally
-        // messageContainer.lastElementChild('')
-
-        messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
-        messageContainer.scrollTo({
-            left: 0,
-            top: messageContainer.scrollHeight,
-            behavior: "smooth"
-        });
-        const userLinks = document.querySelectorAll('.userLink');
-        userLinks.forEach(userLink => {
+        if(!userLink.dataset.eventactive) {
+            userLink.dataset.eventactive = 'true';
             userLink.addEventListener('click', function(e) {
                 const userId = userLink.dataset.userid;
                 addUserModal(userId); 
             })
-        });
+        }
+    });
+}
+
+function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
+    const messageContainer = document.querySelector(`.message-display__container[data-roomid="${roomId}"]`);
+    if(messageContainer) {
+        if(messageContainer.firstElementChild.dataset.userid.toString() === messageObj.user.id.toString()) {
+            console.log(messageContainer.lastElementChild.querySelector('.message-data'));
+            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p>${messageObj.body}</p>`);
+            messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = messageObj.time;
+            if(bySender) {
+                messageContainer.firstElementChild.querySelector('.message-status > i').innerHTML = 'filter_tilt_shift';
+            }
+        } else {
+            const messageHtml = `
+                <div class="message" data-userid=${messageObj.user.id}>
+                    <div class="message-inner">
+                        <div class="user-img userLink pointer" data-userid=${messageObj.user.id}>
+                            <img src="${messageObj.user.image}" class="message-user_dp" alt="">
+                        </div>
+                        <div class="message-body">
+                            <div class="message-header">
+                                <div class="user userLink pointer" data-userid=${messageObj.user.id}>
+                                    <span class="message-user_name">${messageObj.user.name}</span>
+                                </div>
+                                <div class="options pointer">
+                                    <i class="material-icons">more_vert</i>
+                                </div>
+                            </div>
+                            <div class="message-data">
+                                <p>${messageObj.body}</p>
+                            </div>
+                            <span class="message-time_stamp">${messageObj.time}</span>
+                            <div class="message-status">
+                                <i class="material-icons">${ bySender ? 'filter_tilt_shift' : 'done_all' }</i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            `;
+
+            // Checking for tags to notif them personally
+            // messageContainer.lastElementChild('')
+
+            messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
+            messageContainer.scrollTo({
+                left: 0,
+                top: messageContainer.scrollHeight,
+                behavior: "smooth"
+            });
+            const userLinks = document.querySelectorAll('.userLink');
+            userLinks.forEach(userLink => {
+                if(!userLink.dataset.eventactive) {
+                    userLink.dataset.eventactive = 'true';
+                    userLink.addEventListener('click', function(e) {
+                        const userId = userLink.dataset.userid;
+                        addUserModal(userId); 
+                    })
+                }
+            });
+        }
     } else {
         // Handling the case where client is not in the same room
         // Two Cases are here

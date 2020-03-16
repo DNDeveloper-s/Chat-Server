@@ -1,7 +1,7 @@
 const io = require('socket.io-client');
 
 const { loadRoom } = require('./roomUI');
-const { getNsSocket, fetchRooms } = require('../Namespace/nsFunctionaily');
+// const { getNsSocket, fetchRooms } = require('../Namespace/nsFunctionaily');
 
 async function postNewRoom(roomDetails) {
     const nsEndPoint = window.location.search.split('nsEndPoint=')[1];
@@ -46,6 +46,8 @@ async function postDeleteRoom(roomDetails) {
 }
 
 async function joinRoom(roomDetails) {
+    const { getNsSocket } = require('../Namespace/nsFunctionaily');
+    const { fetchRooms } = require('../../dashboard');
 
     const nsSocket = getNsSocket();
     const leaveRoomId = document.querySelector('.room-details').dataset.roomid;
@@ -64,7 +66,7 @@ async function joinRoom(roomDetails) {
                 // Working with sessionStorage
                 let jsonRooms = sessionStorage.getItem(`nsRooms-${roomDetails.nsEndPoint}`);
                 if(!jsonRooms) {
-                    await fetchRooms(roomDetails.nsEndPoint);
+                    await fetchRooms();
                     jsonRooms = sessionStorage.getItem(`nsRooms-${roomDetails.nsEndPoint}`);
                 }
                 // console.log(jsonRooms);

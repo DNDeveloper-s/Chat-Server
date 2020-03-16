@@ -283,6 +283,19 @@ function messageToRoomHandler(roomId, nsEndPoint) {
         const messageInputContainer = document.querySelector('.send-message > .input');
         messageInputContainer.innerHTML = "";
         messageInputContainer.focus();
+
+        const userDp = document.querySelector('#user-dp');
+        const messageObj = {
+            user: {
+                id: userDp.dataset.userid,
+                name: userDp.getAttribute('alt'),
+                image: userDp.getAttribute('src')
+            },
+            body: messageInput,
+            time: convertedTime
+        }
+        addMessageToRoom(messageObj, roomId, nsEndPoint, true);
+
         postMessageToRoom(roomId, nsEndPoint, messageInput, convertedTime);
     }
 }

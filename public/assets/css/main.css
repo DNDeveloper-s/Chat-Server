@@ -1393,8 +1393,13 @@ body {
       flex-wrap: wrap;
 }
 
+#root > .main_bar > .send-message > .input > br {
+  display: none;
+}
+
 #root > .main_bar > .send-message > .input > .text {
   display: inline;
+  min-width: 2px;
   -webkit-box-flex: 0;
       -ms-flex-positive: 0;
           flex-grow: 0;
@@ -1641,6 +1646,17 @@ body {
   color: #1d616e;
   text-align: center;
   font-size: 14px;
+}
+
+#root > .modal[data-id="notifications"] {
+  max-width: 600px;
+}
+
+#root > .modal[data-id="notifications"] .notification {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  padding-left: 20px;
 }
 
 #root > .modal .invite-code {
@@ -1935,14 +1951,30 @@ body {
           transform: translateY(0);
 }
 
+#root > .modal .notification .primary,
+#root > .modal .notification .secondary {
+  cursor: pointer;
+  -webkit-transition: .2s;
+  transition: .2s;
+  font-family: 'Montserrat_Bold', sans-serif;
+}
+
 #root > .modal .notification .primary {
-  color: red;
+  color: #b91909;
   font-weight: 700;
+}
+
+#root > .modal .notification .primary:hover {
+  color: rgba(230, 10, 10, 0.699);
 }
 
 #root > .modal .notification .secondary {
   color: blueviolet;
   font-weight: 700;
+}
+
+#root > .modal .notification .secondary:hover {
+  color: rgba(111, 19, 197, 0.719);
 }
 
 #root > .modal .notification > .delete-notification {

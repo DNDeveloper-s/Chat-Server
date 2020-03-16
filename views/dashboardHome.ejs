@@ -10,8 +10,8 @@
         <div class="nav_bar">
             <div class="userDetails-NameSpace_container">
                 <!-- User Details Container -->
-                <div class="user_dp image_holder remove_sidebar" data-userId="<%= user._id %>">
-                    <img class="userLink" data-userId="<%= user._id %>" src="<%= user.image %>" alt="DNDeveloper">
+                <div class="user_dp image_holder remove_sidebar" data-userId="<%= user._id %>" tabindex="0">
+                    <img id="user-dp" class="userLink" data-userId="<%= user._id %>" src="<%= user.image %>" alt="<%= user.name %>">
                     <!-- Notification Count -->
                     <div class="notification-count remove_sidebar" data-nothing="<%= user.notificationCount == 0 ? 'true' : 'false' %>" ><%= user.notificationCount %></div>
                 </div>

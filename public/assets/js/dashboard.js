@@ -142,6 +142,36 @@ async function fetchWorkSpaces() {
     sessionStorage.setItem(`all_workspaces`, JSON.stringify(obj));
 }
 
+const userLinks = document.querySelectorAll('.userLink');
+userLinks.forEach(userLink => {
+    if(!userLink.dataset.eventactive) {
+        userLink.dataset.eventactive = 'true';
+        userLink.addEventListener('click', function(e) {
+            const userId = userLink.dataset.userid;
+            addUserModal(userId); 
+        })
+    }
+});
+
+async function fetchRooms() {
+    const allNamespaces = document.querySelectorAll('.nameSpaceContainer > .name_space');
+    const allEndPoints = [];
+    allNamespaces.forEach(cur => {
+        allEndPoints.push(cur.dataset.ns);
+    });
+    for(const nsEndPoint of allEndPoints) {
+    
+        const res = await fetch(`${window.location.origin}/dashboard/fetch?rooms=true&nsEndPoint=${nsEndPoint}`, {
+            method: "GET"
+        });
+
+        const data = await res.json();
+        
+        console.log(data);
+    
+        sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
+    }
+}
 
 if(window.innerWidth < 768) {
     toggle_nav_on_mob();
@@ -151,3 +181,4 @@ if(window.innerWidth < 768) {
 defaultModal();
 
 fetchWorkSpaces();
+fetchRooms();

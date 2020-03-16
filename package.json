@@ -20,6 +20,7 @@
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "minimist": "^1.2.5",
     "mongoose": "^5.9.2",
     "randomatic": "^3.1.1",
     "socket.io": "^2.3.0"

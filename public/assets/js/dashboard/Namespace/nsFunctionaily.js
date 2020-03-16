@@ -14,6 +14,7 @@ function getNsSocket() {
 } 
 
 async function connectToNs(nsEndPoint) {
+    const { fetchRooms } = require('../../dashboard');
 
     if (!window.location.search.split('&').includes('showUserModalDefault=true') && window.history.replaceState) {
         //prevents browser from storing history with each change:
@@ -57,7 +58,7 @@ async function connectToNs(nsEndPoint) {
         // Working with sessionStorage
         let jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         if(!jsonRooms) {
-            await fetchRooms(nsEndPoint);
+            await fetchRooms();
             jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         }
         const rooms = JSON.parse(jsonRooms);
@@ -106,7 +107,7 @@ async function connectToNs(nsEndPoint) {
         // Working with sessionStorage - for rooms
         let jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         if(!jsonRooms) {
-            await fetchRooms(nsEndPoint);
+            await fetchRooms();
             jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         }
         const rooms = JSON.parse(jsonRooms);
@@ -134,7 +135,7 @@ async function connectToNs(nsEndPoint) {
         // Working with sessionStorage
         let jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         if(!jsonRooms) {
-            await fetchRooms(nsEndPoint);
+            await fetchRooms();
             jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         }
         let rooms = JSON.parse(jsonRooms);
@@ -181,7 +182,7 @@ async function connectToNs(nsEndPoint) {
             // Working with sessionStorage
             let jsonRooms = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
             if(!jsonRooms) {
-                await fetchRooms(data.nsEndPoint);
+                await fetchRooms();
                 jsonRooms = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
             }
             let rooms = JSON.parse(jsonRooms);
@@ -195,11 +196,33 @@ async function connectToNs(nsEndPoint) {
             });
             sessionStorage.setItem(`nsRooms-${data.nsEndPoint}`, JSON.stringify(rooms));
 
-            addMessageToRoom(data.messageObj, data.roomId, data.nsEndPoint);
+            addMessageToRoom(data.messageObj, data.roomId, data.nsEndPoint, false);
         } else if(data.type === 'toMentions') {
 
             // Pushing Notification to UI
             updateNotificationCount(data.count);
+        } else if(data.type === 'toSender') {
+
+            const messageContainer = document.querySelector(`.message-display__container[data-roomid="${data.roomId}"]`);
+            messageContainer.querySelector('.message-status > i').innerHTML = 'done_all';
+            // Working with sessionStorage
+            // let jsonRooms = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
+            // if(!jsonRooms) {
+            //     await fetchRooms();
+            //     jsonRooms = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
+            // }
+            // let rooms = JSON.parse(jsonRooms);
+            // const room = rooms.filter(cur => cur._id.toString() === data.roomId.toString());
+            // rooms = rooms.map(cur => {
+            //     if(cur._id.toString() === data.roomId.toString()) {
+            //         cur.messages.push(data.messageObj);
+            //         return cur;
+            //     }
+            //     return cur;
+            // });
+            // sessionStorage.setItem(`nsRooms-${data.nsEndPoint}`, JSON.stringify(rooms));
+
+            // addMessageToRoom(data.messageObj, data.roomId, data.nsEndPoint, true);
         }
     });
     
@@ -263,7 +286,7 @@ async function loadNamespace(endPoint) {
     // Working with sessionStorage
     let jsonRooms = sessionStorage.getItem(`nsRooms-${endPoint}`);
     if(!jsonRooms) {
-        await fetchRooms(endPoint);
+        await fetchRooms();
         jsonRooms = sessionStorage.getItem(`nsRooms-${endPoint}`);
     }
     const rooms = JSON.parse(jsonRooms);
@@ -292,17 +315,4 @@ async function loadNamespace(endPoint) {
 //     sessionStorage.setItem(`nsMessages-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
 // }
 
-async function fetchRooms(nsEndPoint) {
-    
-    const res = await fetch(`${window.location.origin}/dashboard/fetch?rooms=true&nsEndPoint=${nsEndPoint}`, {
-        method: "GET"
-    });
-
-    const data = await res.json();
-    
-    console.log(data);
-
-    sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
-}
-
-module.exports = { connectToNs, nsListeners, fetchRooms, getNsSocket };
+module.exports = { connectToNs, nsListeners, getNsSocket, loadNamespace };

@@ -210,7 +210,7 @@ exports.postMessages = async(req, res, next) => {
                     messageObj: messageObj
                 })
                 idUser.notifications.list.push({
-                    message: `You are mentioned by <span class="primary">${user.name}</span> in room <span class="secondary">${room.name}</span>`,
+                    message: `You are mentioned by <span class="primary">${user.name}</span> in room <span class="secondary">#${room.name.toLowerCase()}</span>`,
                     notificationType: 'mentioned_msg',
                     userDetails: {
                         image: user.image,
@@ -239,39 +239,49 @@ exports.postMessages = async(req, res, next) => {
                 }
                 workSpace.roles.members.forEach(async (member) => {
 
-                    // Handling cases where members are online     /- Pushing to UI -/
-                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('messageToRoom', {
-                        type: "toAllConnectedClients",
-                        roomId: roomId,
-                        nsEndPoint: nsEndPoint,
-                        messageObj: messageObj
-                    })
+                    if(member._id.toString() !== user._id.toString()) {
+                        // Handling cases where members are online     /- Pushing to UI -/
+                        io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('messageToRoom', {
+                            type: "toAllConnectedClients",
+                            roomId: roomId,
+                            nsEndPoint: nsEndPoint,
+                            messageObj: messageObj
+                        })
 
-                    const memberUser = await User.findById(member._id);
-                    
-                    // Not emitting to the cur User
-                    if(memberUser.status === "offline" || (user._id.toString() !== member._id.toString() && member.joinedRoom.toString() !== roomId.toString())) {
+                        const memberUser = await User.findById(member._id);
+                        
+                        // Not emitting to the cur User
+                        if(memberUser.status === "offline" || (user._id.toString() !== member._id.toString() && member.joinedRoom.toString() !== roomId.toString())) {
 
-                        // Checking if the notification is already exists for the same room
-                        const isAlreadyExists = memberUser.notifications.list.filter(cur => cur.notificationType === 'msgToRoom' && cur.roomId.toString() === roomId.toString());
+                            // Checking if the notification is already exists for the same room
+                            const isAlreadyExists = memberUser.notifications.list.filter(cur => cur.notificationType === 'msgToRoom' && cur.roomId.toString() === roomId.toString());
 
-                        if(!isAlreadyExists.length > 0) {
-                            // Handling cases where members are offline or online     /- Pushing to notifications -/
-                            // const notiticationObj = {
-                            //     message: `New Messages in ${room.name} room.`,
-                            //     notificationType: 'msgToRoom',
-                            //     userDetails: {
-                            //         image: user.image,
-                            //         userId: user._id,
-                            //         userName: user.name
-                            //     },
-                            //     roomId: roomId,
-                            //     nsEndPoint: nsEndPoint
-                            // }
-                            // memberUser.notifications.list.push(notiticationObj);
-                            // memberUser.notifications.count = memberUser.notifications.list.length;
-                            // await memberUser.save();
+                            if(!isAlreadyExists.length > 0) {
+                                // Handling cases where members are offline or online     /- Pushing to notifications -/
+                                // const notiticationObj = {
+                                //     message: `New Messages in ${room.name} room.`,
+                                //     notificationType: 'msgToRoom',
+                                //     userDetails: {
+                                //         image: user.image,
+                                //         userId: user._id,
+                                //         userName: user.name
+                                //     },
+                                //     roomId: roomId,
+                                //     nsEndPoint: nsEndPoint
+                                // }
+                                // memberUser.notifications.list.push(notiticationObj);
+                                // memberUser.notifications.count = memberUser.notifications.list.length;
+                                // await memberUser.save();
+                            }
                         }
+                    } else {
+                        // Handling cases where members are online     /- Pushing to UI -/
+                        io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('messageToRoom', {
+                            type: "toSender",
+                            roomId: roomId,
+                            nsEndPoint: nsEndPoint,
+                            messageObj: messageObj
+                        })
                     }
                 })
                 return res.json({

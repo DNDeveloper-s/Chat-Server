@@ -94,13 +94,7 @@ module.exports = () => {
             });
         }, 200);
     });
-    // const userLinks = document.querySelectorAll('.userLink > img');
-    // userLinks.forEach(userLink => {
-    //     userLink.addEventListener('click', function(e) {
-    //         const userId = userLink.closest('.userLink').dataset.userid;
-    //         addUserModal(userId); 
-    //     })
-    // });
+    
     const notificationCount = document.querySelector('.notification-count');
     notificationCount.addEventListener('click', function () {
         const userId = notificationCount.parentElement.dataset.userid;
@@ -123,6 +117,7 @@ module.exports = () => {
             inputBox.innerHTML = '<span class="text"></span>';
         }
     })
+    inputBox.addEventListener('keypress', function(e){ return e.which != 13 });
     inputBox.addEventListener('keyup', function(e) {
         if(inputBox.childElementCount === 0) {
             inputBox.innerHTML = '<span class="text"></span>';
@@ -141,6 +136,7 @@ module.exports = () => {
                 remove_tag_list();
             }
         } else if(e.key === "Enter") {
+            e.preventDefault();
             const roomId = roomDetailsContainer.dataset.roomid;
             messageToRoomHandler(roomId, nsEndPoint);
         } else if(e.key === " ") {
@@ -149,7 +145,7 @@ module.exports = () => {
         }
     })
     inputBox.addEventListener('keydown', function(e) {
-        if(e.key === 'ArrowUp' || e.key == 'ArrowDown' || e.key === 'Tab') {
+        if(e.key === 'ArrowUp' || e.key == 'ArrowDown' || e.key === 'Tab' || e.key === 'Enter') {
             e.preventDefault();
         }
     })
