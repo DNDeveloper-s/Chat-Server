@@ -23,6 +23,7 @@ async function addUserModal(userId, fn) {
             openChat: true
         });
     } else {
+        const { addModal } = require('../Modal/addModal');
         addModal('USER_PROFILE', {
             user: data.acknowledgment.user,
             isItAuthenticatedUser: data.acknowledgment.isItAuthenticatedUser,

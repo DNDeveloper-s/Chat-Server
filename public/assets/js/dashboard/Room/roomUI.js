@@ -1,5 +1,5 @@
 const { remove_sidebar } = require('../../utilities');
-
+const { addUserModal } = require('../User/userUI');
 
 function showRooms(rooms) {
     const roomContainer = document.querySelector('.roomContainer');
@@ -196,6 +196,13 @@ function loadMessageToRoom(messages) {
         top: messageContainer.scrollHeight,
         behavior: "smooth"
     });
+    const userLinks = document.querySelectorAll('.userLink');
+    userLinks.forEach(userLink => {
+        userLink.addEventListener('click', function(e) {
+            const userId = userLink.dataset.userid;
+            addUserModal(userId); 
+        })
+    });
 }
 
 function addMessageToRoom(messageObj, roomId, nsEndPoint) {
@@ -228,11 +235,22 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint) {
                 <hr>
             </div>
         `;
+
+        // Checking for tags to notif them personally
+        // messageContainer.lastElementChild('')
+
         messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
         messageContainer.scrollTo({
             left: 0,
             top: messageContainer.scrollHeight,
             behavior: "smooth"
+        });
+        const userLinks = document.querySelectorAll('.userLink');
+        userLinks.forEach(userLink => {
+            userLink.addEventListener('click', function(e) {
+                const userId = userLink.dataset.userid;
+                addUserModal(userId); 
+            })
         });
     } else {
         // Handling the case where client is not in the same room

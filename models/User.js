@@ -12,6 +12,16 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    mentions: [
+        {
+            nsEndPoint: String,
+            roomId: {
+                type: Schema.Types.ObjectID,
+                ref: 'Room'
+            },
+            messageObj: Object
+        }
+    ],
     uniqueTag: String,
     messages: {
         direct: [

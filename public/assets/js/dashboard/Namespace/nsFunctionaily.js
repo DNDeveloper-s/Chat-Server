@@ -196,6 +196,10 @@ async function connectToNs(nsEndPoint) {
             sessionStorage.setItem(`nsRooms-${data.nsEndPoint}`, JSON.stringify(rooms));
 
             addMessageToRoom(data.messageObj, data.roomId, data.nsEndPoint);
+        } else if(data.type === 'toMentions') {
+
+            // Pushing Notification to UI
+            updateNotificationCount(data.count);
         }
     });
     

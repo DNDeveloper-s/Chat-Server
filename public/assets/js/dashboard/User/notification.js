@@ -48,6 +48,7 @@ async function loadNotifications(userId) {
                     <div class="confirm">
                         ${cur.notificationType === 'frnd_req' ? '<div class="action_btn pointer yes"> <img src="/assets/images/check.svg" alt=""> </div><div class="action_btn pointer no"> <img src="/assets/images/close.svg" alt=""> </div>' : ''}
                         ${cur.notificationType === 'rcvd_msg' ? '<div class="action_btn pointer yes reply">Reply</div>' : ''}
+                        ${cur.notificationType === 'mentioned_msg' ? '<div class="action_btn pointer yes show_msg">See</div>' : ''}
                     </div>
                     <div class="loader-container hidden noMargin">
                         <svg width="40" height="40">

@@ -1,4 +1,5 @@
 const { loader } = require('../../utilities');
+const { addUserModal } = require('../User/userUI');
 const { updateUserDetails } = require('./friend');
 const { addMessageToRoom } = require('../Room/roomUI');
 

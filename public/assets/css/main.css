@@ -1198,6 +1198,55 @@ body {
   margin-top: 4px;
 }
 
+#root > .main_bar > .message-display__container > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty {
+  margin: 0;
+}
+
+#root > .main_bar > .message-display__container > .message > .message-inner > .message-body > .message-data > p > span {
+  height: 26px;
+  line-height: 26px;
+}
+
+#root > .main_bar > .message-display__container > .message > .message-inner > .message-body > .message-data > p > .text {
+  padding: 4px 0;
+  margin: 0 10px 0 0;
+}
+
+#root > .main_bar > .message-display__container > .message > .message-inner > .message-body > .message-data > p > .tag-details {
+  position: relative;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0 10px 0 0;
+  color: #984f2c;
+  background: #292940;
+  padding: 4px 8px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-transition: .15s;
+  transition: .15s;
+  padding-left: 27px;
+  white-space: nowrap;
+}
+
+#root > .main_bar > .message-display__container > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover {
+  background: #161623;
+}
+
+#root > .main_bar > .message-display__container > .message > .message-inner > .message-body > .message-data > p > .tag-details > img {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 17px;
+  height: 17px;
+  border-radius: 200px;
+  margin-right: 4px;
+}
+
 #root > .main_bar > .message-display__container > .message > .message-inner > .message-body > .message-status {
   position: absolute;
   bottom: 0;
@@ -1226,13 +1275,13 @@ body {
   position: relative;
   bottom: 0;
   width: 98%;
-  height: 80px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  padding-bottom: 20px;
   margin: 0 auto;
 }
 
@@ -1320,8 +1369,8 @@ body {
 }
 
 #root > .main_bar > .send-message > .input {
+  position: relative;
   width: 100%;
-  height: 40px;
   font-size: 15px;
   margin-right: 10px;
   outline: none;
@@ -1330,35 +1379,61 @@ body {
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
   padding: 4px 8px;
   background: #dedede;
-  overflow-x: auto;
-  overflow-y: hidden;
   color: #000;
   border-radius: 4px;
   line-height: 27px;
   outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  -webkit-user-modify: read-write-plaintext-only;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+#root > .main_bar > .send-message > .input > .text {
+  display: inline;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  -webkit-user-modify: read-write-plaintext-only;
 }
 
 #root > .main_bar > .send-message > .input > .tag-details {
-  background: #6d6d8a;
-  color: #ffffffc4;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  position: relative;
+  background: #9191bd;
+  color: #404084;
   padding: 0 7px;
   margin: 0 4px;
   border-radius: 6px;
   line-height: 28px;
   height: 28px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  font-family: 'Montserrat_Bold', sans-serif;
+  -webkit-transition: .3s ease-in;
+  transition: .3s ease-in;
+}
+
+#root > .main_bar > .send-message > .input > .tag-details:hover {
+  background: #8989cf;
 }
 
 #root > .main_bar > .send-message > .input > .tag-details > img {
@@ -1366,6 +1441,61 @@ body {
   height: 18px;
   border-radius: 100px;
   margin-right: 6px;
+}
+
+#root > .main_bar > .send-message > .input > .tag-details::before {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: 120%;
+  left: 0;
+  width: 100%;
+  height: 65px;
+  line-height: 55px;
+  text-align: right;
+  padding: 0 10px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  background: url("/assets/images/aria.svg");
+  background-size: 100% 100%;
+  color: #d09e07;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  -webkit-transform: translateY(-7px);
+          transform: translateY(-7px);
+  -webkit-transition: .17s;
+  transition: .17s;
+}
+
+#root > .main_bar > .send-message > .input > .tag-details::after {
+  content: url("/assets/images/saurabh_with_laptop_front.jpg");
+  position: absolute;
+  bottom: -292%;
+  left: -51px;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  -webkit-transform: translateY(-7px) scale(0.08);
+          transform: translateY(-7px) scale(0.08);
+  -webkit-transition: .17s;
+  transition: .17s;
+}
+
+#root > .main_bar > .send-message > .input > .tag-details:hover::before {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  visibility: visible;
+  pointer-events: all;
+}
+
+#root > .main_bar > .send-message > .input > .tag-details:hover::after {
+  opacity: 1;
+  -webkit-transform: translateY(0) scale(0.08);
+          transform: translateY(0) scale(0.08);
+  visibility: visible;
+  pointer-events: all;
 }
 
 @media (max-width: 768px) {
@@ -1725,7 +1855,7 @@ body {
   padding: 4px 30px;
 }
 
-#root > .modal .confirm > .action_btn.reply {
+#root > .modal .confirm > .action_btn.reply, #root > .modal .confirm > .action_btn.show_msg {
   width: auto;
   line-height: 40px;
   font-size: 27px;
@@ -1736,7 +1866,7 @@ body {
   font-family: 'Montserrat_Bold', sans-serif;
 }
 
-#root > .modal .confirm > .action_btn.reply:hover {
+#root > .modal .confirm > .action_btn.reply:hover, #root > .modal .confirm > .action_btn.show_msg:hover {
   background: #00fff244;
 }
 
@@ -1805,6 +1935,16 @@ body {
           transform: translateY(0);
 }
 
+#root > .modal .notification .primary {
+  color: red;
+  font-weight: 700;
+}
+
+#root > .modal .notification .secondary {
+  color: blueviolet;
+  font-weight: 700;
+}
+
 #root > .modal .notification > .delete-notification {
   position: absolute;
   top: 5px;
@@ -1834,8 +1974,8 @@ body {
   overflow: hidden;
   margin-right: 15px;
   border: 2px solid white;
-  -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-          box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 2px 3px rgba(43, 29, 29, 0.2);
+          box-shadow: 0 2px 3px rgba(43, 29, 29, 0.2);
 }
 
 #root > .modal .notification > .image > img {

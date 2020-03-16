@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const DOMParser = require('dom-parser');
 const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
@@ -156,6 +156,8 @@ exports.postMessages = async(req, res, next) => {
         }
 
 
+
+
         // userId: userId,
         // body: messageInput,
         // time: time,
@@ -167,59 +169,7 @@ exports.postMessages = async(req, res, next) => {
             const message = req.body.message;
             const time = req.body.time;
 
-            WorkSpace.findOne({endPoint: nsEndPoint})
-            .populate('roles.members')
-            .exec((err, workSpace) => {
-                if(!workSpace) {
-                    return next('Invalid Workspace!');
-                }
-                workSpace.roles.members.forEach(async (member) => {
-
-                    // Handling cases where members are online     /- Pushing to UI -/
-                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('messageToRoom', {
-                        type: "toAllConnectedClients",
-                        roomId: roomId,
-                        nsEndPoint: nsEndPoint,
-                        messageObj: messageObj
-                    })
-
-
-                    const memberUser = await User.findById(member._id);
-                    
-                    // Not emitting to the cur User
-                    if(memberUser.status === "offline" || (user._id.toString() !== member._id.toString() && member.joinedRoom.toString() !== roomId.toString())) {
-
-                        // Checking if the notification is already exists for the same room
-                        const isAlreadyExists = memberUser.notifications.list.filter(cur => cur.notificationType === 'msgToRoom' && cur.roomId.toString() === roomId.toString());
-
-                        if(!isAlreadyExists.length > 0) {
-                            // Handling cases where members are offline or online     /- Pushing to notifications -/
-                            const notiticationObj = {
-                                message: `New Messages in ${room.name} room.`,
-                                notificationType: 'msgToRoom',
-                                userDetails: {
-                                    image: user.image,
-                                    userId: user._id,
-                                    userName: user.name
-                                },
-                                roomId: roomId,
-                                nsEndPoint: nsEndPoint
-                            }
-                            memberUser.notifications.list.push(notiticationObj);
-                            memberUser.notifications.count = memberUser.notifications.list.length;
-                            await memberUser.save();
-                        }
-                    }
-                })
-                return res.json({
-                    acknowledgment: {
-                        type: 'success',
-                        message: 'Succesfully posted the message to room',
-                        messageObj: messageObj
-                    }
-                })
-
-            })
+            console.log(message);
 
             const user = await User.findOne({email: req.session.user.email});
 
@@ -241,6 +191,98 @@ exports.postMessages = async(req, res, next) => {
 
             room.messages.push(messageObj);
             await room.save();
+
+            // Parsing the message input for mentions
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(messageInput, 'text/html');
+            let ids = [];
+            const links = doc.getElementsByClassName('userLink');
+            links.forEach(link => {
+                const attr = link.attributes.filter(cur => cur.name === 'data-userid');
+                ids.push(...attr);
+            })
+
+            ids.forEach(async (cur) => {
+                const idUser = await User.findById(cur.value);
+                idUser.mentions.push({
+                    nsEndPoint: nsEndPoint,
+                    roomId: roomId,
+                    messageObj: messageObj
+                })
+                idUser.notifications.list.push({
+                    message: `You are mentioned by <span class="primary">${user.name}</span> in room <span class="secondary">${room.name}</span>`,
+                    notificationType: 'mentioned_msg',
+                    userDetails: {
+                        image: user.image,
+                        userId: user._id,
+                        userName: user.name
+                    },
+                    nsEndPoint: nsEndPoint,
+                    roomId: roomId
+                })
+                idUser.notifications.count = idUser.notifications.list.length;
+                await idUser.save();
+                
+                // Socket for pushing notification to Mentioned Users
+                io.of(idUser.connectedDetails.endPoint).to(idUser.connectedDetails.socketId).emit('messageToRoom', {
+                    type: "toMentions",
+                    count: idUser.notifications.count
+                })
+            })
+
+            // Now time for message to workspace
+            WorkSpace.findOne({endPoint: nsEndPoint})
+            .populate('roles.members')
+            .exec((err, workSpace) => {
+                if(!workSpace) {
+                    return next('Invalid Workspace!');
+                }
+                workSpace.roles.members.forEach(async (member) => {
+
+                    // Handling cases where members are online     /- Pushing to UI -/
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('messageToRoom', {
+                        type: "toAllConnectedClients",
+                        roomId: roomId,
+                        nsEndPoint: nsEndPoint,
+                        messageObj: messageObj
+                    })
+
+                    const memberUser = await User.findById(member._id);
+                    
+                    // Not emitting to the cur User
+                    if(memberUser.status === "offline" || (user._id.toString() !== member._id.toString() && member.joinedRoom.toString() !== roomId.toString())) {
+
+                        // Checking if the notification is already exists for the same room
+                        const isAlreadyExists = memberUser.notifications.list.filter(cur => cur.notificationType === 'msgToRoom' && cur.roomId.toString() === roomId.toString());
+
+                        if(!isAlreadyExists.length > 0) {
+                            // Handling cases where members are offline or online     /- Pushing to notifications -/
+                            // const notiticationObj = {
+                            //     message: `New Messages in ${room.name} room.`,
+                            //     notificationType: 'msgToRoom',
+                            //     userDetails: {
+                            //         image: user.image,
+                            //         userId: user._id,
+                            //         userName: user.name
+                            //     },
+                            //     roomId: roomId,
+                            //     nsEndPoint: nsEndPoint
+                            // }
+                            // memberUser.notifications.list.push(notiticationObj);
+                            // memberUser.notifications.count = memberUser.notifications.list.length;
+                            // await memberUser.save();
+                        }
+                    }
+                })
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        message: 'Succesfully posted the message to room',
+                        messageObj: messageObj
+                    }
+                })
+
+            })
 
             // io.of(nsEndPoint).to(roomId).emit('messageToRoom', {
             //     type: "toRoom",

@@ -1,7 +1,7 @@
 const { addModal } = require('./dashboard/Modal/addModal');
-const { addUserModal } = require('./dashboard/User/userUI');
+// const { addUserModal } = require('./dashboard/User/userUI');
 const { messageToRoomHandler } = require('./dashBoard/User/message');
-const randomize = require('randomatic');
+// const randomize = require('randomatic');
 
 module.exports = () => {
     const addNameSpaceBtn = document.querySelector('.add-name_space');
@@ -94,16 +94,16 @@ module.exports = () => {
             });
         }, 200);
     });
-    const userLinks = document.querySelectorAll('.userLink > img');
-    userLinks.forEach(userLink => {
-        userLink.addEventListener('click', function(e) {
-            const userId = userLink.closest('.userLink').dataset.userid;
-            addUserModal(userId); 
-        })
-    });
+    // const userLinks = document.querySelectorAll('.userLink > img');
+    // userLinks.forEach(userLink => {
+    //     userLink.addEventListener('click', function(e) {
+    //         const userId = userLink.closest('.userLink').dataset.userid;
+    //         addUserModal(userId); 
+    //     })
+    // });
     const notificationCount = document.querySelector('.notification-count');
     notificationCount.addEventListener('click', function () {
-        const userId = notificationCount.closest('.userLink').dataset.userid;
+        const userId = notificationCount.parentElement.dataset.userid;
         addModal('NOTIFICATIONS', {
             userId: userId
         });
@@ -175,7 +175,11 @@ module.exports = () => {
                 console.log(l);
                 arr.innerHTML = l;
 
-                inputBox.insertAdjacentHTML('beforeend', `<span class="tag-details" data-userid="${user_id}" contenteditable="false" ><img src="${user_image}" alt="${user_name}">@${user_name}</span><span class="text"></span`);
+                const tagHtml = `
+                    <span class="tag-details userLink" aria-label="${user_name}" data-userid="${user_id}" contenteditable="false" ><img src="${user_image}" alt="${user_name}">@${user_name}</span><span class="text"></span
+                `;
+
+                inputBox.insertAdjacentHTML('beforeend', tagHtml);
                 remove_tag_list();
                 inputBox.focus();
                 const sel = window.getSelection();
@@ -273,30 +277,3 @@ function arrows_handler(e, length) {
     }
       
 }
-
-
-function setCursor(pos) { 
-    var tag = document.getElementById("editable"); 
-      
-    // Creates range object 
-    var setpos = document.createRange(); 
-      
-    // Creates object for selection 
-    var set = window.getSelection(); 
-      
-    // Set start position of range 
-    setpos.setStart(tag.childNodes[0], pos); 
-      
-    // Collapse range within its boundary points 
-    // Returns boolean 
-    setpos.collapse(true); 
-      
-    // Remove all ranges set 
-    set.removeAllRanges(); 
-      
-    // Add range with respect to range object. 
-    set.addRange(setpos); 
-      
-    // Set cursor on focus 
-    tag.focus(); 
-} 
