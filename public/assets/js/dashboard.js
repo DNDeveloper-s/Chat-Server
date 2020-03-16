@@ -7,6 +7,8 @@ const { remove_sidebar } = require('./utilities');
 
 nsListeners();
 
+console.log('dashboard');
+
 Array.prototype.deleteItem = function(item) {
     return this.filter(cur => cur.toString() !== item.toString())
 }
@@ -153,26 +155,6 @@ userLinks.forEach(userLink => {
     }
 });
 
-async function fetchRooms() {
-    const allNamespaces = document.querySelectorAll('.nameSpaceContainer > .name_space');
-    const allEndPoints = [];
-    allNamespaces.forEach(cur => {
-        allEndPoints.push(cur.dataset.ns);
-    });
-    for(const nsEndPoint of allEndPoints) {
-    
-        const res = await fetch(`${window.location.origin}/dashboard/fetch?rooms=true&nsEndPoint=${nsEndPoint}`, {
-            method: "GET"
-        });
-
-        const data = await res.json();
-        
-        console.log(data);
-    
-        sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
-    }
-}
-
 if(window.innerWidth < 768) {
     toggle_nav_on_mob();
     toggle_frnds_list();
@@ -181,4 +163,7 @@ if(window.innerWidth < 768) {
 defaultModal();
 
 fetchWorkSpaces();
+
+const { fetchRooms } = require('./utilities');
+
 fetchRooms();

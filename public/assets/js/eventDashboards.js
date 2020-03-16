@@ -4,6 +4,7 @@ const { messageToRoomHandler } = require('./dashBoard/User/message');
 // const randomize = require('randomatic');
 
 module.exports = () => {
+    console.log('counting');
     const addNameSpaceBtn = document.querySelector('.add-name_space');
     addNameSpaceBtn.addEventListener('click', () => {
         console.log('Its clicked!');

@@ -127,6 +127,26 @@ function remove_sidebar() {
         nav_bar.classList.remove('open');
         backDropEl.remove();
     }
+};
+
+async function fetchRooms() {
+    const allNamespaces = document.querySelectorAll('.nameSpaceContainer > .name_space');
+    const allEndPoints = [];
+    allNamespaces.forEach(cur => {
+        allEndPoints.push(cur.dataset.ns);
+    });
+    for(const nsEndPoint of allEndPoints) {
+    
+        const res = await fetch(`${window.location.origin}/dashboard/fetch?rooms=true&nsEndPoint=${nsEndPoint}`, {
+            method: "GET"
+        });
+
+        const data = await res.json();
+        
+        console.log(data);
+    
+        sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
+    }
 }
 
 module.exports = { 
@@ -134,5 +154,6 @@ module.exports = {
     toggleAuthFormUI ,
     copyToClipboard,
     loader,
-    remove_sidebar
+    remove_sidebar,
+    fetchRooms
 }

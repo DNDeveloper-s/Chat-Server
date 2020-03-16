@@ -47,7 +47,7 @@ async function postDeleteRoom(roomDetails) {
 
 async function joinRoom(roomDetails) {
     const { getNsSocket } = require('../Namespace/nsFunctionaily');
-    const { fetchRooms } = require('../../dashboard');
+    const { fetchRooms } = require('../../utilities');
 
     const nsSocket = getNsSocket();
     const leaveRoomId = document.querySelector('.room-details').dataset.roomid;

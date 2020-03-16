@@ -14,7 +14,7 @@ function getNsSocket() {
 } 
 
 async function connectToNs(nsEndPoint) {
-    const { fetchRooms } = require('../../dashboard');
+    const { fetchRooms } = require('../../utilities');
 
     if (!window.location.search.split('&').includes('showUserModalDefault=true') && window.history.replaceState) {
         //prevents browser from storing history with each change:
