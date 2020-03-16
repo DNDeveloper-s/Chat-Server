@@ -975,7 +975,8 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
 exports.fetchDetails = async (req, res, next) => {
     const rooms = req.query.rooms;
-    if(rooms) {
+    const workspaces = req.query.workspaces;
+    // if(rooms) {
         const nsEndPoint = req.query.nsEndPoint;
         const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
 
@@ -989,37 +990,113 @@ exports.fetchDetails = async (req, res, next) => {
 
             await WorkSpace.findOne({endPoint: nsEndPoint})
             .populate('rooms')
+            .populate('connectedClients')
+            .populate('roles.members')
+            .populate('roles.owner')
+            .populate('roles.admins')
             .exec((err, workSpace) => {
                 // Checking for internal error
                 if(err) {
                     return next('Internal Error!');
                 }
-                // Preparing rooms for notifications
-                const roomDetails = workSpace.rooms.map(cur => {
-                    const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
-                    if(msgToRoom.length > 0) {
+                // console.log(workSpace);
+
+                if(workspaces) {
+                    const workSpaceConnectedClients = workSpace.connectedClients.map(client => {
+                        return {
+                            name: client.name,
+                            image: client.image,
+                            uniqueTag: client.uniqueTag,
+                            status: client.status,
+                            _id: client._id
+                        }
+                    });
+
+                    const rooms = workSpace.rooms.map(cur => {
                         return {
                             _id: cur._id,
+                            name: cur.name
+                        }
+                    })
+
+                    const members = workSpace.roles.members.map(cur => {
+                        return {
                             name: cur.name,
+                            _id: cur._id,
+                            image: cur.image,
+                            status: cur.status,
+                            uniqueTag: cur.uniqueTag
+                        }
+                    });
+                    const owner = {
+                        name: workSpace.roles.owner.name,
+                        _id: workSpace.roles.owner._id,
+                        image: workSpace.roles.owner.image,
+                        status: workSpace.roles.owner.status,
+                        uniqueTag: workSpace.roles.owner.uniqueTag
+                    };
+
+                    const admins = workSpace.roles.admins.map(cur => {
+                        return {
+                            name: cur.name,
+                            _id: cur._id,
+                            image: cur.image,
+                            status: cur.status,
+                            uniqueTag: cur.uniqueTag
+                        }
+                    });
+    
+                    return res.json({
+                        title: workSpace.title,
+                        _id: workSpace._id,
+                        endPoint: workSpace.endPoint,
+                        roles: {
+                            owner: owner,
+                            admins: admins,
+                            members: members
+                        },
+                        rooms: rooms,
+                        connectedClients: workSpaceConnectedClients
+                    }) 
+                }
+
+                if(rooms) {
+                    // Preparing rooms for notifications
+                    const roomDetails = workSpace.rooms.map(cur => {
+                        const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
+                        if(msgToRoom.length > 0) {
+                            return {
+                                _id: cur._id,
+                                name: cur.name,
+                                workSpaceId: workSpace._id,
+                                endPoint: nsEndPoint,
+                                workSpaceTitle: workSpace.title,
+                                privacy: cur.privacy,
+                                nothing: false,
+                                messages: cur.messages
+                            }
+                        }
+                        return {
+                            _id: cur._id,
                             workSpaceId: workSpace._id,
                             endPoint: nsEndPoint,
                             workSpaceTitle: workSpace.title,
+                            name: cur.name,
                             privacy: cur.privacy,
-                            nothing: false,
+                            nothing: true,
                             messages: cur.messages
                         }
-                    }
-                    return {
-                        _id: cur._id,
-                        workSpaceId: workSpace._id,
-                        endPoint: nsEndPoint,
-                        workSpaceTitle: workSpace.title,
-                        name: cur.name,
-                        privacy: cur.privacy,
-                        nothing: true,
-                        messages: cur.messages
-                    }
-                })
+                    })
+
+                    // Response JSON data
+                    return res.json({
+                        acknowledgment: {
+                            type: 'success',
+                            message: 'Succesfully fetched all rooms of the workspace',
+                            rooms: roomDetails,
+                        }
+                    })
+                }
 
                 // // Converting array to object
                 // function toObject(arr) {
@@ -1032,18 +1109,9 @@ exports.fetchDetails = async (req, res, next) => {
                 //     return rv;
                 // }
                 // const rooms = toObject(roomDetails);
-
-                // Response JSON data
-                return res.json({
-                    acknowledgment: {
-                        type: 'success',
-                        message: 'Succesfully fetched all rooms of the workspace',
-                        rooms: roomDetails,
-                    }
-                })
             }); 
         }
-    }
+    // }
 }
 
 exports.postAddFriend = async(req, res, next) => {

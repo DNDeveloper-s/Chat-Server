@@ -111,9 +111,43 @@ function remove_frndslist() {
     frnds_list_container.classList.remove('open');
 }
 
+async function fetchWorkSpaces() {
+    const allNamespaces = document.querySelectorAll('.nameSpaceContainer > .name_space');
+    const allEndPoints = [];
+    allNamespaces.forEach(cur => {
+        allEndPoints.push(cur.dataset.ns);
+    });
+    let workspaces = [];
+    for(const nsEndPoint of allEndPoints) {
+        const res = await fetch(`${window.location.origin}/dashboard/fetch?workspaces=true&nsEndPoint=${nsEndPoint}`, {
+            method: "GET"
+        })
+        const data = await res.json();
+        workspaces.push(data);
+    }
+
+    // Converting array to object
+    function toObject(arr) {
+        var rv = {};
+        for (var i = 0; i < arr.length; ++i)
+            if (arr[i] !== undefined) {
+                // const name = arr[i].name
+                rv[arr[i].endPoint] = arr[i];
+            }
+        return rv;
+    }
+
+    const obj = toObject(workspaces);
+    // Storing to Session Storage
+    sessionStorage.setItem(`all_workspaces`, JSON.stringify(obj));
+}
+
+
 if(window.innerWidth < 768) {
     toggle_nav_on_mob();
     toggle_frnds_list();
 }
 
 defaultModal();
+
+fetchWorkSpaces();

@@ -489,7 +489,7 @@ body {
           align-items: center;
   -ms-flex-negative: 0;
       flex-shrink: 0;
-  background: #1d1d2c;
+  background: #151521;
   -webkit-box-shadow: 1px 0 3px black;
           box-shadow: 1px 0 3px black;
   z-index: 111;
@@ -644,7 +644,8 @@ body {
   position: relative;
   width: calc(20vw - 90px);
   min-width: calc(350px - 90px);
-  background: #1d1d2c;
+  background: -webkit-gradient(linear, left top, left bottom, from(#1d1d2c), to(#151521));
+  background: linear-gradient(180deg, #1d1d2c 0%, #151521 100%);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1245,18 +1246,137 @@ body {
   padding: 8px 10px;
 }
 
-#root > .main_bar > .send-message > input {
+#root > .main_bar > .send-message > .tag-list {
+  position: absolute;
+  bottom: 100%;
+  width: 100%;
+  left: 0;
+  background: #151521;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 0;
+  display: none;
+}
+
+#root > .main_bar > .send-message > .tag-list.open {
+  display: block;
+}
+
+#root > .main_bar > .send-message > .tag-list > .tag {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 10px 20px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  cursor: pointer;
+}
+
+#root > .main_bar > .send-message > .tag-list > .tag:hover, #root > .main_bar > .send-message > .tag-list > .tag.focus-tag {
+  background: -webkit-gradient(linear, left top, left bottom, from(#1d1d2c), to(#151521));
+  background: linear-gradient(180deg, #1d1d2c 0%, #151521 100%);
+  outline: none;
+}
+
+#root > .main_bar > .send-message > .tag-list > .tag > .tag-body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .main_bar > .send-message > .tag-list > .tag > .tag-body > .tag-img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 200px;
+  overflow: hidden;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+}
+
+#root > .main_bar > .send-message > .tag-list > .tag > .tag-body > .tag-img > img {
+  width: 100%;
+  height: 100%;
+}
+
+#root > .main_bar > .send-message > .tag-list > .tag > .tag-body > .tag-name {
+  color: #d0cbbc;
+  font-size: 15px;
+}
+
+#root > .main_bar > .send-message > .tag-list > .tag > .tag-hash {
+  font-size: 12px;
+  color: #d0cbbc47;
+  font-weight: 800;
+}
+
+#root > .main_bar > .send-message > .input {
   width: 100%;
   height: 40px;
   font-size: 15px;
   margin-right: 10px;
+  outline: none;
+  border: 2px solid #ffffff;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  padding: 4px 8px;
+  background: #dedede;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: #000;
+  border-radius: 4px;
+  line-height: 27px;
+  outline: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#root > .main_bar > .send-message > .input > .tag-details {
+  background: #6d6d8a;
+  color: #ffffffc4;
+  padding: 0 7px;
+  margin: 0 4px;
+  border-radius: 6px;
+  line-height: 28px;
+  height: 28px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .main_bar > .send-message > .input > .tag-details > img {
+  width: 18px;
+  height: 18px;
+  border-radius: 100px;
+  margin-right: 6px;
 }
 
 @media (max-width: 768px) {
-  #root > .main_bar > .send-message > input {
+  #root > .main_bar > .send-message > .input {
     margin-right: 0;
     padding-right: 65px;
   }
+}
+
+#root > .main_bar > .send-message > .input[contenteditable="true"]:empty:not(:focus):before {
+  content: attr(data-text);
 }
 
 #root > .main_bar > .send-message > button {

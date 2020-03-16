@@ -132,6 +132,7 @@ function deleteRooom(roomDetails) {
 }
 
 function loadRoom(roomDetails) {
+    console.log(roomDetails);
     const curRoomName = document.querySelector('.current-room-name > span');
 
     loadMessageToRoom(roomDetails.messages);

@@ -16,17 +16,13 @@ const workSpaceSchema = new Schema({
     },
     roles: {
         owner: {
-            id: {
-                type: Schema.Types.ObjectID,
-                ref: 'User'
-            },
+            type: Schema.Types.ObjectID,
+            ref: 'User'
         },
         admins: [
             {
-                id: {
-                    type: Schema.Types.ObjectID,
-                    ref: 'User'
-                },
+                type: Schema.Types.ObjectID,
+                ref: 'User'
             }
         ],
         members: [

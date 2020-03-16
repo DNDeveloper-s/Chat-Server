@@ -31,11 +31,11 @@ const regHandle = async () => {
 
     if(data.acknowledgment.type === 'success') {
         
-        
+        console.log(data);
 
     } else if(data.acknowledgment.type === 'error') {
-
-
+        
+        console.log(data);
 
     }
 }

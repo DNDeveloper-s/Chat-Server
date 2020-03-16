@@ -268,7 +268,7 @@ function showTypingStatus(type, userId) {
 }
 
 function messageToRoomHandler(roomId, nsEndPoint) {
-    const messageInput = document.querySelector('.send-message > input').value;
+    const messageInput = document.querySelector('.send-message > .input').innerHTML;
     // Converting Time in a readable format
     const curTime = new Date();
     const timeObj = {
@@ -279,8 +279,8 @@ function messageToRoomHandler(roomId, nsEndPoint) {
     const convertedTime = tConvert (time);
     // Checking if the input is not empty
     if(messageInput.length > 0) {
-        const messageInputContainer = document.querySelector('.send-message > input');
-        messageInputContainer.value = "";
+        const messageInputContainer = document.querySelector('.send-message > .input');
+        messageInputContainer.innerHTML = "";
         messageInputContainer.focus();
         postMessageToRoom(roomId, nsEndPoint, messageInput, convertedTime);
     }

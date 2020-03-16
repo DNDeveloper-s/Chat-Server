@@ -93,8 +93,8 @@ $header: #EBA63F;
 $body: #F7F4E9;
 $background: #1D1D2C;
 $nav: #d0cbbc;
-$sidebar_grad1: #1d1d2c;
-$sidebar_grad2: #1d1d2c;
+$sidebar_grad1: #151521;
+$sidebar_grad2: linear-gradient(180deg, #1d1d2c 0%, #151521 100%);
 $btn_grad: linear-gradient(180deg, #1d1d2cd6 0%, #0b0b15 100%);
 $friendlist_grad: linear-gradient(180deg, #27273ee8 0%, #161623 100%);
 $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
@@ -617,7 +617,7 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
             width: calc(20vw - 90px);
             min-width: calc(350px - 90px);
             // background: linear-gradient(180deg, #303030 0%, #0e0d0d 100%);
-            background: $sidebar_grad1;
+            background: $sidebar_grad2;
             display: flex;
             flex-direction: column;
             transition: .5s;
@@ -1146,15 +1146,118 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
                 padding: 8px 10px;
             }
 
-            > input {
+            > .tag-list {
+                position: absolute;
+                bottom: 100%;
+                width: 100%;
+                left: 0;
+                background: $sidebar_grad1;
+                border-radius: 8px 8px 0 0;
+                padding: 10px 0;
+                display: none;
+
+                &.open {
+                    display: block;
+                }
+
+                > .tag {
+                    display: flex;
+                    padding: 10px 20px;
+                    align-items: center;
+                    justify-content: space-between;
+                    cursor: pointer;
+
+                    &:hover,
+                    &.focus-tag {
+                        background: $sidebar_grad2;
+                        outline: none;
+                    }
+
+                    > .tag-body {
+                        display: flex;
+                        align-items: center;
+
+                        > .tag-img {
+                            width: 40px;
+                            height: 40px;
+                            margin-right: 10px;
+                            border-radius: 200px;
+                            overflow: hidden;
+                            flex-shrink: 0;
+                            flex-grow: 0;
+    
+                            > img {
+                                width: 100%;
+                                height: 100%;
+                            }
+                        }
+    
+                        > .tag-name {
+                            color: $nav;
+                            // font-family: 'ArimaMadurai_Regular', sans-serif;
+                            font-size: 15px;
+                        }
+                    }
+
+                    > .tag-hash {
+                        font-size: 12px;
+                        color: #d0cbbc47;
+                        font-weight: 800;
+                    }
+                }
+            }
+
+            > .input {
                 width: 100%;
                 height: 40px;
                 font-size: 15px;
                 margin-right: 10px;
+                outline: none;
+                border: 2px solid #ffffff;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+                padding: 4px 8px;
+                background: #dedede;
+                overflow-x: auto;
+                overflow-y: hidden;
+                color: #000;
+                border-radius: 4px;
+                line-height: 27px;
+                outline: none; 
+                // white-space: pre-wrap; 
+                // overflow-wrap: break-word; 
+                // -webkit-user-modify: read-write-plaintext-only;
+                display: flex;
+
+                > .tag-details {
+                    background: #6d6d8a;
+                    color: #ffffffc4;
+                    padding: 0 7px;
+                    margin: 0 4px;
+                    border-radius: 6px;
+                    line-height: 28px;
+                    height: 28px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+
+                    > img {
+                        width: 18px;
+                        height: 18px;
+                        border-radius: 100px;
+                        margin-right: 6px;
+                    }
+                }
 
                 @media (max-width: 768px) {
                     margin-right: 0;
                     padding-right: 65px;
+                }
+            
+                &[contenteditable="true"]:empty:not(:focus):before{
+                    content:attr(data-text)
                 }
             }
 

@@ -21,12 +21,12 @@ async function connectToNs(nsEndPoint) {
      }
 
     // Blurring the whole Workspace area between interchanging the workspace
-    const root = document.getElementById('root');
-    root.classList.add('namespace-interchange');
+    // const root = document.getElementById('root');
+    // root.classList.add('namespace-interchange');
 
     // Injecting nsid to page
-    const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
-    nsContainer.dataset.nsendpoint = nsEndPoint;
+    // const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
+    // nsContainer.dataset.nsendpoint = nsEndPoint;
     
     // Loading Connected Namespace
     await fetch(`${window.location.origin}/dashboard/workspace?isLoad=true&nsEndPoint=${nsEndPoint}`, {
@@ -62,21 +62,21 @@ async function connectToNs(nsEndPoint) {
         }
         const rooms = JSON.parse(jsonRooms);
         console.log(rooms);
-        showRooms(rooms);
+        // showRooms(rooms);
 
         nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
             console.log(roomData);
-            loadRoom(roomData);
+            // loadRoom(roomData);
         });
 
         // Injecting the Namespace Name
-        const nameSpaceNameHolder = document.querySelector('.namespace-name > .namespace-event > h3');
-        const nsOptions = document.querySelector('.namespace-name > .ns-options.dropdown');
-        nameSpaceNameHolder.innerHTML = rooms[0].workSpaceTitle.toUpperCase();
-        nsOptions.dataset.id =  rooms[0].endPoint;
+        // const nameSpaceNameHolder = document.querySelector('.namespace-name > .namespace-event > h3');
+        // const nsOptions = document.querySelector('.namespace-name > .ns-options.dropdown');
+        // nameSpaceNameHolder.innerHTML = rooms[0].workSpaceTitle.toUpperCase();
+        // nsOptions.dataset.id =  rooms[0].endPoint;
 
         // Removing the blur effect
-        root.classList.remove('namespace-interchange');
+        // root.classList.remove('namespace-interchange');
     });
 
     nsSocket.on('notification', data => {
@@ -103,18 +103,27 @@ async function connectToNs(nsEndPoint) {
 
     nsSocket.on('roomCreated', async(data) => {
 
-        // Working with sessionStorage
+        // Working with sessionStorage - for rooms
         let jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         if(!jsonRooms) {
             await fetchRooms(nsEndPoint);
             jsonRooms = sessionStorage.getItem(`nsRooms-${nsEndPoint}`);
         }
         const rooms = JSON.parse(jsonRooms);
-
-        // Same room schema data for session storage
         rooms.push(data.roomDetails);
         sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(rooms));
         console.log(rooms);
+
+        // Working with sessionStorage - for workspaces
+        let jsonWorkspaces = sessionStorage.getItem(`all_workspaces`);
+        if(jsonWorkspaces) {
+            const workspaces = JSON.parse(jsonWorkspaces);
+            workspaces[data.roomDetails.workSpaceId].rooms.push({
+                _id: data.roomDetails._id,
+                name: data.roomDetails.name
+            });
+            sessionStorage.setItem(`all_workspaces`, workspaces);
+        }
         
         console.log(data);
         addRooms(data.roomDetails);
@@ -132,6 +141,14 @@ async function connectToNs(nsEndPoint) {
         console.log(rooms);
         rooms = rooms.filter(cur => cur._id.toString() !== data.roomId.toString());
         sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(rooms));
+
+        // Working with sessionStorage - for workspaces
+        let jsonWorkspaces = sessionStorage.getItem(`all_workspaces`);
+        if(jsonWorkspaces) {
+            const workspaces = JSON.parse(jsonWorkspaces);
+            workspaces[data.roomDetails.nsId].rooms = workspaces[data.roomDetails.nsId].rooms.filter(cur => cur._id.toString() !== data.roomId.toString());
+            sessionStorage.setItem(`all_workspaces`, workspaces);
+        }
 
         console.log(data);
         deleteRooom(data);
@@ -212,17 +229,50 @@ async function nsListeners() {
     console.log(data);
        
     if(data.acknowledgment.config.defaultWorkSpace) {
-        connectToNs(data.acknowledgment.config.defaultWorkSpace.endPoint);
+
+        const endPoint = data.acknowledgment.config.defaultWorkSpace.endPoint;
+
+        loadNamespace(endPoint);
+
+
+        connectToNs(endPoint);
     }
 
     nameSpaces.forEach(ns => {
         ns.addEventListener('click', async (e) => {
+            
+            loadNamespace(ns.dataset.ns)
             const isIt = isItSameNs(nsSocket, ns.dataset.ns);
             if(!isIt) {           
                 connectToNs(ns.dataset.ns);
             }
         });
     })
+}
+
+async function loadNamespace(endPoint) {
+
+    // Injecting nsid to page
+    const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
+    nsContainer.dataset.nsendpoint = endPoint;
+
+    // Working with sessionStorage
+    let jsonRooms = sessionStorage.getItem(`nsRooms-${endPoint}`);
+    if(!jsonRooms) {
+        await fetchRooms(endPoint);
+        jsonRooms = sessionStorage.getItem(`nsRooms-${endPoint}`);
+    }
+    const rooms = JSON.parse(jsonRooms);
+    console.log(rooms);
+    showRooms(rooms);
+
+    // Injecting the Namespace Name
+    const nameSpaceNameHolder = document.querySelector('.namespace-name > .namespace-event > h3');
+    const nsOptions = document.querySelector('.namespace-name > .ns-options.dropdown');
+    nameSpaceNameHolder.innerHTML = rooms[0].workSpaceTitle.toUpperCase();
+    nsOptions.dataset.id =  rooms[0].endPoint;
+
+    loadRoom(rooms[0]);
 }
 
 // async function fetchAllMessages(nsEndPoint) {
@@ -250,6 +300,5 @@ async function fetchRooms(nsEndPoint) {
 
     sessionStorage.setItem(`nsRooms-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
 }
-
 
 module.exports = { connectToNs, nsListeners, fetchRooms, getNsSocket };

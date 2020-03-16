@@ -1,6 +1,7 @@
 const { addModal } = require('./dashboard/Modal/addModal');
 const { addUserModal } = require('./dashboard/User/userUI');
 const { messageToRoomHandler } = require('./dashBoard/User/message');
+const randomize = require('randomatic');
 
 module.exports = () => {
     const addNameSpaceBtn = document.querySelector('.add-name_space');
@@ -109,17 +110,47 @@ module.exports = () => {
     });
     const roomDetailsContainer = document.querySelector('.room-details');
     const sendMessageToRoomBtn = document.querySelector('.send-message > button');
-    const inputBox = document.querySelector('.send-message > input');
+    const inputBox = document.querySelector('.send-message > .input');
+    inputBox.innerHTML = "";
+    // inputBox.focus();
     const form = document.querySelector('.send-message');
     const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+    });
+    inputBox.addEventListener('focus', e => {
+        if(inputBox.childElementCount === 0) {
+            inputBox.innerHTML = '<span class="text"></span>';
+        }
     })
-    inputBox.addEventListener('keydown', function(e) {
-        if(e.key === "Enter") {
-            const nsEndPoint = nsContainer.dataset.nsendpoint;
+    inputBox.addEventListener('keyup', function(e) {
+        if(inputBox.childElementCount === 0) {
+            inputBox.innerHTML = '<span class="text"></span>';
+        }
+
+        const nsEndPoint = nsContainer.dataset.nsendpoint;
+        if((e.keyCode >= 64 && e.keyCode <= 91) || e.key === '@' || e.key === "Backspace") {
+            const textEl = inputBox.querySelectorAll('.text');
+            const arr = textEl[textEl.length - 1].textContent.split(' ');
+            const string = arr[arr.length - 1].trim();
+            if(string.startsWith('@')) {
+                const str = string.slice('1');
+                showTags(nsEndPoint, str.toLowerCase());
+            } else {
+                // Remove Tag List
+                remove_tag_list();
+            }
+        } else if(e.key === "Enter") {
             const roomId = roomDetailsContainer.dataset.roomid;
             messageToRoomHandler(roomId, nsEndPoint);
+        } else if(e.key === " ") {
+            // Remove Tag List
+            remove_tag_list();
+        }
+    })
+    inputBox.addEventListener('keydown', function(e) {
+        if(e.key === 'ArrowUp' || e.key == 'ArrowDown' || e.key === 'Tab') {
+            e.preventDefault();
         }
     })
     sendMessageToRoomBtn.addEventListener('click', function() {
@@ -127,4 +158,145 @@ module.exports = () => {
         const roomId = roomDetailsContainer.dataset.roomid;
         messageToRoomHandler(roomId, nsEndPoint);
     })
+
+    // Tab Event for Tags
+    window.addEventListener('keydown', e => {
+        if(e.key === 'Tab') {
+            const focusedTag = document.querySelector('.focus-tag');
+            if(focusedTag) {
+                const user_name = focusedTag.querySelector('.tag-name').innerText;
+                const user_id = focusedTag.querySelector('.tag-body').dataset.userid;
+                const user_image = focusedTag.querySelector('.tag-img > img').getAttribute('src');
+
+                const textEl = inputBox.querySelectorAll('.text');
+                const arr = textEl[textEl.length - 1];
+                console.log(arr);
+                const l = arr.textContent.split('@')[0];
+                console.log(l);
+                arr.innerHTML = l;
+
+                inputBox.insertAdjacentHTML('beforeend', `<span class="tag-details" data-userid="${user_id}" contenteditable="false" ><img src="${user_image}" alt="${user_name}">@${user_name}</span><span class="text"></span`);
+                remove_tag_list();
+                inputBox.focus();
+                const sel = window.getSelection();
+                sel.collapse(inputBox.lastChild, 0);
+            }
+        }
+    })
 }
+
+function remove_tag_list() {
+    // Remove Tag List
+    const tagList = document.querySelector('.tag-list');
+    tagList.classList.remove('open');
+    tagList.innerHTML = '';
+}
+
+function showTags(nsEndPoint, inputValue) {
+    const jsonWorkSpace = sessionStorage.getItem(`all_workspaces`);
+    const workspace = JSON.parse(jsonWorkSpace);
+    // console.log(workspace[nsEndPoint].roles.members);
+    const matchedNames = workspace[nsEndPoint].roles.members.filter(cur => {
+        const str = cur.name.toLowerCase();
+        return str.search(inputValue) !== -1
+    });
+
+    // Remove Tag List
+    const tagList = document.querySelector('.tag-list');
+    remove_tag_list();
+
+    if(matchedNames.length > 0 && !tagList.classList.contains('open')) {
+        tagList.classList.add('open');
+    }
+
+    // Adding Tag List
+    matchedNames.forEach((cur, ind) => {
+        const tagHTML = `
+            <div class="tag" id="tag-${ind}" data-num="${ind+1}" tabindex="0">
+                <div class="tag-body userLink" data-userid="${cur._id}">
+                    <div class="tag-img">
+                        <img src="${cur.image}" class="message-user_dp" alt="">
+                    </div>
+                    <div class="tag-name">${cur.name}</div>
+                </div>
+                <div class="tag-hash">${cur.uniqueTag}</div>
+            </div>
+        `;
+        tagList.insertAdjacentHTML('beforeend', tagHTML);
+    });
+
+    if(document.getElementById('tag-0')) {
+        document.getElementById('tag-0').classList.add('focus-tag');
+        add_keys(matchedNames.length);
+    }
+
+}
+
+function add_keys(length) {
+    const tagList = document.querySelector('.tag-list');
+    if(tagList.childElementCount > 1) {
+        window.removeEventListener('keydown', arrows_handler);
+        window.addEventListener('keydown', arrows_handler);
+    }
+}
+
+function arrows_handler(e, length) {
+    let cur;
+    switch (e.key) {
+        case 'ArrowUp':
+            cur = document.querySelector('.focus-tag').dataset.num;
+            addUp(+cur);
+            break;
+        case 'ArrowDown':
+            cur = document.querySelector('.focus-tag').dataset.num;
+            addDown(+cur);
+            break;
+        default:
+    }
+
+    function addDown(num) {
+        const tagElToRemove = document.querySelector(`.tag[data-num="${num}"]`);
+        const tagEl = document.querySelector(`.tag[data-num="${num+1}"]`);
+        if(tagEl && tagElToRemove) {
+            tagElToRemove.classList.remove('focus-tag');
+            tagEl.classList.add('focus-tag');
+        }
+    }
+
+    function addUp(num, length) {
+        const tagElToRemove = document.querySelector(`.tag[data-num="${num}"]`);
+        const tagEl = document.querySelector(`.tag[data-num="${num-1}"]`);
+        if(tagEl && tagElToRemove) {
+            tagElToRemove.classList.remove('focus-tag');
+            tagEl.classList.add('focus-tag');
+        }
+    }
+      
+}
+
+
+function setCursor(pos) { 
+    var tag = document.getElementById("editable"); 
+      
+    // Creates range object 
+    var setpos = document.createRange(); 
+      
+    // Creates object for selection 
+    var set = window.getSelection(); 
+      
+    // Set start position of range 
+    setpos.setStart(tag.childNodes[0], pos); 
+      
+    // Collapse range within its boundary points 
+    // Returns boolean 
+    setpos.collapse(true); 
+      
+    // Remove all ranges set 
+    set.removeAllRanges(); 
+      
+    // Add range with respect to range object. 
+    set.addRange(setpos); 
+      
+    // Set cursor on focus 
+    tag.focus(); 
+} 

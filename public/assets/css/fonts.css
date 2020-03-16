@@ -22,3 +22,25 @@
     font-family: 'Montserrat_ExtraBold';
     src: url('../fonts/MontSerrat/Montserrat-ExtraBold.otf');
 }
+
+/* Arima Madurai */
+
+@font-face {
+    font-family: 'ArimaMadurai_Regular';
+    src: url('../fonts/ArimaMadurai/ArimaMadurai-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'ArimaMadurai_Medium';
+    src: url('../fonts/ArimaMadurai/ArimaMadurai-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'ArimaMadurai_Bold';
+    src: url('../fonts/ArimaMadurai/ArimaMadurai-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'ArimaMadurai_ExtraBold';
+    src: url('../fonts/ArimaMadurai/ArimaMadurai-ExtraBold.ttf');
+}

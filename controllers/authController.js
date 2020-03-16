@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const randomize = require('randomatic');
 const User = require('../models/User');
 
 exports.fetchUser = async (req, res, next) => {
@@ -41,7 +42,7 @@ exports.getAuth = async (req, res, next) => {
                 type: type,
                 message: message
             },
-            loggedIn: true
+            loggedIn: false
         });
     }
     
@@ -59,6 +60,8 @@ exports.postRegAuth = async (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    console.log(req.body.name, req.body.email);
+
     try {
 
         let user = await User.findOne({email: email});
@@ -72,10 +75,22 @@ exports.postRegAuth = async (req, res, next) => {
         if(!hashedPw) {
             throw new Error('Something went wrong, Try again!');
         }
+        let uniqueId;
+        while(true) {
+            const randomNum = randomize('0', 5);
+            uniqueId = `${name}#${randomNum}`;
+            console.log(uniqueId);
+            const users = await User.findOne({uniqueTag: uniqueId});
+            if(users) {
+                continue;
+            }
+            break;
+        }
 
         user = new User({
             name: name,
             email: email,
+            uniqueTag: uniqueId,
             password: hashedPw,
             image: '/assets/images/Saurabh_DP_square.jpg'
         })
@@ -89,10 +104,8 @@ exports.postRegAuth = async (req, res, next) => {
             }
         })
 
-        console.log(req.body.name, req.body.email);
-
     } catch(e) {
-        next(e);
+        return next(e);
     }
     
 }
