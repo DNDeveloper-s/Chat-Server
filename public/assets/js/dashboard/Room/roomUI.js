@@ -153,13 +153,13 @@ function loadRoom(roomDetails) {
 
     // Injecting Room Id
     const roomContainer = document.querySelector('.room-details');
-    const msgDispContainer = document.querySelector('.message-display__container');
+    const msgDispContainer = document.querySelector('.message-display__container > .messages');
     roomContainer.dataset.roomid = roomDetails._id.toString();
     msgDispContainer.dataset.roomid = roomDetails._id.toString();
 }
 
 function loadMessageToRoom(messages) {
-    const messageContainer = document.querySelector('.message-display__container');
+    const messageContainer = document.querySelector('.message-display__container > .messages');
     messageContainer.innerHTML = "";
     messages.forEach(message => {
         if(messageContainer.childElementCount > 0 && messageContainer.firstElementChild.dataset.userid.toString() === message.user.id.toString()) {
@@ -168,7 +168,7 @@ function loadMessageToRoom(messages) {
         } else {
             
             const messageHtml = `
-                <div class="message" data-userid=${message.user.id}>
+                <div class="message" id="${message.user.id}" data-userid=${message.user.id}>
                     <div class="message-inner">
                         <div class="user-img userLink pointer" data-userid=${message.user.id}>
                             <img src="${message.user.image}" class="message-user_dp" alt="">
@@ -215,9 +215,9 @@ function loadMessageToRoom(messages) {
 }
 
 function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
-    const messageContainer = document.querySelector(`.message-display__container[data-roomid="${roomId}"]`);
+    const messageContainer = document.querySelector(`.message-display__container > .messages[data-roomid="${roomId}"]`);
     if(messageContainer) {
-        if(messageContainer.firstElementChild.dataset.userid.toString() === messageObj.user.id.toString()) {
+        if(messageContainer.firstElementChild && messageContainer.firstElementChild.dataset.userid.toString() === messageObj.user.id.toString()) {
             console.log(messageContainer.lastElementChild.querySelector('.message-data'));
             messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p>${messageObj.body}</p>`);
             messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = messageObj.time;
@@ -226,7 +226,7 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
             }
         } else {
             const messageHtml = `
-                <div class="message" data-userid=${messageObj.user.id}>
+                <div class="message" id="${messageObj.user.id}" data-userid=${messageObj.user.id}>
                     <div class="message-inner">
                         <div class="user-img userLink pointer" data-userid=${messageObj.user.id}>
                             <img src="${messageObj.user.image}" class="message-user_dp" alt="">

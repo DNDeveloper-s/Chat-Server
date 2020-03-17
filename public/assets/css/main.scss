@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Varela+Round&display=swap');
+
 $img_holder-sides: 65px;
 
 $left-margin-roomContainer: 10%;
@@ -7,6 +9,7 @@ $left-margin-roomContainer: 10%;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat_Regular', sans-serif;
+    user-select: text;
 }
 
 input:focus,
@@ -860,25 +863,56 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
         > .room-details {
             position: relative;
             display: flex;
-            justify-content: space-evenly;
+            justify-content: space-between;
             align-items: center;
             width: 100%;
             height: 90px;
             // background: #eee;
             background: $nav;
             color: $background;
-            
+            flex-shrink: 0;
 
-            > .toggle-btn {
-                margin-left: 5px;
-            }
-
-            > .alignCenter {
+             .alignCenter {
                 display: flex;
                 align-items: center;
                 
                 > .material-icons {
                     font-size: 28px;
+                }
+            }
+            
+
+            > .toggle-btn {
+                margin-left: 5px;
+
+                @media (min-width: 768px) {
+                    display: none;
+                }
+            }
+
+            > .toRight {
+                display: flex;
+
+                > * {
+                    margin-right: 50px;
+                }
+            
+
+                > .friends-icon {
+                    @media (min-width: 768px) {
+                        display: none;
+                    }
+                }
+            }
+
+             .workspace-clients-icon {
+                width: 23px;
+                // height: 40px;
+
+
+                > img {
+                    width: 100%;
+                    height: 100%;
                 }
             }
 
@@ -956,218 +990,300 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
         }
 
         > .message-display__container {
+            position: relative;
             height: 100%;
-            width: 98%;
+            width: 100%;
             margin: 0 auto;
             display: flex;
-            flex-direction: column-reverse;
             overflow: auto;
+            justify-content: space-between;
 
             @media (max-width: 768px) {
                 padding: 0 10px;
             }
 
-            > .message {
-                // min-height: min-content;
-                position: relative;
-                display: block;
-                padding: 0 0 10px;
+            > .messages {
+                height: 100%;
+                width: 100%;
+                padding: 0 12px;
+                display: flex;
+                flex-direction: column-reverse;
+                overflow: auto;
+                
 
-                // @media (max-width: 768px) {
-                //     max-width: 100%;
-                //     zoom: 0.68;
-                //     overflow: hidden;
-                // }
-
-                > hr {
-                    border: 0.5px solid #d3d3d3bf;
-                }
-
-                > .message-inner {
+                > .message {
+                    // min-height: min-content;
                     position: relative;
-                    align-items: flex-start;
-                    color: #272727;
-                    border-radius: 10px 10px 10px 0;
-                    overflow: hidden;
-                    // min-width: 650px;
-                    // max-width: 90%;
-                    width: 100%;
-                    padding: 8px 8px 12px;
-                    // background: #89c4f74a;
-                    // box-shadow: 0 2px 3px rgba(0,0,0,0.4);
-                    display: inline-flex;
+                    display: block;
+                    padding: 0 0 10px;
+
+                    // @media (max-width: 768px) {
+                    //     max-width: 100%;
+                    //     zoom: 0.68;
+                    //     overflow: hidden;
+                    // }
 
                     > hr {
-                        margin: 5px 0;
+                        border: 0.5px solid #d3d3d300;
                     }
 
-                    > .user-img {
-                        min-height: min-content;
+                    > .message-inner {
                         position: relative;
-                        width: 34px;
-                        //width: 30%;
-                        //max-width: 60px;
-                        height: 34px;
-                        margin-top: 4px;
-                        flex-shrink: 0;
-                        // border: 2px solid #fff;
-                        // box-shadow: 0 3px 4px rgba(0,0,0,0.4);
-                        border-radius: 20000px;
+                        align-items: flex-start;
+                        color: #272727;
+                        border-radius: 10px 10px 10px 0;
                         overflow: hidden;
+                        // min-width: 650px;
+                        // max-width: 90%;
+                        width: 100%;
+                        padding: 8px 8px 12px;
+                        // background: #89c4f74a;
+                        // box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+                        display: inline-flex;
 
-                        > .message-user_dp {
-                            width: 100%;
-                            height: 100%;
-                        }
-                    }
-
-                    > .message-body {
-                        min-height: min-content;
-                        width: calc(100% - 60px);
-                        // border: 2px solid #fff;
-                        border-left: none;
-                        padding-left: 10px;
-                        // background: #eee;
-
-                        @media (max-width: 768px) {
-                            width: 100%;
+                        > hr {
+                            margin: 5px 0;
                         }
 
-                        > .message-header {
+                        > .user-img {
+                            min-height: min-content;
                             position: relative;
-                            // color: #000000 ;
-                            color: $header;
-                            font-weight: 800;
-                            padding: 7px 9px 4px;
-                            display: flex;
-                            justify-content: flex-start;
-                            align-items: flex-end;
+                            width: 34px;
+                            //width: 30%;
+                            //max-width: 60px;
+                            height: 34px;
+                            margin-top: 4px;
+                            flex-shrink: 0;
+                            // border: 2px solid #fff;
+                            // box-shadow: 0 3px 4px rgba(0,0,0,0.4);
+                            border-radius: 20000px;
+                            overflow: hidden;
 
-                            > .user {
-                                display: flex;
-                                align-items: center;
-                                margin-right: 30px;
-
-                                > span {
-                                    font-family: 'Montserrat_Bold';
-                                    font-size: 13px;
-                                    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-
-                                    @media (max-width: 768px) {
-                                        font-size: 13px;
-                                    }
-                                }
-                            }
-
-                            > .options {
-                                position: absolute;
-                                top: 50%;
-                                right: 0;
-                                transform: translateY(-50%);
-                                display: flex;
-                                align-items: center;
-
-                                @media (max-width: 768px) {
-                                    zoom: 0.6;
-                                }
+                            > .message-user_dp {
+                                width: 100%;
+                                height: 100%;
                             }
                         }
 
-                        > .message-data {
-                            margin: 9px 30px 0 0;
-                            font-size: 14px;
-                            padding: 0 0 7px 9px;
-                            font-weight: 600;
-                            // color: #00000096;
-                            color: $body;
+                        > .message-body {
+                            min-height: min-content;
+                            width: calc(100% - 60px);
+                            // border: 2px solid #fff;
+                            border-left: none;
+                            padding-left: 10px;
+                            // background: #eee;
 
                             @media (max-width: 768px) {
-                                margin: 3px 30px 0 0;
-                                max-width: 100%;
-                                overflow: auto;
-                                font-size: 12px;
+                                width: 100%;
                             }
 
-                            > .new-line {
-                                margin-top: 4px;
-                            }
+                            > .message-header {
+                                position: relative;
+                                // color: #000000 ;
+                                color: $header;
+                                font-weight: 800;
+                                padding: 7px 9px 4px;
+                                display: flex;
+                                justify-content: flex-start;
+                                align-items: flex-end;
 
-                            > p {
-                                // display: flex;
-                                // align-items: center;
-
-                                > .text:first-child:empty {
-                                    margin: 0;
-                                }
-
-                                > span {
-                                    height: 26px;
-                                    line-height: 26px;
-                                }
-
-                                > .text {
-                                    padding: 4px 0;
-                                    margin: 0 10px 0 0;
-                                }
-
-                                > .tag-details {
-                                    position: relative;
-                                    // display: inline-flex;
+                                > .user {
+                                    display: flex;
                                     align-items: center;
-                                    margin: 0 10px 0 0;
-                                    color: #984f2c;
-                                    background: #292940;
-                                    padding: 4px 8px;
-                                    box-sizing: border-box;
-                                    border-radius: 5px;
-                                    cursor: pointer;
-                                    transition: .15s;
-                                    padding-left: 27px;
-                                    white-space: nowrap;
+                                    margin-right: 30px;
 
-                                    &:hover {
-                                        background: #161623;
+                                    > span {
+                                        font-family: 'Montserrat_Bold';
+                                        font-size: 13px;
+                                        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+
+                                        @media (max-width: 768px) {
+                                            font-size: 13px;
+                                        }
                                     }
+                                }
 
-                                    > img {
-                                        position: absolute;
-                                        top: 50%;
-                                        left: 5px;
-                                        transform: translateY(-50%);
-                                        width: 17px;
-                                        height: 17px;
-                                        border-radius: 200px;
-                                        margin-right: 4px;
+                                > .options {
+                                    position: absolute;
+                                    top: 50%;
+                                    right: 0;
+                                    transform: translateY(-50%);
+                                    display: flex;
+                                    align-items: center;
+
+                                    @media (max-width: 768px) {
+                                        zoom: 0.6;
                                     }
                                 }
                             }
-                        }
 
-                        > .message-status {
-                            position: absolute;
-                            bottom: 0;
-                            right: 4px;
-
-                            &.sent {
-                                > .material-icons {
-                                    color: #2797A7;
-                                }
-                            }
-
-                            > .material-icons {
+                            > .message-data {
+                                margin: 9px 30px 0 0;
                                 font-size: 14px;
-                                color: #bbb;
+                                padding: 0 0 7px 9px;
+                                font-weight: 600;
+                                // color: #00000096;
+                                color: $body;
+
+                                @media (max-width: 768px) {
+                                    margin: 3px 30px 0 0;
+                                    max-width: 100%;
+                                    overflow: auto;
+                                    font-size: 12px;
+                                }
+
+                                > .new-line {
+                                    margin-top: 4px;
+                                }
+
+                                > p {
+                                    // display: flex;
+                                    // align-items: center;
+
+                                    > .text:first-child:empty {
+                                        margin: 0;
+                                    }
+
+                                    > span {
+                                        height: 26px;
+                                        line-height: 26px;
+                                    }
+
+                                    > .text {
+                                        padding: 4px 0;
+                                        margin: 0 10px 0 0;
+                                    }
+
+                                    > .tag-details {
+                                        position: relative;
+                                        // display: inline-flex;
+                                        align-items: center;
+                                        margin: 0 10px 0 0;
+                                        color: #984f2c;
+                                        background: #292940;
+                                        padding: 4px 8px;
+                                        box-sizing: border-box;
+                                        border-radius: 5px;
+                                        cursor: pointer;
+                                        transition: .15s;
+                                        padding-left: 27px;
+                                        white-space: nowrap;
+                                        user-select: none;
+
+                                        &:hover {
+                                            background: #161623;
+                                        }
+
+                                        > img {
+                                            position: absolute;
+                                            top: 50%;
+                                            left: 5px;
+                                            transform: translateY(-50%);
+                                            width: 17px;
+                                            height: 17px;
+                                            border-radius: 200px;
+                                            margin-right: 4px;
+                                        }
+                                    }
+                                }
+                            }
+
+                            > .message-status {
+                                position: absolute;
+                                bottom: 0;
+                                right: 4px;
+
+                                &.sent {
+                                    > .material-icons {
+                                        color: #2797A7;
+                                    }
+                                }
+
+                                > .material-icons {
+                                    font-size: 14px;
+                                    color: #bbb;
+                                }
+                            }
+                            
+
+                            > .message-time_stamp {
+                                position: absolute;
+                                bottom: 4px;
+                                right: 25px;
+                                margin-left: 30px;
+                                font-size: 10px;
+                                color: $body;
                             }
                         }
-                        
+                    }
+                }
+            }
 
-                        > .message-time_stamp {
+            > .workspace-clients {
+                width: 0;
+                overflow: hidden;
+                transition: .3s $fashioned_bezier;
+                height: 100%;
+                background: $sidebar_grad1;
+
+                &.open {
+                    width: 250px;
+                }
+
+                > .separators {
+                    font-size: 11px;
+                    font-weight: 900;
+                    color: #806e39;
+                    margin: 10px 0;
+                    padding: 0 20px;
+                    font-family: 'Varela Round', sans-serif;
+                }
+
+                 .loader-container {
+                    margin: 0 auto;
+                }
+
+                 .client {
+                    height: 50px;
+                    display: flex;
+                    align-items: center;
+                    padding: 0 10px;
+
+                    > .image {
+                        position: relative;
+                        width: 35px;
+                        height: 35px;
+                        margin-right: 10px;
+                        border-radius: 300px;
+
+                        > .status {
                             position: absolute;
-                            bottom: 4px;
-                            right: 25px;
-                            margin-left: 30px;
-                            font-size: 10px;
-                            color: $body;
+                            bottom: -3px;
+                            right: -3px;
+                            width: 14px;
+                            height: 14px;
+                            border-radius: 300px;
+
+                            &[data-status="online"] {
+                                border: 2px solid #1a1a27;
+                                background: #2aa70b;
+                            }
+                        }
+
+                        > img {
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 300px;
+                        }
+                    }
+
+                    > .name {
+                        color: $nav;
+                        font-size: 14px;
+
+                        > p {
+                            font-weight: 500;
+                            font-family: 'Varela Round', sans-serif;
                         }
                     }
                 }
@@ -1175,6 +1291,7 @@ $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
         }
 
         > .send-message {
+            flex-shrink: 0;
             position: relative;
             //position: absolute;
             //left: 50%;

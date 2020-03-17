@@ -3,6 +3,7 @@ const { updateStatus } = require('../User/friend');
 const { updateNotificationCount } = require('../User/notification'); 
 const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
 const { addMessageToRoom } = require('../Room/roomUI'); 
+const { loader } = require('../../utilities');
 
 const { showRooms, loadRoom, addNewRoom, addRooms, deleteRooom, updateClients } = require('../Room/roomUI'); 
 // const { joinRoom } = require('../Room/addRoom');
@@ -48,6 +49,26 @@ async function connectToNs(nsEndPoint) {
     nsSocket.on('clients', function(data) {
         console.log(data);
     });
+
+    nsSocket.on('ping', function() {
+		console.log(`Socket :: Ping sent.`);
+    })
+
+    nsSocket.on('pong', function(ms) {
+		console.log(`Socket :: Latency :: ${ms} ms`);
+    })
+
+    // let startTime;
+
+    // nsSocket.on('pong', function() {
+    //     let latency = Date.now() - startTime;
+    //     console.log(latency);
+    // });
+
+    // setInterval(function() {
+    //     startTime = Date.now();
+    //     nsSocket.emit('ping');
+    // }, 200);
 
     nsSocket.on('connectedByLink', function(data) {
         console.log(data);
@@ -203,7 +224,7 @@ async function connectToNs(nsEndPoint) {
             updateNotificationCount(data.count);
         } else if(data.type === 'toSender') {
 
-            const messageContainer = document.querySelector(`.message-display__container[data-roomid="${data.roomId}"]`);
+            const messageContainer = document.querySelector(`.message-display__container > .messages[data-roomid="${data.roomId}"]`);
             messageContainer.querySelector('.message-status > i').innerHTML = 'done_all';
             // Working with sessionStorage
             // let jsonRooms = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
@@ -225,6 +246,10 @@ async function connectToNs(nsEndPoint) {
             // addMessageToRoom(data.messageObj, data.roomId, data.nsEndPoint, true);
         }
     });
+
+    nsSocket.on('toClients', async (data) => {
+        updateStatusToClients(data);
+    })
     
 }
 
@@ -278,6 +303,7 @@ async function nsListeners() {
 }
 
 async function loadNamespace(endPoint) {
+    const { fetchRooms } = require('../../utilities');
 
     // Injecting nsid to page
     const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
@@ -300,19 +326,74 @@ async function loadNamespace(endPoint) {
     nsOptions.dataset.id =  rooms[0].endPoint;
 
     loadRoom(rooms[0]);
+
+    // Working with the workspace clients
+    // 1. Adding Loader to UI
+    const onlineClients = document.querySelector('.workspace-clients > .online-clients');
+    const offlineClients = document.querySelector('.workspace-clients > .offline-clients');
+    onlineClients.innerHTML = '<div class="loader-container"><svg width="40" height="40"><circle class="loader" cx="20" cy="20" r="17"></circle></svg></div>';
+    offlineClients.innerHTML = '<div class="loader-container"><svg width="40" height="40"><circle class="loader" cx="20" cy="20" r="17"></circle></svg></div>';
+
+    loader();
+
+    // Fetching 
+    const res = await fetch(`${window.location.origin}/dashboard/fetch?clientsStatus=true&nsEndPoint=${endPoint}`, {
+        method: "GET"
+    })
+    const data = await res.json();
+
+    if(data.acknowledgment.type === "success") {
+        const members = data.acknowledgment.members;
+        clientsUI(members);
+    }
 }
 
-// async function fetchAllMessages(nsEndPoint) {
-    
-//     const res = await fetch(`${window.location.origin}/message/fetch?byNs=true&nsEndPoint=${nsEndPoint}`, {
-//         method: "GET"
-//     });
+function clientsUI(members) {
+    const onlineClients = document.querySelector('.workspace-clients > .online-clients');
+    const offlineClients = document.querySelector('.workspace-clients > .offline-clients');
+    onlineClients.innerHTML = '';
+    offlineClients.innerHTML = '';
+    members.forEach(member => {
+        const htmlToInject = `
+            <div class="client" data-userid="${member._id}">
+                <div class="image">
+                    <img src="${member.image}" class="message-user_dp" alt="${member.name}">
+                    <span class="status" data-status="${member.status}"></span>
+                </div>
+                <div class="name">
+                    <p>${member.name}</p>
+                </div>
+            </div>
+        `;  
+        if(member.status === "online") {
+            onlineClients.insertAdjacentHTML('beforeend', htmlToInject);
+        } else if(member.status === "offline") {
+            offlineClients.insertAdjacentHTML('beforeend', htmlToInject);
+        }
+    })
+}
 
-//     const data = await res.json();
-    
-//     console.log(data);
-
-//     sessionStorage.setItem(`nsMessages-${nsEndPoint}`, JSON.stringify(data.acknowledgment.rooms));
-// }
+function updateStatusToClients(data) {
+    const clientContainer = document.querySelector('.workspace-clients');
+    const client = clientContainer.querySelector(`[data-userid="${data.userDetails._id}"]`);
+    const clientStatus = client.querySelector('.status').dataset.status;
+    console.log(clientStatus, data.userDetails.status);
+    if(clientStatus !== data.userDetails.status) {
+        client.remove();
+        const htmlToInject = `
+            <div class="client" data-userid="${data.userDetails._id}">
+                <div class="image">
+                    <img src="${data.userDetails.image}" class="message-user_dp" alt="${data.userDetails.name}">
+                    <span class="status" data-status="${data.userDetails.status}"></span>
+                </div>
+                <div class="name">
+                    <p>${data.userDetails.name}</p>
+                </div>
+            </div>
+        `;
+        const containerToAdd = document.querySelector(`.${data.userDetails.status}-clients`);
+        containerToAdd.insertAdjacentHTML('beforeend', htmlToInject);
+    }
+}
 
 module.exports = { connectToNs, nsListeners, getNsSocket, loadNamespace };

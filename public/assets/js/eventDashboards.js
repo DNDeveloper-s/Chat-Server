@@ -184,6 +184,13 @@ module.exports = () => {
             }
         }
     })
+
+    // Clients Toggle Button Handler
+    const clientIcon = document.querySelector('.workspace-clients-icon');
+    clientIcon.addEventListener('click', function(e) {
+        const workspaceClientContainer = document.querySelector('.workspace-clients');
+        workspaceClientContainer.classList.toggle('open');
+    });
 }
 
 function remove_tag_list() {

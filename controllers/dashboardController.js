@@ -634,6 +634,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     throw new Error('Invalid User From Line 282 in dashboardController.js!');
                 }
 
+
                 socket_id.push(nsSocket.id);
                 if (socket_id[0] === nsSocket.id) {
                     // remove the connection listener for any subsequent 
@@ -644,6 +645,10 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 if(nsEndPoint.slice(0, 1) !== '/') {
                     nsEndPoint = `/${nsEndPoint}`;
                 }
+
+                // nsSocket.on('ping', function() {
+                //     nsSocket.emit('pong');
+                // });
 
                 // On Connection, Updating Namespace clients
                 const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
@@ -665,6 +670,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 // Update your status to all of your friends
                 await User.findOne({email: req.session.user.email})
                 .populate('friendsList')
+                .populate('workSpaces')
                 .exec(function (err, user) {
                     const friendsSocket = user.friendsList.map(cur => {
                         return {
@@ -683,6 +689,23 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                             }
                         })
                     })
+
+                    
+                    // Emitting event to all the workspaces, user is connected in that he is online/ available
+                    const allEndPoints = user.workSpaces.map(cur => cur.endPoint);
+                    allEndPoints.forEach(endPoint => {
+                        io.of(endPoint).emit('toClients', {
+                            userDetails: {
+                                _id: user._id,
+                                name: user.name,
+                                image: user.image,
+                                status: user.status,
+                                uniqueTag: user.uniqueTag
+                            },
+                            endPoint: endPoint
+                        });
+                    })
+
                 });
 
                 // Typing Events //
@@ -874,6 +897,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     setTimeout(async() => {
                         // Update your status to all of your friends
                         await User.findOne({email: req.session.user.email})
+                        .populate('workSpaces')
                         .populate('friendsList')
                         .exec(function (err, user) {
                             const friendsSocket = user.friendsList.map(cur => {
@@ -893,6 +917,22 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                                     }
                                 })
                             });
+
+                    
+                            // Emitting event to all the workspaces, user is connected in that he is online/ available
+                            const allEndPoints = user.workSpaces.map(cur => cur.endPoint);
+                            allEndPoints.forEach(endPoint => {
+                                io.of(endPoint).emit('toClients', {
+                                    userDetails: {
+                                        _id: user._id,
+                                        name: user.name,
+                                        image: user.image,
+                                        status: user.status,
+                                        uniqueTag: user.uniqueTag
+                                    },
+                                    endPoint: endPoint
+                                });
+                            })
                         });
                     }, 1000);
 
@@ -976,18 +1016,43 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 exports.fetchDetails = async (req, res, next) => {
     const rooms = req.query.rooms;
     const workspaces = req.query.workspaces;
-    // if(rooms) {
-        const nsEndPoint = req.query.nsEndPoint;
+    const clientsStatus = req.query.clientsStatus;
+    
+    const nsEndPoint = req.query.nsEndPoint;
+
+    if(clientsStatus) {
+        await WorkSpace.findOne({endPoint: nsEndPoint})
+        .populate('roles.members')
+        .exec((err, workSpace) => {
+            const members = workSpace.roles.members.map(cur => {
+                return {
+                    _id: cur._id,
+                    name: cur.name,
+                    image: cur.image,
+                    status: cur.status,
+                    uniqueTag: cur.uniqueTag
+                }
+            })
+
+            return res.json({
+                acknowledgment: {
+                    type: 'success',
+                    message: 'Succesfully Got the Users!',
+                    members: members
+                }
+            })
+        })
+    } else {
         const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
-
+    
         const user = await User.findOne({email: req.session.user.email});
-
+    
         if(!workSpace) {    
             return next('Invalid Workspace');
         }
-
+    
         if(user.workSpaces.includes(workSpace._id.toString())) {
-
+    
             await WorkSpace.findOne({endPoint: nsEndPoint})
             .populate('rooms')
             .populate('connectedClients')
@@ -1000,7 +1065,7 @@ exports.fetchDetails = async (req, res, next) => {
                     return next('Internal Error!');
                 }
                 // console.log(workSpace);
-
+    
                 if(workspaces) {
                     const workSpaceConnectedClients = workSpace.connectedClients.map(client => {
                         return {
@@ -1011,14 +1076,14 @@ exports.fetchDetails = async (req, res, next) => {
                             _id: client._id
                         }
                     });
-
+    
                     const rooms = workSpace.rooms.map(cur => {
                         return {
                             _id: cur._id,
                             name: cur.name
                         }
                     })
-
+    
                     const members = workSpace.roles.members.map(cur => {
                         return {
                             name: cur.name,
@@ -1035,7 +1100,7 @@ exports.fetchDetails = async (req, res, next) => {
                         status: workSpace.roles.owner.status,
                         uniqueTag: workSpace.roles.owner.uniqueTag
                     };
-
+    
                     const admins = workSpace.roles.admins.map(cur => {
                         return {
                             name: cur.name,
@@ -1059,7 +1124,7 @@ exports.fetchDetails = async (req, res, next) => {
                         connectedClients: workSpaceConnectedClients
                     }) 
                 }
-
+    
                 if(rooms) {
                     // Preparing rooms for notifications
                     const roomDetails = workSpace.rooms.map(cur => {
@@ -1087,7 +1152,7 @@ exports.fetchDetails = async (req, res, next) => {
                             messages: cur.messages
                         }
                     })
-
+    
                     // Response JSON data
                     return res.json({
                         acknowledgment: {
@@ -1097,7 +1162,7 @@ exports.fetchDetails = async (req, res, next) => {
                         }
                     })
                 }
-
+    
                 // // Converting array to object
                 // function toObject(arr) {
                 //     var rv = {};
@@ -1111,7 +1176,8 @@ exports.fetchDetails = async (req, res, next) => {
                 // const rooms = toObject(roomDetails);
             }); 
         }
-    // }
+    }
+        
 }
 
 exports.postAddFriend = async(req, res, next) => {

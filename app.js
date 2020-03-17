@@ -70,7 +70,11 @@ mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true }
     .then(result => {
         console.log('Server is listening on 3000');
         const server = app.listen( process.env.PORT || 3000);
-        const io = require('./socket').init(server);
+        const io = require('./socket').init(server, 
+            {
+                'pingInterval': 2000,
+                'pingTimeout': 5000
+            });
         app.set('socketio', io);
     })
     .catch(err => console.log(err));

@@ -2,5 +2,18 @@
 Handling room to message where members of workspace are online,
 Put notifications to all the members of workspace once room has got new message and message is not rendered on the page
 
---TODO
 Notifications to all room where new message is arrived to the same or another namespace
+
+--TODO
+FIx biud - ns Functionality in toSender message /- Select proper last message using some extra information on line 207 -/
+
+1. Workspace clients -- Done
+2. Show mentioned messages and focus them with proper UI
+3. Fix modal loads on fetching data, will put loader in that
+4. Adding Separate Mentions Btn in the nav
+5. Improve User Registration UI
+
+
+-- Coming Soon
+# Custom Roles to the workspaces
+# Adding Images and Links to TextArea in room message

@@ -15,6 +15,7 @@ async function removeFriend(friendId) {
 }
 
 async function updateStatus(friendDetails) {
+    // Update status to the friends list UI
     const friendsListContainer = document.querySelector('.friends-list');
     const friendToUpdate = document.querySelector(`.friend.userLink[data-userid="${friendDetails._id}"]`);
     console.log(friendDetails._id, friendToUpdate);
