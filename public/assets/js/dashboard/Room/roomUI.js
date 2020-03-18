@@ -163,12 +163,12 @@ function loadMessageToRoom(messages) {
     messageContainer.innerHTML = "";
     messages.forEach(message => {
         if(messageContainer.childElementCount > 0 && messageContainer.firstElementChild.dataset.userid.toString() === message.user.id.toString()) {
-            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p>${message.body}</p>`);
+            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p data-messageid="${message._id}">${message.body}</p>`);
             messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = message.time;
         } else {
             
             const messageHtml = `
-                <div class="message" id="${message.user.id}" data-userid=${message.user.id}>
+                <div class="message" data-userid=${message.user.id}>
                     <div class="message-inner">
                         <div class="user-img userLink pointer" data-userid=${message.user.id}>
                             <img src="${message.user.image}" class="message-user_dp" alt="">
@@ -183,7 +183,7 @@ function loadMessageToRoom(messages) {
                                 </div>
                             </div>
                             <div class="message-data">
-                                <p>${message.body}</p>
+                                <p data-messageid="${message._id}">${message.body}</p>
                             </div>
                             <span class="message-time_stamp">${message.time}</span>
                             <div class="message-status">
@@ -219,14 +219,14 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
     if(messageContainer) {
         if(messageContainer.firstElementChild && messageContainer.firstElementChild.dataset.userid.toString() === messageObj.user.id.toString()) {
             console.log(messageContainer.lastElementChild.querySelector('.message-data'));
-            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p>${messageObj.body}</p>`);
+            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p data-messageid="${messageObj._id}">${messageObj.body}</p>`);
             messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = messageObj.time;
             if(bySender) {
                 messageContainer.firstElementChild.querySelector('.message-status > i').innerHTML = 'filter_tilt_shift';
             }
         } else {
             const messageHtml = `
-                <div class="message" id="${messageObj.user.id}" data-userid=${messageObj.user.id}>
+                <div class="message" data-userid=${messageObj.user.id}>
                     <div class="message-inner">
                         <div class="user-img userLink pointer" data-userid=${messageObj.user.id}>
                             <img src="${messageObj.user.image}" class="message-user_dp" alt="">
@@ -241,7 +241,7 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
                                 </div>
                             </div>
                             <div class="message-data">
-                                <p>${messageObj.body}</p>
+                                <p data-messageid="${messageObj._id}">${messageObj.body}</p>
                             </div>
                             <span class="message-time_stamp">${messageObj.time}</span>
                             <div class="message-status">

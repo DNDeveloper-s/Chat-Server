@@ -14,7 +14,7 @@ function getNsSocket() {
     return nsSocket;
 } 
 
-async function connectToNs(nsEndPoint) {
+async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
     const { fetchRooms } = require('../../utilities');
 
     if (!window.location.search.split('&').includes('showUserModalDefault=true') && window.history.replaceState) {
@@ -58,6 +58,11 @@ async function connectToNs(nsEndPoint) {
 		console.log(`Socket :: Latency :: ${ms} ms`);
     })
 
+    nsSocket.on('checkStatus', (data) => {
+        console.log(data);
+        nsSocket.emit('connectedSuc');
+    })
+
     // let startTime;
 
     // nsSocket.on('pong', function() {
@@ -86,10 +91,12 @@ async function connectToNs(nsEndPoint) {
         console.log(rooms);
         // showRooms(rooms);
 
-        nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
-            console.log(roomData);
-            // loadRoom(roomData);
-        });
+        if(!dontJoinDefaultRoom) {
+            nsSocket.emit('joinDefaultRoom', {nsEndPoint: nsEndPoint}, (roomData) => {
+                console.log(roomData);
+                // loadRoom(roomData);
+            });
+        }
 
         // Injecting the Namespace Name
         // const nameSpaceNameHolder = document.querySelector('.namespace-name > .namespace-event > h3');
@@ -140,7 +147,7 @@ async function connectToNs(nsEndPoint) {
         let jsonWorkspaces = sessionStorage.getItem(`all_workspaces`);
         if(jsonWorkspaces) {
             const workspaces = JSON.parse(jsonWorkspaces);
-            workspaces[data.roomDetails.workSpaceId].rooms.push({
+            workspaces[data.roomDetails.endPoint].rooms.push({
                 _id: data.roomDetails._id,
                 name: data.roomDetails.name
             });
@@ -198,6 +205,7 @@ async function connectToNs(nsEndPoint) {
     });
 
     nsSocket.on('messageToRoom', async(data) => {
+        console.log(data);
         if(data.type === "toAllConnectedClients") {
 
             // Working with sessionStorage
@@ -222,6 +230,13 @@ async function connectToNs(nsEndPoint) {
 
             // Pushing Notification to UI
             updateNotificationCount(data.count);
+
+            // Pushing mention to session storage
+            const jsonData = sessionStorage.getItem('mentions');
+            const arr = JSON.parse(jsonData);
+            arr.push(data.mentionDetails);
+            sessionStorage.setItem('mentions');
+
         } else if(data.type === 'toSender') {
 
             const messageContainer = document.querySelector(`.message-display__container > .messages[data-roomid="${data.roomId}"]`);
@@ -302,7 +317,7 @@ async function nsListeners() {
     })
 }
 
-async function loadNamespace(endPoint) {
+async function loadNamespace(endPoint, dontLoadDefaultRoom) {
     const { fetchRooms } = require('../../utilities');
 
     // Injecting nsid to page
@@ -325,7 +340,9 @@ async function loadNamespace(endPoint) {
     nameSpaceNameHolder.innerHTML = rooms[0].workSpaceTitle.toUpperCase();
     nsOptions.dataset.id =  rooms[0].endPoint;
 
-    loadRoom(rooms[0]);
+    if(!dontLoadDefaultRoom) {
+        loadRoom(rooms[0]);
+    }
 
     // Working with the workspace clients
     // 1. Adding Loader to UI

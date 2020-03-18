@@ -183,6 +183,7 @@ exports.postMessages = async(req, res, next) => {
                 time: time
             }
 
+            const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
             const room = await Room.findById(roomId);
 
             if(!room) {
@@ -191,6 +192,8 @@ exports.postMessages = async(req, res, next) => {
 
             room.messages.push(messageObj);
             await room.save();
+
+            messageObj._id = room.messages[room.messages.length - 1]._id;
 
             // Parsing the message input for mentions
             let parser = new DOMParser();
@@ -204,11 +207,19 @@ exports.postMessages = async(req, res, next) => {
 
             ids.forEach(async (cur) => {
                 const idUser = await User.findById(cur.value);
-                idUser.mentions.push({
-                    nsEndPoint: nsEndPoint,
-                    roomId: roomId,
+                const mentionObj = {
+                    nsDetails: {
+                        title: workSpace.title,
+                        image: workSpace.image,
+                        endPoint: nsEndPoint
+                    },
+                    roomDetails: {
+                        name: room.name,
+                        _id: roomId
+                    },
                     messageObj: messageObj
-                })
+                };
+                idUser.mentions.push(mentionObj)
                 idUser.notifications.list.push({
                     message: `You are mentioned by <span class="primary">${user.name}</span> in room <span class="secondary">#${room.name.toLowerCase()}</span>`,
                     notificationType: 'mentioned_msg',
@@ -221,12 +232,16 @@ exports.postMessages = async(req, res, next) => {
                     roomId: roomId
                 })
                 idUser.notifications.count = idUser.notifications.list.length;
+
+                const notificationCount = idUser.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg');
+
                 await idUser.save();
                 
                 // Socket for pushing notification to Mentioned Users
                 io.of(idUser.connectedDetails.endPoint).to(idUser.connectedDetails.socketId).emit('messageToRoom', {
                     type: "toMentions",
-                    count: idUser.notifications.count
+                    count: notificationCount.length,
+                    mentionDetails: mentionObj
                 })
             })
 
@@ -235,7 +250,7 @@ exports.postMessages = async(req, res, next) => {
             .populate('roles.members')
             .exec((err, workSpace) => {
                 if(!workSpace) {
-                    return next('Invalid Workspace!');
+                    return next('Invalid Workspace! Line 246');
                 }
                 workSpace.roles.members.forEach(async (member) => {
 

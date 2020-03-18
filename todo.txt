@@ -5,13 +5,16 @@ Put notifications to all the members of workspace once room has got new message 
 Notifications to all room where new message is arrived to the same or another namespace
 
 --TODO
-FIx biud - ns Functionality in toSender message /- Select proper last message using some extra information on line 207 -/
+Fix biud - ns Functionality in toSender message /- Select proper last message using some extra information on line 207 -/
+Fix bug on same NS click changing to default room
+# When some one new join the workspace -- Do something
 
 1. Workspace clients -- Done
-2. Show mentioned messages and focus them with proper UI
+2. Show mentioned messages -- Done and focus them with proper UI
 3. Fix modal loads on fetching data, will put loader in that
 4. Adding Separate Mentions Btn in the nav
 5. Improve User Registration UI
+6. Implementing Service worker in our project
 
 
 -- Coming Soon

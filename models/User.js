@@ -14,10 +14,18 @@ const userSchema = new Schema({
     },
     mentions: [
         {
-            nsEndPoint: String,
-            roomId: {
-                type: Schema.Types.ObjectID,
-                ref: 'Room'
+
+            nsDetails: {
+                title: String,
+                image: String,
+                endPoint: String
+            },
+            roomDetails: {
+                name: String,
+                _id: {
+                    type: Schema.Types.ObjectID,
+                    ref: 'Room'
+                }
             },
             messageObj: Object
         }

@@ -100,9 +100,7 @@ exports.postWorkspace = async (req, res, next) => {
         },
         endPoint: endPoint,
         roles: {
-            owner: {
-                id: req.session.user._id
-            }
+            owner: req.session.user._id
         },
         rooms: [
             room._id
@@ -189,7 +187,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
         const workSpace = await WorkSpace.findOne({endPoint: `/${nsName}`});
 
         if(!workSpace) {
-            return next('Invalid Workspace!');
+            return next('Invalid Workspace! Line 192');
         }
 
         if(link !== workSpace.invLink.link || !workSpace.invLink.linkExpiration > Date.now()) {
@@ -347,7 +345,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
         const roomDetails = {
             _id: room._id,
             workSpaceId: workSpace._id,
-            endPoint: nsEndPoint,
+            endPoint: `/${nsEndPoint}`,
             workSpaceTitle: workSpace.title,
             name: room.name,
             privacy: room.privacy,
@@ -645,6 +643,20 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 if(nsEndPoint.slice(0, 1) !== '/') {
                     nsEndPoint = `/${nsEndPoint}`;
                 }
+
+                // setInterval(async () => {
+                //     const user = await User.findOne({email: req.session.user.email});
+                //     const timer = setTimeout(async () => {
+                //         user.status = 'offline';
+                //         await user.save();
+                //     }, 2000);
+                //     io.of(nsEndPoint).to(nsSocket.id).emit('checkStatus', {status: 'connected'});
+                //     nsSocket.on('connectedSuc', async () => {
+                //         clearTimeout(timer);
+                //         user.status = 'online';
+                //         await user.save();
+                //     });
+                // }, 1000);
 
                 // nsSocket.on('ping', function() {
                 //     nsSocket.emit('pong');
@@ -1017,10 +1029,27 @@ exports.fetchDetails = async (req, res, next) => {
     const rooms = req.query.rooms;
     const workspaces = req.query.workspaces;
     const clientsStatus = req.query.clientsStatus;
+    const mentions = req.query.mentions;
     
-    const nsEndPoint = req.query.nsEndPoint;
+    if(mentions) {
+        const user = await User.findOne({email: req.session.user.email})
+        if(!user) {
+            return next('Invalid User');
+        }
 
-    if(clientsStatus) {
+        const mentions = user.mentions;
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Got the Mentions!',
+                mentions: mentions
+            }
+        })
+
+    } else if(clientsStatus) {
+    
+        const nsEndPoint = req.query.nsEndPoint;
         await WorkSpace.findOne({endPoint: nsEndPoint})
         .populate('roles.members')
         .exec((err, workSpace) => {
@@ -1042,13 +1071,15 @@ exports.fetchDetails = async (req, res, next) => {
                 }
             })
         })
-    } else {
+    } else  {
+    
+        const nsEndPoint = req.query.nsEndPoint;
         const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
     
         const user = await User.findOne({email: req.session.user.email});
     
         if(!workSpace) {    
-            return next('Invalid Workspace');
+            return next('Invalid Workspace Line 1070');
         }
     
         if(user.workSpaces.includes(workSpace._id.toString())) {
@@ -1177,7 +1208,7 @@ exports.fetchDetails = async (req, res, next) => {
             }); 
         }
     }
-        
+    
 }
 
 exports.postAddFriend = async(req, res, next) => {

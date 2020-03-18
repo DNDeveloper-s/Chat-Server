@@ -57,6 +57,7 @@ app.use((error, req, res, next) => {
     if(!err) {
         err = error;
     }
+    console.log(error);
     return res.json({
         acknowledgment: {
             type: 'error',

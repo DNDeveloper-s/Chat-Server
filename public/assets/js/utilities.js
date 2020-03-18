@@ -149,11 +149,40 @@ async function fetchRooms() {
     }
 }
 
+async function fetchMentions() {
+    
+    const res = await fetch(`${window.location.origin}/dashboard/fetch?mentions=true`, {
+        method: "GET"
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+    if(data.acknowledgment.type === 'success') {
+        sessionStorage.setItem('mentions', JSON.stringify(data.acknowledgment.mentions));
+    }
+}
+
+function focusMessageById(id) {
+    const container = document.querySelector('.message-display__container > .messages');
+    const messageId = container.querySelector(`[data-messageid="${id}"]`);
+    console.log(messageId);
+    messageId.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+    // messageId.classList.add('boom');
+    messageId.style.animation = `boom .5s ease-in-out 5`;
+    messageId.closest('.message').classList.add('focus');
+    setTimeout(() => {
+        messageId.style.animation = `none`;
+    }, 2800);
+}
+
 module.exports = { 
     bgAnim, 
     toggleAuthFormUI ,
     copyToClipboard,
     loader,
     remove_sidebar,
-    fetchRooms
+    fetchRooms,
+    fetchMentions,
+    focusMessageById
 }

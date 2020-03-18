@@ -1,6 +1,7 @@
 const { addModal } = require('./dashboard/Modal/addModal');
 // const { addUserModal } = require('./dashboard/User/userUI');
 const { messageToRoomHandler } = require('./dashBoard/User/message');
+const { fetchMentions, focusMessageById } = require('./utilities');
 // const randomize = require('randomatic');
 
 module.exports = () => {
@@ -191,6 +192,88 @@ module.exports = () => {
         const workspaceClientContainer = document.querySelector('.workspace-clients');
         workspaceClientContainer.classList.toggle('open');
     });
+
+    // Mentions Toggle button Handler
+    const mentionBtn = document.querySelector('.mentions-btn > img');
+    mentionBtn.addEventListener('click', async function(e) {
+        const mentionsModal = document.querySelector('.mentions-modal');
+        mentionsModal.classList.toggle('open');
+
+        await fetchMentions();
+        const jsonData = sessionStorage.getItem('mentions');
+
+        const mentions = JSON.parse(jsonData);
+        const mentionsContainer = mentionsModal.querySelector('.mentions-container');
+        mentionsModal.style.height = '500px';
+        mentionsContainer.innerHTML = '';
+        mentions.forEach(mention => {
+            const htmlToAdd = `
+                <div class="channel-separator"></div>
+                <div class="message">
+                    <div class="channel-details">
+                        <div class="channel">
+                            <div class="details">
+                                <div class="channel-img">
+                                    <img src="${mention.nsDetails.image}" class="message-user_dp" alt="${mention.nsDetails.title}">
+                                </div>
+                                <div class="channel-name">
+                                    <p>${mention.nsDetails.title}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="room-id">
+                            <div class="room-name">
+                                <p># ${mention.roomDetails.name}</p>
+                            </div>
+                            <div class="message-details">
+                                <div class="message" id="${mention.messageObj._id}">
+                                    <div class="message-inner">
+                                        <div class="user-img">
+                                            <img src="${mention.messageObj.user.image}" class="message-user_dp" alt="${mention.messageObj.user.name}">
+                                        </div>
+                                        <div class="message-body">
+                                            <div class="message-header">
+                                                <div class="user">
+                                                    <span class="message-user_name">${mention.messageObj.user.name}</span>
+                                                </div>
+                                                <div class="action_btn">
+                                                    <p>Jump</p>
+                                                </div>
+                                            </div>
+                                            <div class="message-data">
+                                                <p>${mention.messageObj.body}</p>
+                                            </div>
+                                            <span class="message-time_stamp">${mention.messageObj.time}</span>
+                                            <div class="message-status">
+                                                <i class="material-icons">done_all</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            mentionsContainer.insertAdjacentHTML('afterbegin', htmlToAdd);
+        })
+        const jumpBtns = mentionsContainer.querySelectorAll('.action_btn');
+        jumpBtns.forEach(jumpBtn => {
+            jumpBtn.addEventListener('click', function() {
+                const messageId = jumpBtn.closest('.message').getAttribute('id');
+                console.log(messageId);
+                
+                focusMessageById(messageId);
+            })
+        })
+    });
+
+    // Jump to message button Handler
+    // const jumpBtn = document.getElementById('search-btn');
+    // jumpBtn.addEventListener('click', function() {
+    //     const container = document.querySelector('.message-display__container > .messages');
+    // })
 }
 
 function remove_tag_list() {

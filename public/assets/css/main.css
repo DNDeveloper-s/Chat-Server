@@ -167,6 +167,30 @@ body {
   }
 }
 
+@-webkit-keyframes boom {
+  0% {
+    background: #1d1d2c;
+  }
+  70% {
+    background: #151521;
+  }
+  100% {
+    background: #1d1d2c;
+  }
+}
+
+@keyframes boom {
+  0% {
+    background: #1d1d2c;
+  }
+  70% {
+    background: #151521;
+  }
+  100% {
+    background: #1d1d2c;
+  }
+}
+
 .body-overlay {
   position: absolute;
   top: 0;
@@ -969,12 +993,23 @@ body {
 
 #root > .main_bar > .room-details > .toRight > * {
   margin-right: 50px;
+  cursor: pointer;
 }
 
 @media (min-width: 768px) {
   #root > .main_bar > .room-details > .toRight > .friends-icon {
     display: none;
   }
+}
+
+#root > .main_bar > .room-details > .toRight > .mentions-btn {
+  position: relative;
+  width: 23px;
+}
+
+#root > .main_bar > .room-details > .toRight > .mentions-btn > img {
+  width: 100%;
+  height: 100%;
 }
 
 #root > .main_bar > .room-details .workspace-clients-icon {
@@ -1114,6 +1149,31 @@ body {
   padding: 0 0 10px;
 }
 
+#root > .main_bar > .message-display__container > .messages > .message.focus {
+  border-top: 1px solid #e03600;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message.focus::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message.focus::after {
+  content: 'Message';
+  position: absolute;
+  top: -1px;
+  padding: 0 15px;
+  color: #e03600;
+  background: #1d1d2c;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
 #root > .main_bar > .message-display__container > .messages > .message > hr {
   border: 0.5px solid #d3d3d300;
 }
@@ -1248,6 +1308,42 @@ body {
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-body > .message-data > .new-line {
   margin-top: 4px;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-body > .message-data > p {
+  position: relative;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-body > .message-data > p.boom {
+  -webkit-animation: boom .5s ease-in-out;
+          animation: boom .5s ease-in-out;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-body > .message-data > p.focus {
+  border-top: 1px solid #e03600;
+  margin: 10px 0 0;
+  padding: 10px 0 0;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-body > .message-data > p.focus::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-body > .message-data > p.focus::after {
+  content: 'Message';
+  position: absolute;
+  top: -1px;
+  padding: 0 15px;
+  color: #e03600;
+  background: #1d1d2c;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty {
@@ -2654,6 +2750,376 @@ body {
 
 #root > .friends-list > .friend[data-status="idle"] > .status {
   background: yellow;
+}
+
+.mentions-modal {
+  width: 400px;
+  overflow: auto;
+  background: #252535;
+  position: absolute;
+  top: 211%;
+  right: -130%;
+  z-index: 11;
+  -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border-radius: 0 0 3px 3px;
+  height: 50px;
+  -webkit-transition: height 0.2s cubic-bezier(0.55, 0.01, 0.51, 1.58), opacity 0.1s cubic-bezier(0.55, 0.01, 0.51, 1.58);
+  transition: height 0.2s cubic-bezier(0.55, 0.01, 0.51, 1.58), opacity 0.1s cubic-bezier(0.55, 0.01, 0.51, 1.58);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  border-bottom: 10px solid #252535;
+}
+
+.mentions-modal > .mentions-container > .loader-container {
+  margin: 20px auto;
+}
+
+.mentions-modal > .mentions-container > .channel-separator {
+  margin: 20px 0;
+}
+
+.mentions-modal > .mentions-container > .message {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  -webkit-transform: translateY(-20px);
+          transform: translateY(-20px);
+  -webkit-transition: all 0.2s cubic-bezier(0.55, 0.01, 0.51, 1.58) 0.1s;
+  transition: all 0.2s cubic-bezier(0.55, 0.01, 0.51, 1.58) 0.1s;
+  position: relative;
+  display: block;
+  padding: 0 0 10px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .channel {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .channel::before {
+  width: 100%;
+  height: 1.5px;
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 0;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  background: rgba(251, 251, 251, 0.1);
+  z-index: -1;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background: #252535;
+  padding: 0 15px;
+  z-index: 1;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 200px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-name > p {
+  color: #c1c1d645;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .room-name {
+  padding: 0 20px;
+  margin: 20px 0 10px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .room-name > p {
+  letter-spacing: 1px;
+  text-transform: lowercase;
+  color: #95afa99e;
+  font-weight: 800;
+  font-size: 15px;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details {
+  width: 90%;
+  position: relative;
+  margin: auto;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #c0c0ea12;
+  -webkit-filter: blur(1px);
+          filter: blur(1px);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner {
+  position: relative;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  color: #272727;
+  border-radius: 10px 10px 10px 0;
+  overflow: hidden;
+  width: 100%;
+  padding: 8px 8px 12px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > hr {
+  margin: 5px 0;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img {
+  min-height: -webkit-min-content;
+  min-height: -moz-min-content;
+  min-height: min-content;
+  position: relative;
+  width: 34px;
+  height: 34px;
+  margin-top: 4px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  border-radius: 20000px;
+  overflow: hidden;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img > .message-user_dp {
+  width: 100%;
+  height: 100%;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body {
+  min-height: -webkit-min-content;
+  min-height: -moz-min-content;
+  min-height: min-content;
+  width: calc(100%);
+  border-left: none;
+  padding-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body {
+    width: 100%;
+  }
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header {
+  position: relative;
+  color: #EBA63F;
+  font-weight: 800;
+  padding: 7px 9px 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-right: 30px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span {
+  font-family: 'Montserrat_Bold';
+  font-size: 13px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span {
+    font-size: 13px;
+  }
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn {
+  background: #ffffff14;
+  padding: 2px 12px;
+  opacity: 0;
+  -webkit-transform: translateY(-8px);
+          transform: translateY(-8px);
+  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn > p {
+  color: #d0cbbc;
+  font-size: 12px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn:hover {
+  background: #ffffff46;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data {
+  margin: 9px 30px 0 0;
+  font-size: 11px;
+  padding: 0 0 7px 9px;
+  font-weight: 600;
+  color: #F7F4E9;
+}
+
+@media (max-width: 768px) {
+  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data {
+    margin: 3px 30px 0 0;
+    max-width: 100%;
+    overflow: auto;
+    font-size: 12px;
+  }
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > .new-line {
+  margin-top: 4px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty {
+  margin: 0;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > span {
+  height: 26px;
+  line-height: 26px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text {
+  padding: 4px 0;
+  margin: 0 10px 0 0;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details {
+  position: relative;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0 10px 0 0;
+  color: #984f2c;
+  background: #292940;
+  padding: 4px 8px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-transition: .15s;
+  transition: .15s;
+  padding-left: 27px;
+  white-space: nowrap;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover {
+  background: #161623;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details > img {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 17px;
+  height: 17px;
+  border-radius: 200px;
+  margin-right: 4px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status {
+  position: absolute;
+  bottom: 0;
+  right: 4px;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status.sent > .material-icons {
+  color: #2797A7;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status > .material-icons {
+  font-size: 14px;
+  color: #ffffff3d;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-time_stamp {
+  position: absolute;
+  bottom: 4px;
+  right: 25px;
+  margin-left: 30px;
+  font-size: 10px;
+  color: #ffffff3d;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover > .message > .message-inner > .message-body > .message-header > .action_btn {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+}
+
+.mentions-modal.open {
+  opacity: 1;
+  visibility: visible;
+  height: 100px;
+  pointer-events: all;
+}
+
+.mentions-modal.open .message {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
 }
 
 @-webkit-keyframes addBackDrop {

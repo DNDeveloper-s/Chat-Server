@@ -164,6 +164,8 @@ defaultModal();
 
 fetchWorkSpaces();
 
-const { fetchRooms } = require('./utilities');
+const { fetchRooms, fetchMentions } = require('./utilities');
+
+fetchMentions();
 
 fetchRooms();

@@ -92,8 +92,19 @@ async function loadNotifications(userId) {
                     roomId: this.dataset.roomid,
                     nsEndPoint: this.dataset.endpoint
                 });
-                loadNamespace(this.dataset.endpoint);
-                connectToNs(this.dataset.endpoint);
+                loadNamespace(this.dataset.endpoint, true);
+                connectToNs(this.dataset.endpoint, true);
+
+                /// Removing Modal
+                const rootEl = document.getElementById('root');
+                const backDropEl = rootEl.querySelector('.back-drop');
+                const modalEl = rootEl.querySelector('.modal');
+                backDropEl.classList.add('remove');
+                modalEl.classList.add('remove');
+                setTimeout(() => {
+                    rootEl.querySelector('.back-drop').remove();
+                    rootEl.querySelector('.modal').remove();
+                }, 200)
             })
         })
         const closeNotificationBtns = firstChoiceContainer.querySelectorAll('.delete-notification');
