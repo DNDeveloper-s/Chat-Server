@@ -2,8 +2,8 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: {
-    main: './public/assets/js/main.js',
-    dashBoard: './public/assets/js/dashBoard.js',
+    main: './src/main.js',
+    dashboard: './src/dashboard.js',
   },
   output: {
     path: path.resolve(__dirname, 'public/assets/js'),

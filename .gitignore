@@ -1,3 +1,4 @@
 node_modules
 .env
 images_to_be_resized
+src
