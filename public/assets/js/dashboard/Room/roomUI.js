@@ -279,9 +279,9 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
                 `);
                 messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = messageObj.time;
             }
-            if(bySender) {
-                messageContainer.firstElementChild.querySelector('.message-status > i').innerHTML = 'filter_tilt_shift';
-            }
+            // if(bySender) {
+            //     messageContainer.firstElementChild.querySelector('.message-status > i').innerHTML = 'filter_tilt_shift';
+            // }
         } else {
             const messageHtml = `
                 <div class="message" data-userid=${messageObj.user.id}>
