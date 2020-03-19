@@ -1,6 +1,7 @@
 const {acceptFriendRequest, declineFriendRequest } = require('./friend');
 const { addReplyModal } = require('./message');
 const { joinRoom } = require('../Room/addRoom');
+const { focusMessageById } = require('../../utilities');
 
 function updateNotificationCount(notificationCount) {
     const notificationCounter = document.querySelector('.notification-count');
@@ -49,7 +50,7 @@ async function loadNotifications(userId) {
                     <div class="confirm">
                         ${cur.notificationType === 'frnd_req' ? '<div class="action_btn pointer yes"> <img src="/assets/images/check.svg" alt=""> </div><div class="action_btn pointer no"> <img src="/assets/images/close.svg" alt=""> </div>' : ''}
                         ${cur.notificationType === 'rcvd_msg' ? '<div class="action_btn pointer yes reply">Reply</div>' : ''}
-                        ${cur.notificationType === 'mentioned_msg' ? `<div class="action_btn pointer yes show_msg" data-endPoint="${cur.nsEndPoint}" data-roomId="${cur.roomId}">See</div>` : ''}
+                        ${cur.notificationType === 'mentioned_msg' ? `<div class="action_btn pointer yes show_msg" data-messageid="${cur.messageId}" data-endPoint="${cur.nsEndPoint}" data-roomId="${cur.roomId}">See</div>` : ''}
                     </div>
                     <div class="loader-container hidden noMargin">
                         <svg width="40" height="40">
@@ -88,12 +89,16 @@ async function loadNotifications(userId) {
         seeMessageBtns.forEach(seeMsgBtn => {
             seeMsgBtn.addEventListener('click', function(e) {
                 const { connectToNs, loadNamespace } = require('../Namespace/nsFunctionaily');
+
+                const messageId = seeMsgBtn.dataset.messageid;
+
+                loadNamespace(this.dataset.endpoint, true);
+                connectToNs(this.dataset.endpoint, true);
                 joinRoom({
                     roomId: this.dataset.roomid,
                     nsEndPoint: this.dataset.endpoint
-                });
-                loadNamespace(this.dataset.endpoint, true);
-                connectToNs(this.dataset.endpoint, true);
+                }, messageId);
+                // focusMessageById(messageId);
 
                 /// Removing Modal
                 const rootEl = document.getElementById('root');

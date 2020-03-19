@@ -66,7 +66,10 @@ const userSchema = new Schema({
                     type: Schema.Types.ObjectID,
                     ref: 'Room'
                 },
-                nsEndPoint: String
+                nsEndPoint: String,
+                messageId: {
+                    type: Schema.Types.ObjectID
+                }
             }
         ]
     },

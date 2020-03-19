@@ -229,7 +229,8 @@ exports.postMessages = async(req, res, next) => {
                         userName: user.name
                     },
                     nsEndPoint: nsEndPoint,
-                    roomId: roomId
+                    roomId: roomId,
+                    messageId: messageObj._id
                 })
                 idUser.notifications.count = idUser.notifications.list.length;
 

@@ -10,7 +10,7 @@ Fix bug on same NS click changing to default room
 # When some one new join the workspace -- Do something
 
 1. Workspace clients -- Done
-2. Show mentioned messages -- Done and focus them with proper UI
+2. Show mentioned messages -- Done and focus them with proper UI -- Done
 3. Fix modal loads on fetching data, will put loader in that
 4. Adding Separate Mentions Btn in the nav
 5. Improve User Registration UI

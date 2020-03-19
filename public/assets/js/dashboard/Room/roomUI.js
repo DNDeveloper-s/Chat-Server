@@ -1,4 +1,4 @@
-const { remove_sidebar } = require('../../utilities');
+const { remove_sidebar, focusMessageById } = require('../../utilities');
 const { addUserModal } = require('../User/userUI');
 
 function showRooms(rooms) {
@@ -131,11 +131,11 @@ function deleteRooom(roomDetails) {
 
 }
 
-function loadRoom(roomDetails) {
+function loadRoom(roomDetails, msgId) {
     console.log(roomDetails);
     const curRoomName = document.querySelector('.current-room-name > span');
 
-    loadMessageToRoom(roomDetails.messages);
+    loadMessageToRoom(roomDetails.messages, msgId);
     curRoomName.innerHTML = roomDetails.name.toUpperCase();
 
     // Removing Notifications
@@ -158,7 +158,7 @@ function loadRoom(roomDetails) {
     msgDispContainer.dataset.roomid = roomDetails._id.toString();
 }
 
-function loadMessageToRoom(messages) {
+function loadMessageToRoom(messages, msgId) {
     const messageContainer = document.querySelector('.message-display__container > .messages');
     messageContainer.innerHTML = "";
     messages.forEach(message => {
@@ -197,11 +197,15 @@ function loadMessageToRoom(messages) {
             messageContainer.insertAdjacentHTML('afterbegin', messageHtml);
         }
     });
-    messageContainer.scrollTo({
-        left: 0,
-        top: messageContainer.scrollHeight,
-        behavior: "smooth"
-    });
+    if(!msgId) {
+        messageContainer.scrollTo({
+            left: 0,
+            top: messageContainer.scrollHeight,
+            behavior: "smooth"
+        });
+    } else {     
+        focusMessageById(msgId);
+    }
     const userLinks = document.querySelectorAll('.userLink');
     userLinks.forEach(userLink => {
         if(!userLink.dataset.eventactive) {

@@ -210,7 +210,7 @@ module.exports = () => {
             const htmlToAdd = `
                 <div class="channel-separator"></div>
                 <div class="message">
-                    <div class="channel-details">
+                    <div class="channel-details" data-endpoint="${mention.nsDetails.endPoint}">
                         <div class="channel">
                             <div class="details">
                                 <div class="channel-img">
@@ -221,7 +221,7 @@ module.exports = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="room-id">
+                        <div class="room-id" data-roomid="${mention.roomDetails._id}">
                             <div class="room-name">
                                 <p># ${mention.roomDetails.name}</p>
                             </div>
@@ -260,11 +260,20 @@ module.exports = () => {
         })
         const jumpBtns = mentionsContainer.querySelectorAll('.action_btn');
         jumpBtns.forEach(jumpBtn => {
-            jumpBtn.addEventListener('click', function() {
+            jumpBtn.addEventListener('click', function(e) {
+                const { joinRoom } = require('./dashboard/Room/addRoom');
+
+                const { connectToNs, loadNamespace } = require('./dashboard/Namespace/nsFunctionaily');
+
                 const messageId = jumpBtn.closest('.message').getAttribute('id');
+
+                loadNamespace(this.closest('.channel-details').dataset.endpoint, true);
+                connectToNs(this.closest('.channel-details').dataset.endpoint, true);
+                joinRoom({
+                    roomId: this.closest('.room-id').dataset.roomid,
+                    nsEndPoint: this.closest('.channel-details').dataset.endpoint
+                }, messageId);
                 console.log(messageId);
-                
-                focusMessageById(messageId);
             })
         })
     });

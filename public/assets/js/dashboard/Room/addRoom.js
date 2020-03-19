@@ -45,7 +45,7 @@ async function postDeleteRoom(roomDetails) {
     // deleteRooom(data.acknowledgment.roomDetails);
 }
 
-async function joinRoom(roomDetails) {
+async function joinRoom(roomDetails, msgId) {
     const { getNsSocket } = require('../Namespace/nsFunctionaily');
     const { fetchRooms } = require('../../utilities');
 
@@ -74,7 +74,7 @@ async function joinRoom(roomDetails) {
                 console.log(rooms);
                 const room = rooms.filter(cur => cur._id.toString() === roomDetails.roomId.toString());
 
-                loadRoom(room[0]);
+                loadRoom(room[0], msgId);
             });
         }
     });

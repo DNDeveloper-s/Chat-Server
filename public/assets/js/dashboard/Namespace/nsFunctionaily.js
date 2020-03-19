@@ -96,6 +96,8 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
                 console.log(roomData);
                 // loadRoom(roomData);
             });
+        } else {
+            
         }
 
         // Injecting the Namespace Name
