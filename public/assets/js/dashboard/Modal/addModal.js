@@ -4,6 +4,7 @@ const { copyToClipboard, loader } = require('../../utilities');
 const { addFriend, removeFriend } = require('../User/friend');
 const { loadNotifications } = require('../User/notification');
 const { addMessageModal } = require('../User/message');
+const { addUserModal } = require('../User/userUI');
 
 const addModal = (el, options) => {
     const rootEl = document.getElementById('root');
@@ -70,13 +71,17 @@ const addModal = (el, options) => {
                 </div>
             </div>
         `;
-    } else if(el.split('=')[0] === 'GETINVCODE') {
+    } else if(el === 'GETINVCODE') {
         addModalHTML = `
             <div class="modal" data-id="getInvCode" tabindex="0">
                 <div class="first-choice alone">  
                     <h5>Invite Code</h5>
                     <div class="invite-code">
-                        <p>${el.split('=')[1]}</p>
+                        <div class="loader-container">
+                            <svg width="40" height="40">
+                                <circle class="loader" cx="20" cy="20" r="17"></circle>
+                            </svg>
+                        </div>
                     </div>
                     <button class="copy-invite-code pointer yes" data-closemodal="true">Copy to Clipboard</button>
                 </div>
@@ -85,33 +90,12 @@ const addModal = (el, options) => {
     } else if(el === 'WORKSPACESETTINGS') {
         addModalHTML = `
             <div class="modal" data-id="workspace_settings" tabindex="0">
-                <div class="first-choice center-content alone">  
-                    <h5 class="bigger">Your Workspace</h5>
-                    <div class="nsImage">
-                        <input name="image" type="file" class="input__file input__dp">
-                        <figure>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
-                        </figure>
-                        <label for="image" class="dp__name"></label>
-                        <img src="${options.workSpace.image}" alt="DNDeveloper">
-                    </div>
-                    <div class="input-control">
-                        <label for="">Edit workspace name</label>
-                        <input type="text" name="" value="${options.workSpace.title}" placeholder="Enter Workspace name...">
-                    </div>
-                    <div class="input-control">
-                        <label for="" class="small">Edit Your Workspace EndPoint</label>
-                        <input type="text" name="" value="${options.workSpace.endPoint.slice(1)}" placeholder="Enter Workspace name...">
-                    </div>
-                    <div class="input-control">
-                        <label class="finalize" for="">Finalize changes</label>
-                        <button class="pointer blueLienar yes" data-closemodal="true">Save Changes</button>
-                    </div>
-                </div>
-                <div class="option-choice center-content">
-                    <div class="input-control">
-                        <label class="strict-action" for="">Strict Action</label>
-                        <button class="pointer redLinear another">Delete Workspace</button>
+                <div class="first-choice center-content alone noRightPadding">  
+                    <h5 class="bigger bottomMarginInc white">User Profile</h5>
+                    <div class="loader-container">
+                        <svg width="40" height="40">
+                            <circle class="loader" cx="20" cy="20" r="17"></circle>
+                        </svg>
                     </div>
                 </div>
             </div>
@@ -119,30 +103,15 @@ const addModal = (el, options) => {
     } else if(el === 'USER_PROFILE') {
         addModalHTML = `
             <div class="modal" data-id="user_profile" data-userId="${options.user._id}" tabindex="0">
-                <div class="first-choice center-content alone">  
-                    <h5 class="bigger">User Profile</h5>
-                    <div class="nsImage">
-                        <input name="image" type="file" class="input__file input__dp">
-                        <figure>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
-                        </figure>
-                        <label for="image" class="dp__name"></label>
-                        <img src="${options.user.image}" alt="${options.user.name}">
+                <div class="first-choice center-content alone noRightPadding">  
+                    <h5 class="bigger bottomMarginInc white">User Profile</h5>
+                    <div class="loader-container">
+                        <svg width="40" height="40">
+                            <circle class="loader" cx="20" cy="20" r="17"></circle>
+                        </svg>
                     </div>
-                    <div class="input-control">
-                        <label class="finalize" for="">Full Name</label>
-                        <input type="text" name="" value="${options.user.name}" placeholder="Enter Workspace name..." ${options.isItAuthenticatedUser ? '' : 'readonly'}>
-                    </div>
-                    <div class="input-control">
-                        <label for="" class="finalize">Unique userId</label>
-                        <input type="text" name="" value="${options.user._id}" placeholder="Enter Workspace name..." disabled>
-                    </div>
-                    ${options.isItAuthenticatedUser ? '<div class="input-control"><label class="finalize" for="">Finalize Changes</label><button class="pointer blueLienar yes">Save Changes</button></div>' : ''}
-                    ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="input-control"><label class="finalize" for="">Write a Message</label><button class="pointer blueLienar yes" data-togglechat="true" data-closemodal="false">Toggle Chatbox</button></div>' : ''}
                 </div>
-                ${ !options.isItAuthenticatedUser && !options.isFriend  ? '<div class="option-choice center-content" data-id="add_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Add as a Friend</button></div></div>' : ''}
-                ${ !options.isItAuthenticatedUser && options.isFriend ? '<div class="option-choice center-content" data-id="remove_friend"><div class="input-control"><label class="strict-action" for="">Such Action</label><button class="pointer redLinear another">Remove Friend</button></div></div>' : '' }
-                </div>
+            </div>
         `;
     } else if(el === 'NOTIFICATIONS') {
         addModalHTML = `
@@ -160,7 +129,7 @@ const addModal = (el, options) => {
     }
     rootEl.insertAdjacentHTML('beforeend', backDropHTML);
     rootEl.insertAdjacentHTML('beforeend', addModalHTML);
-    const backDropEl = rootEl.querySelector('.back-drop');
+    const backDropEl = rootEl.querySelector('.back-drop:not(.noOpaque)');
     const modalEl = rootEl.querySelector('.modal');
     modalEl.focus();
     if(!options) {
@@ -177,10 +146,8 @@ const addModal = (el, options) => {
     }
     console.log(backDropEl);
     if(el === 'USER_PROFILE') {
-        if(options.openChat) {
-            const userId = modalEl.dataset.userid;
-            addMessageModal(userId);
-        }
+        loader();
+        addUserModal(options.user._id, options.openChat);
         backDropEl.addEventListener('click', () => {
             removeModal({
                 updateUrl: true
@@ -192,6 +159,8 @@ const addModal = (el, options) => {
         backDropEl.addEventListener('click', removeModal);
     } else {
         backDropEl.addEventListener('click', removeModal);
+        console.log(backDropEl);
+        loader();
     }
 
     function removeModal(options) {
@@ -267,8 +236,6 @@ const addModal = (el, options) => {
         } else if(modalEl.dataset.id === 'user_profile') {
             if(this.dataset.togglechat === 'true') {
                 e.preventDefault();
-                const userId = modalEl.dataset.userid;
-                addMessageModal(userId);
             }
         } else if(modalEl.dataset.id === 'notifications') {
 

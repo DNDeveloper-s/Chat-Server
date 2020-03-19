@@ -57,31 +57,29 @@ module.exports = () => {
     const getInvCode = nsDropdown.querySelector('.invite-friend');
     getInvCode.addEventListener('click', async(e) => {
         e.preventDefault();
+
+        addModal(`GETINVCODE`);
+
         const nsEndPoint = getInvCode.closest('.ns-options').dataset.id.slice(1);
-        
-        // const dataString = sessionStorage.getItem('invcode');
-        // let data = JSON.parse(dataString);
 
 
+        const res = await fetch(`${window.location.origin}/dashboard/workspace?nsName=${nsEndPoint}&genInvLink=true`, {
+            method: "POST"
+        });
 
-        // if(!dataString) {
-            // console.log('Fetching!');
-            const res = await fetch(`${window.location.origin}/dashboard/workspace?nsName=${nsEndPoint}&genInvLink=true`, {
-                method: "POST"
-            });
-    
-            data = await res.json();
-        // }
+        data = await res.json();
 
-        // sessionStorage.setItem('invcode', JSON.stringify(data));  
-
-        setTimeout(() => {
-            addModal(`GETINVCODE=${data.acknowledgment.link}`, );
-        }, 200);
+        if(data.acknowledgment.type === 'success') {
+            const modalEl = document.querySelector('.modal[data-id="getInvCode"]');
+            modalEl.querySelector('.invite-code').innerHTML = `<p>${data.acknowledgment.link}</p>`
+        }
     })
     const workspaceSettings = nsDropdown.querySelector('.workspace-settings');
     workspaceSettings.addEventListener('click', async(e) => {
         e.preventDefault();
+
+        addModal(`WORKSPACESETTINGS`);
+
         const nsEndPoint = workspaceSettings.closest('.ns-options').dataset.id;
         const res = await fetch(`${window.location.origin}/dashboard/workspace?nsEndPoint=${nsEndPoint}&getWorkspaceDetails=true`, {
             method: "GET"
@@ -90,11 +88,44 @@ module.exports = () => {
         const data = await res.json();
 
         console.log(data);
-        setTimeout(() => {
-            addModal(`WORKSPACESETTINGS`, {
-                workSpace: data.acknowledgment.workSpace
-            });
-        }, 200);
+        
+        if(data.acknowledgment.type === 'success') {
+            const htmlToAdd = `
+                <div class="first-choice center-content alone">  
+                    <h5 class="bigger">Your Workspace</h5>
+                    <div class="nsImage">
+                        <input name="image" type="file" class="input__file input__dp">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
+                        </figure>
+                        <label for="image" class="dp__name"></label>
+                        <img src="${data.acknowledgment.workSpace.image}" alt="DNDeveloper">
+                    </div>
+                    <div class="input-control">
+                        <label for="">Edit workspace name</label>
+                        <input type="text" name="" value="${data.acknowledgment.workSpace.title}" placeholder="Enter Workspace name...">
+                    </div>
+                    <div class="input-control">
+                        <label for="" class="small">Edit Your Workspace EndPoint</label>
+                        <input type="text" name="" value="${data.acknowledgment.workSpace.endPoint.slice(1)}" placeholder="Enter Workspace name...">
+                    </div>
+                    <div class="input-control">
+                        <label class="finalize" for="">Finalize changes</label>
+                        <button class="pointer blueLienar yes" data-closemodal="true">Save Changes</button>
+                    </div>
+                </div>
+                <div class="option-choice center-content">
+                    <div class="input-control">
+                        <label class="strict-action" for="">Strict Action</label>
+                        <button class="pointer redLinear another">Delete Workspace</button>
+                    </div>
+                </div>
+            `;
+
+            const modalEl = document.querySelector('.modal[data-id="workspace_settings"]');
+            modalEl.innerHTML = htmlToAdd;
+        }
+        
     });
     
     const notificationCount = document.querySelector('.notification-count');

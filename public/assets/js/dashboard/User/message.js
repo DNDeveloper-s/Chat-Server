@@ -13,7 +13,10 @@ async function addReplyModal(friendId) {
 
     const { addUserModal } = require('./userUI');
 
-    addUserModal(friendId, 'openChat');
+    addModal('USER_PROFILE', {
+        openChat: true,
+        friendId: friendId
+    });
 }
 
 async function addMessageModal(userId) {

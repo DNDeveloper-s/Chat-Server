@@ -1,11 +1,21 @@
 require('./eventDashboards')();
 
 const { nsListeners } = require('./dashboard/Namespace/nsFunctionaily');
-const { addUserModal } = require('./dashboard/User/userUI'); 
+const { addModal } = require('./dashboard/Modal/addModal'); 
 const { addFriend, addMessageModal } = require('./dashboard/User/friend');
 const { remove_sidebar } = require('./utilities');
 
+const $ = require('jquery');
+window.jQuery = $;
+window.$ = $;
+require('emojionearea');
+
+$('#emoji').emojioneArea({
+    pickerPosition: "bottom"
+});
+
 nsListeners();
+
 
 console.log('dashboard');
 
@@ -150,7 +160,12 @@ userLinks.forEach(userLink => {
         userLink.dataset.eventactive = 'true';
         userLink.addEventListener('click', function(e) {
             const userId = userLink.dataset.userid;
-            addUserModal(userId); 
+            addModal('USER_PROFILE', {
+                user: {
+                    _id: userId
+                }
+            });
+            // addUserModal(userId); 
         })
     }
 });
@@ -169,3 +184,17 @@ const { fetchRooms, fetchMentions } = require('./utilities');
 fetchMentions();
 
 fetchRooms();
+
+
+// window.addEventListener('click', function(e) {
+//     const isTargetInModal = e.target.closest('.modal');
+//     const modalEl = document.querySelector('.modal');
+//     if(modalEl && isTargetInModal === null) {
+//         modalEl.classList.add('remove');
+//         setTimeout(() => {
+//             // rootEl.querySelector('.back-drop').remove();
+//             modalEl.remove();
+//         }, 200)
+//     }
+//     // backDropEl.classList.add('remove');
+// })

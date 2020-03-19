@@ -1,5 +1,4 @@
 const { remove_sidebar, focusMessageById } = require('../../utilities');
-const { addUserModal } = require('../User/userUI');
 
 function showRooms(rooms) {
     const roomContainer = document.querySelector('.roomContainer');
@@ -136,7 +135,7 @@ function loadRoom(roomDetails, msgId) {
     const curRoomName = document.querySelector('.current-room-name > span');
 
     loadMessageToRoom(roomDetails.messages, msgId);
-    curRoomName.innerHTML = roomDetails.name.toUpperCase();
+    curRoomName.innerHTML = `# ${roomDetails.name.toLowerCase()}`;
 
     // Removing Notifications
     const room = document.querySelector(`.room[data-id="${roomDetails._id}"]`);
@@ -163,32 +162,65 @@ function loadMessageToRoom(messages, msgId) {
     messageContainer.innerHTML = "";
     messages.forEach(message => {
         if(messageContainer.childElementCount > 0 && messageContainer.firstElementChild.dataset.userid.toString() === message.user.id.toString()) {
-            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p data-messageid="${message._id}">${message.body}</p>`);
-            messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = message.time;
+            if(message.body !== '<span class="text"></span>') {
+                messageContainer.firstElementChild.querySelector('.message-inner > .message-data').insertAdjacentHTML('beforeend', `
+                    <p data-messageid="${message._id}">${message.body}
+                        <span class="react_container">
+                            <span class="delete-icon icon">
+                                <i class="material-icons">delete</i>
+                            </span>
+                            <span class="pin-icon icon">
+                                <img src="/assets/images/pin.svg" class="message-user_dp" alt="">
+                            </span>
+                            <span class="more-icon icon">
+                                <i class="material-icons">more_horiz</i>
+                            </span>
+                        </span>
+                        <span class="message-time_stamp">${message.time}</span>
+                    </p>
+                `);
+                messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = message.time;
+            }
+            // if(messageContainer.firstElementChild.querySelector('.message-data').lastElementChild.innerText === '') {
+            //     messageContainer.firstElementChild.querySelector('.message-data').lastElementChild.style.display = 'none';
+            // }
         } else {
             
             const messageHtml = `
                 <div class="message" data-userid=${message.user.id}>
                     <div class="message-inner">
-                        <div class="user-img userLink pointer" data-userid=${message.user.id}>
-                            <img src="${message.user.image}" class="message-user_dp" alt="">
-                        </div>
-                        <div class="message-body">
-                            <div class="message-header">
-                                <div class="user userLink pointer" data-userid=${message.user.id}>
-                                    <span class="message-user_name">${message.user.name}</span>
+                        <div class="header">
+                            <div class="user-img userLink pointer" data-userid=${message.user.id}>
+                                <img src="${message.user.image}" class="message-user_dp" alt="">
+                            </div>
+                            <div class="message-body">
+                                <div class="message-header">
+                                    <div class="user userLink pointer" data-userid=${message.user.id}>
+                                        <span class="message-user_name">${message.user.name}</span>
+                                    </div>
+                                    <div class="options pointer">
+                                        <i class="material-icons">more_vert</i>
+                                    </div>
                                 </div>
-                                <div class="options pointer">
-                                    <i class="material-icons">more_vert</i>
+                                <div class="message-data">
+                                    <p data-messageid="${message._id}">${message.body}
+                                    </p>
                                 </div>
                             </div>
-                            <div class="message-data">
-                                <p data-messageid="${message._id}">${message.body}</p>
-                            </div>
+                            <span class="react_container">
+                                <span class="delete-icon icon">
+                                    <i class="material-icons">delete</i>
+                                </span>
+                                <span class="pin-icon icon">
+                                    <img src="/assets/images/pin.svg" class="message-user_dp" alt="">
+                                </span>
+                                <span class="more-icon icon">
+                                    <i class="material-icons">more_horiz</i>
+                                </span>
+                            </span>
                             <span class="message-time_stamp">${message.time}</span>
-                            <div class="message-status">
-                                <i class="material-icons">done_all</i>
-                            </div>
+                        </div>
+                        <div class="message-data">
                         </div>
                     </div>
                     <hr>
@@ -212,7 +244,12 @@ function loadMessageToRoom(messages, msgId) {
             userLink.dataset.eventactive = 'true';
             userLink.addEventListener('click', function(e) {
                 const userId = userLink.dataset.userid;
-                addUserModal(userId); 
+                const { addModal } = require('../Modal/addModal');
+                addModal('USER_PROFILE' ,{
+                    user: {
+                        _id: userId
+                    }
+                }); 
             })
         }
     });
@@ -223,8 +260,25 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
     if(messageContainer) {
         if(messageContainer.firstElementChild && messageContainer.firstElementChild.dataset.userid.toString() === messageObj.user.id.toString()) {
             console.log(messageContainer.lastElementChild.querySelector('.message-data'));
-            messageContainer.firstElementChild.querySelector('.message-data').insertAdjacentHTML('beforeend', `<p data-messageid="${messageObj._id}">${messageObj.body}</p>`);
-            messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = messageObj.time;
+            if(messageObj.body !== '<span class="text"></span>') {
+                messageContainer.firstElementChild.querySelector('.message-inner > .message-data').insertAdjacentHTML('beforeend', `
+                    <p data-messageid="${messageObj._id}">${messageObj.body}
+                        <span class="react_container">
+                            <span class="delete-icon icon">
+                                <i class="material-icons">delete</i>
+                            </span>
+                            <span class="pin-icon icon">
+                                <img src="/assets/images/pin.svg" class="message-user_dp" alt="">
+                            </span>
+                            <span class="more-icon icon">
+                                <i class="material-icons">more_horiz</i>
+                            </span>
+                        </span>
+                        <span class="message-time_stamp">${messageObj.time}</span>
+                    </p>
+                `);
+                messageContainer.firstElementChild.querySelector('.message-time_stamp').innerHTML = messageObj.time;
+            }
             if(bySender) {
                 messageContainer.firstElementChild.querySelector('.message-status > i').innerHTML = 'filter_tilt_shift';
             }
@@ -232,25 +286,41 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
             const messageHtml = `
                 <div class="message" data-userid=${messageObj.user.id}>
                     <div class="message-inner">
-                        <div class="user-img userLink pointer" data-userid=${messageObj.user.id}>
-                            <img src="${messageObj.user.image}" class="message-user_dp" alt="">
-                        </div>
-                        <div class="message-body">
-                            <div class="message-header">
-                                <div class="user userLink pointer" data-userid=${messageObj.user.id}>
-                                    <span class="message-user_name">${messageObj.user.name}</span>
+                        <div class="header">
+                            <div class="user-img userLink pointer" data-userid=${messageObj.user.id}>
+                                <img src="${messageObj.user.image}" class="message-user_dp" alt="">
+                            </div>
+                            <div class="message-body">
+                                <div class="message-header">
+                                    <div class="user userLink pointer" data-userid=${messageObj.user.id}>
+                                        <span class="message-user_name">${messageObj.user.name}</span>
+                                    </div>
+                                    <div class="options pointer">
+                                        <i class="material-icons">more_vert</i>
+                                    </div>
                                 </div>
-                                <div class="options pointer">
-                                    <i class="material-icons">more_vert</i>
+                                <div class="message-data">
+                                    <p data-messageid="${messageObj._id}">${messageObj.body}
+                                    </p>
+                                </div>
+                                <div class="message-status">
+                                    <i class="material-icons">done_all</i>
                                 </div>
                             </div>
-                            <div class="message-data">
-                                <p data-messageid="${messageObj._id}">${messageObj.body}</p>
-                            </div>
+                            <span class="react_container">
+                                <span class="delete-icon icon">
+                                    <i class="material-icons">delete</i>
+                                </span>
+                                <span class="pin-icon icon">
+                                    <img src="/assets/images/pin.svg" class="message-user_dp" alt="">
+                                </span>
+                                <span class="more-icon icon">
+                                    <i class="material-icons">more_horiz</i>
+                                </span>
+                            </span>
                             <span class="message-time_stamp">${messageObj.time}</span>
-                            <div class="message-status">
-                                <i class="material-icons">${ bySender ? 'filter_tilt_shift' : 'done_all' }</i>
-                            </div>
+                        </div>
+                        <div class="message-data">
                         </div>
                     </div>
                     <hr>
@@ -272,7 +342,12 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, bySender) {
                     userLink.dataset.eventactive = 'true';
                     userLink.addEventListener('click', function(e) {
                         const userId = userLink.dataset.userid;
-                        addUserModal(userId); 
+                        const { addModal } = require('../Modal/addModal');
+                        addModal('USER_PROFILE' ,{
+                            user: {
+                                _id: userId
+                            }
+                        }); 
                     })
                 }
             });
