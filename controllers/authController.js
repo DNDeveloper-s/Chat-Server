@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const randomize = require('randomatic');
 const User = require('../models/User');
+const fs = require('fs');
+const compress_images = require('compress-images');
 
 exports.fetchUser = async (req, res, next) => {
     const userId = req.query.userId;
@@ -160,4 +162,65 @@ exports.postLogoutAuth = async (req, res, next) => {
             }
         });
     })
+}
+
+exports.postUpdateProfile = async (req, res, next) => {
+    const image = req.file;
+    const name = req.body.user_name;
+    const userId = req.query.userId;
+
+    console.log(userId);
+    
+    if(req.session.user._id.toString() !== userId.toString()) {
+        return next('It\'s not you! You cannot update to this user');
+    }
+
+    if(image) {
+        let input = 'productImages/user_images/*.{jpg,JPG,jpeg,JPEG,png,svg,gif}';
+        let output = 'productImages/user_images/resized/';
+        
+        compress_images(input, output, {output: false, statistic: true, autoupdate: true}, false,
+                                                    {jpg: {engine: 'mozjpeg', command: ['-quality', '60']}},
+                                                    {png: {engine: 'webp', command: false}},
+                                                    {svg: {engine: 'svgo', command: '--multipass'}},
+                                                    {gif: {engine: 'gifsicle', command: ['--colors', '64', '--use-col=web']}}, 
+        async function(error, completed, statistic){
+            if(error) {
+                return next(error);
+            }          
+
+            const user = await User.findOne({email: req.session.user.email});
+        
+            user.name = name;
+            console.log(statistic);
+            if(image) {
+                user.image = statistic.path_out_new.slice(13);
+            }
+            
+            await user.save();
+            
+            return res.json({
+                acknowledgment: {
+                    type: 'success',
+                    imageSrc: user.image,
+                    name: name
+                }
+            })
+            
+        }); 
+    } else {
+
+        const user = await User.findOne({email: req.session.user.email});
+    
+        user.name = name;
+            
+        await user.save();
+            
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                name: name
+            }
+        })
+    }
 }

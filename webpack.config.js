@@ -9,10 +9,5 @@ module.exports = {
     path: path.resolve(__dirname, 'public/assets/js'),
     filename: '[name].bundle.js'
   },
-  // externals: /^(jquery|\$)$/i
-  // entry: './public/assets/js/dashBoard.js',
-  // output: {
-  //   path: path.resolve(__dirname, 'public/assets/js'),
-  //   filename: 'dashBoard.bundle.js'
-  // }
+  watch: true
 };

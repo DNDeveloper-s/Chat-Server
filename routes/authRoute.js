@@ -19,4 +19,8 @@ router.post('/login', authController.postLoginAuth);
 
 router.post('/logout', auth.isAuth, authController.postLogoutAuth);
 
+// const upload = req.app.get('upload');
+
+router.post('/update_profile', authController.postUpdateProfile);
+
 module.exports = router;

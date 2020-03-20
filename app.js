@@ -1,9 +1,11 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDbStore = require('connect-mongodb-session')(session);
+const multer = require('multer');
 
 require('dotenv').config();
 
@@ -18,16 +20,30 @@ const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO
 const store = new MongoDbStore({
     uri: MONGODB_URI,
     collection: 'sessions'
-})
+});
+
+
+const fileStorageProduct = multer.diskStorage({
+    destination: './productImages/user_images',
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+        console.log(file);
+    }
+});
 
 // View Engines
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+// Multer-Resizer
+
+
 // Utility Middlewares
 app.use(bodyParser.json());
+app.use(multer({ storage: fileStorageProduct }).single('image'));
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/material-design-icons'));
+app.use(express.static(__dirname + '/productImages'));
 app.use(session({
     secret: 'You dont know the secret of this project and can never know 8860119880',
     resave: false,
@@ -36,7 +52,7 @@ app.use(session({
     cookie: {
         maxAge: 10 * 60 * 60 * 1000
     }
-}))
+}));
 
 // Application Routes
 app.use('/auth', authRoutes);
@@ -64,9 +80,9 @@ app.use((error, req, res, next) => {
             message: err
         }
     });
-})
+});
 
-// Connection to Mongo DB and Socet.io and Server
+// Connection to Mongo DB and Socket.io and Server
 mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true })
     .then(result => {
         console.log('Server is listening on 3000');

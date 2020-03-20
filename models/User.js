@@ -27,7 +27,15 @@ const userSchema = new Schema({
                     ref: 'Room'
                 }
             },
-            messageObj: Object
+            messageObj: {
+                userId: {
+                    type: Schema.Types.ObjectID,
+                    ref: 'User'
+                },
+                body: String,
+                time: String,
+                _id: Schema.Types.ObjectID
+            }
         }
     ],
     uniqueTag: String,

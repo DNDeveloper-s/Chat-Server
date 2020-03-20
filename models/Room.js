@@ -20,9 +20,7 @@ const roomSchema = new Schema({
                 id: {
                     type: Schema.Types.ObjectID,
                     ref: 'User'
-                },
-                name: String,
-                image: String
+                }
             },
             body: String,
             time: String

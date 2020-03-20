@@ -1033,11 +1033,29 @@ exports.fetchDetails = async (req, res, next) => {
     
     if(mentions) {
         const user = await User.findOne({email: req.session.user.email})
+            .populate('mentions.messageObj.userId');
         if(!user) {
             return next('Invalid User');
         }
 
-        const mentions = user.mentions;
+        const mentions = user.mentions.map(cur => {
+            return {
+                nsDetails: cur.nsDetails,
+                roomDetails: cur.roomDetails,
+                messageObj: {
+                    _id: cur.messageObj._id,
+                    user: {
+                        id: cur.messageObj.userId._id,
+                        name: cur.messageObj.userId.name,
+                        image: cur.messageObj.userId.image
+                    },
+                    body: cur.messageObj.body,
+                    time: cur.messageObj.time
+                }
+            }
+        })
+        
+        console.log(mentions);
 
         return res.json({
             acknowledgment: {
@@ -1083,9 +1101,23 @@ exports.fetchDetails = async (req, res, next) => {
         }
     
         if(user.workSpaces.includes(workSpace._id.toString())) {
+
+            // let doc = await WorkSpace.findOne({endPoint: nsEndPoint})
+            //     .populate('rooms');
+            
+            // doc = await WorkSpace.findOne({endPoint: nsEndPoint})
+            //     .populate({ path: 'rooms' , populate: { path: 'messages.user.id'} });
+
+            // return res.json({
+            //     acknowledgment: {
+            //         type: 'error',
+            //         workSpace: doc
+            //     }
+            // })
     
             await WorkSpace.findOne({endPoint: nsEndPoint})
             .populate('rooms')
+            .populate({ path: 'rooms' , populate: { path: 'messages.user.id'} })
             .populate('connectedClients')
             .populate('roles.members')
             .populate('roles.owner')
@@ -1157,8 +1189,21 @@ exports.fetchDetails = async (req, res, next) => {
                 }
     
                 if(rooms) {
+
                     // Preparing rooms for notifications
                     const roomDetails = workSpace.rooms.map(cur => {
+                        const roomMessages = cur.messages.map(message => {
+                            return {
+                                _id: message._id,
+                                user: {
+                                    id: message.user.id._id,
+                                    name: message.user.id.name,
+                                    image: message.user.id.image
+                                },
+                                body: message.body,
+                                time: message.time
+                            }
+                        })
                         const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
                         if(msgToRoom.length > 0) {
                             return {
@@ -1169,7 +1214,7 @@ exports.fetchDetails = async (req, res, next) => {
                                 workSpaceTitle: workSpace.title,
                                 privacy: cur.privacy,
                                 nothing: false,
-                                messages: cur.messages
+                                messages: roomMessages
                             }
                         }
                         return {
@@ -1180,7 +1225,7 @@ exports.fetchDetails = async (req, res, next) => {
                             name: cur.name,
                             privacy: cur.privacy,
                             nothing: true,
-                            messages: cur.messages
+                            messages: roomMessages
                         }
                     })
     
