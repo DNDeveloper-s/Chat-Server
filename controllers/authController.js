@@ -1,8 +1,7 @@
 const bcrypt = require('bcrypt');
 const randomize = require('randomatic');
 const User = require('../models/User');
-const fs = require('fs');
-const compress_images = require('compress-images');
+const compression = require('../compress-image');
 
 exports.fetchUser = async (req, res, next) => {
     const userId = req.query.userId;
@@ -176,19 +175,18 @@ exports.postUpdateProfile = async (req, res, next) => {
     }
 
     if(image) {
+
+        console.log(image);
+        // const path = req
+
         let input = 'productImages/user_images/*.{jpg,JPG,jpeg,JPEG,png,svg,gif}';
         let output = 'productImages/user_images/resized/';
-        
-        compress_images(input, output, {output: false, statistic: true, autoupdate: true}, false,
-                                                    {jpg: {engine: 'mozjpeg', command: ['-quality', '60']}},
-                                                    {png: {engine: 'webp', command: false}},
-                                                    {svg: {engine: 'svgo', command: '--multipass'}},
-                                                    {gif: {engine: 'gifsicle', command: ['--colors', '64', '--use-col=web']}}, 
-        async function(error, completed, statistic){
+
+        compression(input, output, async (error, completed, statistic) => {
             if(error) {
                 return next(error);
             }          
-
+    
             const user = await User.findOne({email: req.session.user.email});
         
             user.name = name;
@@ -206,8 +204,7 @@ exports.postUpdateProfile = async (req, res, next) => {
                     name: name
                 }
             })
-            
-        }); 
+        })
     } else {
 
         const user = await User.findOne({email: req.session.user.email});

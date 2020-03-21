@@ -22,6 +22,7 @@ const roomSchema = new Schema({
                     ref: 'User'
                 }
             },
+            msgType: String,
             body: String,
             time: String
         }

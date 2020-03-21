@@ -1203,7 +1203,7 @@ exports.fetchDetails = async (req, res, next) => {
                                 body: message.body,
                                 time: message.time
                             }
-                        })
+                        });
                         const msgToRoom = user.notifications.list.filter(cur1 => cur1.notificationType === 'msgToRoom' && cur1.roomId.toString() === cur._id.toString());
                         if(msgToRoom.length > 0) {
                             return {

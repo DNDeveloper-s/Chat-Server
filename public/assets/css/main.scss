@@ -1344,6 +1344,36 @@ $focus_color: #e03600;
                                                 transform: translate(-50%, -50%);
                                             }
                                         }
+
+                                        > .image-input {
+                                            display: block;
+                                            height: auto;
+        
+                                            > img {
+                                                border: 2px solid #c2c2c2;
+                                                border-radius: 5px;
+                                                max-width: 300px;
+                                            }
+        
+                                            + span {
+                                                margin-left: 0 !important;
+                                            }
+                                        }
+
+                                        > .image-loader {
+                                            width: 300px;
+                                            height: 270px;
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            border: 2px solid #c2c2c2;
+                                            border-radius: 6px;
+                                            background: #151521;
+                                        }
+        
+                                        > .text:empty {
+                                            display: none;
+                                        }
         
                                         > .text:first-child:empty {
                                             margin: 0;
@@ -1525,7 +1555,7 @@ $focus_color: #e03600;
                                     // box-shadow: 0 4px 8px rgba(0,0, 0,0.3);
                                     border-top: 1px solid $focus_color;
                                     margin: 10px 0 0;
-                                    padding: 10px 0 0;
+                                    padding-top: 20px;
             
                                     &::before {
                                         content: '';
@@ -1546,6 +1576,36 @@ $focus_color: #e03600;
                                         left: 50%;
                                         transform: translate(-50%, -50%);
                                     }
+                                }
+
+                                > .image-input {
+                                    display: block;
+                                    height: auto;
+
+                                    > img {
+                                        border: 2px solid #c2c2c2;
+                                        border-radius: 5px;
+                                        max-width: 300px;
+                                    }
+
+                                    + span {
+                                        margin-left: 0 !important;
+                                    }
+                                }
+
+                                > .image-loader {
+                                    width: 300px;
+                                    height: 270px;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    border: 2px solid #c2c2c2;
+                                    border-radius: 6px;
+                                    background: #151521;
+                                }
+
+                                > .text:empty {
+                                    display: none;
                                 }
 
                                 > .text:first-child:empty {
@@ -2128,6 +2188,12 @@ $focus_color: #e03600;
             }
         }
 
+        &[data-id="send_file"] {
+            overflow: auto;
+            background: #0d0d14;
+            max-height: 70vh;
+        }
+
          .invite-code {
             padding: 50px 0;
             text-align: center;
@@ -2351,13 +2417,13 @@ $focus_color: #e03600;
             // height: 40px;
             font-size: 15px;
             outline: none;
-            border: 2px solid #ffffff;
+            border: 2px solid #ffffff0f;
             box-shadow: 0 2px 4px rgba(0,0,0,0.6);
             padding: 4px 8px;
-            background: #dedede;
+            background: #ffffff0d;
             // overflow-x: auto;
             // overflow-y: hidden;
-            color: #000;
+            color: #bdbdaf;
             border-radius: 4px;
             line-height: 27px;
             margin-bottom: 20px;
@@ -3400,6 +3466,15 @@ $focus_color: #e03600;
                                             // display: flex;
                                             // align-items: center;
 
+                                            > .image-input {
+                                                height: auto;
+                                                display: block;
+
+                                                > img {
+                                                    width: 100%;
+                                                }
+                                            }
+
                                             > .text:first-child:empty {
                                                 margin: 0;
                                             }
@@ -3581,7 +3656,7 @@ button{
 }
 
 .pointer {
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 

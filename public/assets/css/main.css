@@ -1463,6 +1463,42 @@ body {
           transform: translate(-50%, -50%);
 }
 
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .image-input {
+  display: block;
+  height: auto;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .image-input > img {
+  border: 2px solid #c2c2c2;
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .image-input + span {
+  margin-left: 0 !important;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .image-loader {
+  width: 300px;
+  height: 270px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 2px solid #c2c2c2;
+  border-radius: 6px;
+  background: #151521;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .text:empty {
+  display: none;
+}
+
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .text:first-child:empty {
   margin: 0;
 }
@@ -1642,7 +1678,7 @@ body {
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p.focus {
   border-top: 1px solid #e03600;
   margin: 10px 0 0;
-  padding: 10px 0 0;
+  padding-top: 20px;
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p.focus::before {
@@ -1664,6 +1700,42 @@ body {
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .image-input {
+  display: block;
+  height: auto;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .image-input > img {
+  border: 2px solid #c2c2c2;
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .image-input + span {
+  margin-left: 0 !important;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .image-loader {
+  width: 300px;
+  height: 270px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 2px solid #c2c2c2;
+  border-radius: 6px;
+  background: #151521;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .text:empty {
+  display: none;
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .text:first-child:empty {
@@ -2298,6 +2370,12 @@ body {
   padding-left: 20px;
 }
 
+#root > .modal[data-id="send_file"] {
+  overflow: auto;
+  background: #0d0d14;
+  max-height: 70vh;
+}
+
 #root > .modal .invite-code {
   padding: 50px 0;
   text-align: center;
@@ -2563,12 +2641,12 @@ body {
   width: 100%;
   font-size: 15px;
   outline: none;
-  border: 2px solid #ffffff;
+  border: 2px solid #ffffff0f;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
   padding: 4px 8px;
-  background: #dedede;
-  color: #000;
+  background: #ffffff0d;
+  color: #bdbdaf;
   border-radius: 4px;
   line-height: 27px;
   margin-bottom: 20px;
@@ -3676,6 +3754,15 @@ body {
   margin-top: 4px;
 }
 
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input {
+  height: auto;
+  display: block;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input > img {
+  width: 100%;
+}
+
 .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty {
   margin: 0;
 }
@@ -3896,7 +3983,7 @@ button:hover {
 }
 
 .pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 @-webkit-keyframes topToBottom {
