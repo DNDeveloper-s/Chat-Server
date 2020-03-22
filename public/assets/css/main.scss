@@ -509,6 +509,10 @@ $focus_color: #e03600;
                 height: 100%;
                 overflow: auto;
 
+                &.tut_mode {
+                    overflow: visible;
+                }
+
                 //> .name_space {
                 //    opacity: 0;
                 //    transform: translateY(-20px);
@@ -518,6 +522,15 @@ $focus_color: #e03600;
                  p {
                     color: white;
                 }
+            }
+
+             .back-drop {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: #000000cf;
             }
 
              .image_holder {
@@ -532,6 +545,10 @@ $focus_color: #e03600;
                 transition: 200ms;
                 background: #1c1c1c;
                 backface-visibility: hidden;
+
+                &.tut_focus {
+                    z-index: 233;
+                }
 
                  > img {
                      width: 100%;
@@ -660,22 +677,41 @@ $focus_color: #e03600;
                 }
             }
 
+            > .back-drop {
+                position: absolute;
+                top: 0;
+                left: -90px;
+                width: 100vw;
+                height: 100vh;
+                z-index: 111;
+                background: #000000cf;
+            }
+
             > .namespace-name {
                 position: relative;
                 display: inline-block;
-                height: 40px;
                 margin: 20px $left-margin-roomContainer;
                 color: #c2c2c2;
                 cursor: pointer;
                 opacity: 1;
                 transition: .2s ease-in-out;
 
-                &.hide {
-                    opacity: 0;
+                &.tut_focus {
+                    z-index: 233;
+                    padding: 0 10px;
+                    border: 2px solid #c1c1c1ce;
+                    border-radius: 5px;
+
+                    > .namespace-event {
+
+                        > h3 {
+                            width: 86%;
+                        }
+                    }
                 }
 
-                > * {
-                    line-height: 40px;
+                &.hide {
+                    opacity: 0;
                 }
 
                 > .namespace-event {
@@ -719,7 +755,7 @@ $focus_color: #e03600;
                         }
 
                         > .ns-option {
-                            padding: 0 9px;
+                            padding: 12px 9px;
                             
                             > p {
                                 font-size: 13px;
@@ -734,6 +770,16 @@ $focus_color: #e03600;
                 }
             }
 
+            > .back-drop {
+                position: absolute;
+                top: 0;
+                left: -90px;
+                width: 100vw;
+                height: 100vh;
+                z-index: 111;
+                background: #000000cf;
+            }
+
             > .roomContainer {
                 //width: 100%;
                 display: flex;
@@ -745,6 +791,13 @@ $focus_color: #e03600;
 
                 &.hide {
                     opacity: 0;
+                }
+
+                &.tut_focus {
+                    z-index: 133;
+                    border: 2px solid #109082;
+                    padding: 0 10px 10px;
+                    position: relative;
                 }
 
                 > .room-group-name {
@@ -949,12 +1002,39 @@ $focus_color: #e03600;
                         width: 100%;
                         height: 100%;
                     }
+
+                    &.tut_focus {
+                        z-index: 133;
+                        border: 2px solid white;
+                        padding: 10px;
+                        box-sizing: content-box;
+                        box-shadow: 0 0 5px rgb(255, 255, 255);
+                    }
+                }
+
+                > .back-drop {
+                    position: absolute;
+                    top: 0;
+                    left: -400px;
+                    width: 200vw;
+                    height: 100vh;
+                    z-index: 111;
+                    background: #000000cf;
                 }
             }
 
              .workspace-clients-icon {
                 width: 23px;
                 // height: 40px;
+
+                    &.tut_focus {
+                        position: relative;
+                        z-index: 133;
+                        border: 2px solid white;
+                        padding: 10px;
+                        box-sizing: content-box;
+                        box-shadow: 0 0 5px rgb(255, 255, 255);
+                    }
 
 
                 > img {
@@ -1052,6 +1132,10 @@ $focus_color: #e03600;
 
             @media (max-width: 768px) {
                 padding: 0 10px;
+            }
+
+            &.tut_mode {
+                overflow: visible;
             }
 
             > .messages {
@@ -1751,12 +1835,32 @@ $focus_color: #e03600;
                 }
             }
 
+            > .back-drop {
+                position: absolute;
+                top: -400px;
+                left: -400px;
+                width: 200vw;
+                height: 200vh;
+                z-index: 111;
+                background: #000000cf;
+            }
+
             > .workspace-clients {
                 width: 0;
                 overflow: hidden;
                 transition: .3s $fashioned_bezier;
                 height: 100%;
                 background: $sidebar_grad1;
+
+                &.tut_focus {
+                    position: relative;
+                    z-index: 133;
+                    overflow: visible;
+                    border: 2px solid white;
+                    padding: 10px;
+                    box-sizing: content-box;
+                    box-shadow: 0 0 5px rgb(255, 255, 255);
+                }
 
                 &.open {
                     width: 250px;
@@ -3736,6 +3840,63 @@ $focus_color: #e03600;
         transform: translate(-50%, -50%) scale(0.95);
     }
 }
+
+
+
+.tut_message {
+    position: absolute;
+    min-width: 250px;
+    text-align: center; 
+    background: #04000e;
+    border: 2px solid #fbd168;
+    border-radius: 4px;
+    padding: 8px 20px;
+
+    &.toRight {    
+        top: 50%;
+        left: 150%;
+        transform: translateY(-50%);
+    }
+
+    &.toBottom {    
+        top: 150%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    &.toLeft {
+        top: 50%;
+        right: 150%;
+        transform: translateY(-50%);
+    }
+
+    &.toBottomLeft {
+        top: 150%;
+        // left: 50%;
+        right: 0;
+        // transform: translateX(-50%);
+        // top: 50%;
+        // right: 150%;
+        // transform: translateY(-50%);
+    }
+
+    > p {
+        white-space: nowrap;
+        color: #d2d2d2;
+        font-weight: 800;
+    }
+
+    > .btns {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+
+        > button {
+            margin-right: 8px;
+        }
+    }
+}
+
 
 input[type="text"] {
     outline: none;

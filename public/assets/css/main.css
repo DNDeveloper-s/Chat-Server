@@ -545,8 +545,21 @@ body {
   overflow: auto;
 }
 
+#root > .nav_bar > .userDetails-NameSpace_container > .nameSpaceContainer.tut_mode {
+  overflow: visible;
+}
+
 #root > .nav_bar > .userDetails-NameSpace_container > .nameSpaceContainer p {
   color: white;
+}
+
+#root > .nav_bar > .userDetails-NameSpace_container .back-drop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000cf;
 }
 
 #root > .nav_bar > .userDetails-NameSpace_container .image_holder {
@@ -564,6 +577,10 @@ body {
   background: #1c1c1c;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
+}
+
+#root > .nav_bar > .userDetails-NameSpace_container .image_holder.tut_focus {
+  z-index: 233;
 }
 
 #root > .nav_bar > .userDetails-NameSpace_container .image_holder > img {
@@ -703,10 +720,19 @@ body {
   }
 }
 
+#root > .nav_bar > .nameSpaceDetails-Room_container > .back-drop {
+  position: absolute;
+  top: 0;
+  left: -90px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 111;
+  background: #000000cf;
+}
+
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name {
   position: relative;
   display: inline-block;
-  height: 40px;
   margin: 20px 10%;
   color: #c2c2c2;
   cursor: pointer;
@@ -715,12 +741,19 @@ body {
   transition: .2s ease-in-out;
 }
 
-#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name.hide {
-  opacity: 0;
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name.tut_focus {
+  z-index: 233;
+  padding: 0 10px;
+  border: 2px solid #c1c1c1ce;
+  border-radius: 5px;
 }
 
-#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > * {
-  line-height: 40px;
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name.tut_focus > .namespace-event > h3 {
+  width: 86%;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name.hide {
+  opacity: 0;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .namespace-event > * {
@@ -763,7 +796,7 @@ body {
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown > .ns-option {
-  padding: 0 9px;
+  padding: 12px 9px;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown > .ns-option > p {
@@ -773,6 +806,16 @@ body {
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown > .ns-option:hover {
   background: #d4c68b12;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .back-drop {
+  position: absolute;
+  top: 0;
+  left: -90px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 111;
+  background: #000000cf;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer {
@@ -794,6 +837,13 @@ body {
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer.hide {
   opacity: 0;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer.tut_focus {
+  z-index: 133;
+  border: 2px solid #109082;
+  padding: 0 10px 10px;
+  position: relative;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room-group-name {
@@ -1031,8 +1081,39 @@ body {
   height: 100%;
 }
 
+#root > .main_bar > .room-details > .toRight > .mentions-btn.tut_focus {
+  z-index: 133;
+  border: 2px solid white;
+  padding: 10px;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  -webkit-box-shadow: 0 0 5px white;
+          box-shadow: 0 0 5px white;
+}
+
+#root > .main_bar > .room-details > .toRight > .back-drop {
+  position: absolute;
+  top: 0;
+  left: -400px;
+  width: 200vw;
+  height: 100vh;
+  z-index: 111;
+  background: #000000cf;
+}
+
 #root > .main_bar > .room-details .workspace-clients-icon {
   width: 23px;
+}
+
+#root > .main_bar > .room-details .workspace-clients-icon.tut_focus {
+  position: relative;
+  z-index: 133;
+  border: 2px solid white;
+  padding: 10px;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  -webkit-box-shadow: 0 0 5px white;
+          box-shadow: 0 0 5px white;
 }
 
 #root > .main_bar > .room-details .workspace-clients-icon > img {
@@ -1147,6 +1228,10 @@ body {
   #root > .main_bar > .message-display__container {
     padding: 0 10px;
   }
+}
+
+#root > .main_bar > .message-display__container.tut_mode {
+  overflow: visible;
 }
 
 #root > .main_bar > .message-display__container > .messages {
@@ -1891,6 +1976,16 @@ body {
   transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
 }
 
+#root > .main_bar > .message-display__container > .back-drop {
+  position: absolute;
+  top: -400px;
+  left: -400px;
+  width: 200vw;
+  height: 200vh;
+  z-index: 111;
+  background: #000000cf;
+}
+
 #root > .main_bar > .message-display__container > .workspace-clients {
   width: 0;
   overflow: hidden;
@@ -1898,6 +1993,18 @@ body {
   transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
   height: 100%;
   background: #151521;
+}
+
+#root > .main_bar > .message-display__container > .workspace-clients.tut_focus {
+  position: relative;
+  z-index: 133;
+  overflow: visible;
+  border: 2px solid white;
+  padding: 10px;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  -webkit-box-shadow: 0 0 5px white;
+          box-shadow: 0 0 5px white;
 }
 
 #root > .main_bar > .message-display__container > .workspace-clients.open {
@@ -4060,6 +4167,62 @@ body {
     -webkit-transform: translate(-50%, -50%) scale(0.95);
             transform: translate(-50%, -50%) scale(0.95);
   }
+}
+
+.tut_message {
+  position: absolute;
+  min-width: 250px;
+  text-align: center;
+  background: #04000e;
+  border: 2px solid #fbd168;
+  border-radius: 4px;
+  padding: 8px 20px;
+}
+
+.tut_message.toRight {
+  top: 50%;
+  left: 150%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.tut_message.toBottom {
+  top: 150%;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+
+.tut_message.toLeft {
+  top: 50%;
+  right: 150%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.tut_message.toBottomLeft {
+  top: 150%;
+  right: 0;
+}
+
+.tut_message > p {
+  white-space: nowrap;
+  color: #d2d2d2;
+  font-weight: 800;
+}
+
+.tut_message > .btns {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-top: 10px;
+}
+
+.tut_message > .btns > button {
+  margin-right: 8px;
 }
 
 input[type="text"] {

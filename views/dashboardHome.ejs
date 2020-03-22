@@ -23,14 +23,26 @@
                 </div>
                 <hr>
                 <!-- NameSpace Container -->
-                <div class="nameSpaceContainer">
+                <div class="nameSpaceContainer"> <!-- class="tut_mode" -->
                     <% for(let workSpace of workSpaces) { %>
-                        <div class="name_space image_holder anim" data-ns="<%= workSpace.endPoint %>" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">
+    <!-- class="tut_focus" --><div class="name_space image_holder anim" data-ns="<%= workSpace.endPoint %>" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">
                             <img src="<%= workSpace.image %>" alt="<%= workSpace.title %>" title="<%= workSpace.title %>">
                             <!-- <p><%= workSpace.title %></p> -->
                             <div class="ns-notification" data-nothing="<%= workSpace.nothing %>"></div>
                         </div>
                     <% } %>
+                    <!-- <div class="back-drop"></div> -->
+
+
+                    <!-- <div class="tut_message">
+                        <p>Click here to get anything here</p>
+                        <div class="btns">
+                            <button type="button" class="redLinear">Skip</button>
+                            <button type="button" class="blueLinear">Next</button>
+                        </div>
+                    </div> -->
+
+
 <!--                    <div class="name_space image_holder anim" ns="/wikit" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
 <!--                        <img src="/assets/images/Capture.PNG" alt="wikit" title="wikit">-->
 <!--                    </div>-->
@@ -54,7 +66,7 @@
                 </div>
             </div>
             <div class="nameSpaceDetails-Room_container">
-                <div class="namespace-name">
+<!-- class="tut_focus" --><div class="namespace-name">
                     <div class="namespace-event">
                         <h3 title="<%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : '' %>"><%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : "" %></h3><i class="material-icons">arrow_drop_down</i>
                     </div>
@@ -66,9 +78,26 @@
                             <p class="green">Invite Friend</p>
                         </div>
                     </div>
+
+                    <!-- <div class="tut_message toBottom">
+                        <p>Click here to get anything here</p>
+                        <div class="btns">
+                            <button type="button" class="redLinear">Skip</button>
+                            <button type="button" class="blueLinear">Next</button>
+                        </div>
+                    </div> -->
                 </div>
+                <!-- <div class="back-drop"></div> -->
                 <!-- Room Container -->
-                <div class="roomContainer">
+<!-- class="tut_focus" --><div class="roomContainer">
+
+                    <!-- <div class="tut_message toRight">
+                        <p>Click here to get anything here</p>
+                        <div class="btns">
+                            <button type="button" class="redLinear">Skip</button>
+                            <button type="button" class="blueLinear">Next</button>
+                        </div>
+                    </div> -->
                     <h4 class="room-group-name">Rooms</h4>
                     <!-- Real Rooms -->
                     <!-- <div class="room anim" data-id="5e66686a8aca6819f4a4af34" data-nsid="5e66686b8aca6819f4a4af35" data-ns="/boys8068659" data-animtochilds="false" data-animdelay="0.1" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px">
@@ -113,6 +142,8 @@
 <!--                    </div>-->
 <!--                    <hr>-->
                 </div>
+
+                <!-- <div class="back-drop"></div> -->
                 <button class="pointer add-room">Add Room</button>
             </div>
         </div>
@@ -147,7 +178,7 @@
                     <button id="search-btn" class="pointer">Search</button>
                 </div>
                 <div class="toRight">
-                    <div class="mentions-btn alignCenter">
+                    <!-- class="tut_focus" --><div class="mentions-btn alignCenter">
                         <img src="/assets/images/mention.svg" class="mention" title="Sneek on your mentions" alt="mentions">
 
                         <div class="mentions-modal">
@@ -159,9 +190,26 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- <div class="tut_message toBottom">
+                            <p>Click here to get anything here</p>
+                            <div class="btns">
+                                <button type="button" class="redLinear">Skip</button>
+                                <button type="button" class="blueLinear">Next</button>
+                            </div>
+                        </div> -->
                     </div>
-                    <div class="workspace-clients-icon alignCenter">
+                    <!-- <div class="back-drop"></div> -->
+                    <!-- class="tut_focus" --><div class="workspace-clients-icon alignCenter">
                         <img src="/assets/images/friends.svg" class="message-user_dp" alt="workspace-clients-icon">
+
+                        <!-- <div class="tut_message toBottomLeft">
+                            <p>Click here to get anything here</p>
+                            <div class="btns">
+                                <button type="button" class="redLinear">Skip</button>
+                                <button type="button" class="blueLinear">Next</button>
+                            </div>
+                        </div> -->
                     </div>
                     <div class="friends-icon alignCenter">
                         <i class="material-icons">person</i>
@@ -172,7 +220,7 @@
                 </div>
             </div>
             <!-- Message display container -->
-            <div class="message-display__container">
+            <!-- class="tut_mode" --><div class="message-display__container">
 
                 <div class="messages">
                     
@@ -263,7 +311,16 @@
                     </div> -->
 
                 </div>
-                <div class="workspace-clients open">
+                <!-- <div class="back-drop"></div> -->
+                <!-- class="tut_focus" --><div class="workspace-clients open">
+
+                    <!-- <div class="tut_message toLeft">
+                        <p>Click here to get anything here</p>
+                        <div class="btns">
+                            <button type="button" class="redLinear">Skip</button>
+                            <button type="button" class="blueLinear">Next</button>
+                        </div>
+                    </div> -->
                     <div class="online-separator separators">ONLINE</div>
                     <div class="online-clients">
                         <!-- <div class="client">
@@ -392,14 +449,14 @@
                     
                 </div>
                 <div class="selectors">
-                    <!-- <div class="image_input">
-                        <input type="file" name="image" class="room_image">
-                        <i class="material-icons">image</i>
-                    </div> -->
                     <div class="image_input">
                         <input type="file" name="image" class="room_image">
                         <i class="material-icons">image</i>
                     </div>
+                    <!-- <div class="image_input">
+                        <input type="file" name="image" class="room_image">
+                        <i class="material-icons">image</i>
+                    </div> -->
                 </div>
                 <!-- <input type="text" value="<span style='color: red'>Saurabh Singh</span> is good guy!" placeholder="Enter your message!"> -->
                 <button class="pointer" type="button">Send<i class="material-icons">send</i></button>

@@ -217,9 +217,14 @@ exports.workSpaceFunctions = async(req, res, next) => {
     
         user.workSpaces.push(workSpace._id);
 
-        nsp.emit('connectedByLink', {data: {
-            userName: user.name
-        }});
+        nsp.emit('connectedByLink', {
+            user: {
+                name: user.name,
+                image: user.image,
+                _id: user._id,
+                status: user.status
+            }
+        });
 
         await workSpace.save();
 
@@ -1318,7 +1323,7 @@ exports.postAddFriend = async(req, res, next) => {
         return res.json({
             acknowledgment: {
                 type: 'success',
-                message: 'Added as a friend!',
+                message: 'Friend Request Sent!',
                 newFriend: newFriend
             }
         })
@@ -1354,7 +1359,7 @@ exports.postAddFriend = async(req, res, next) => {
                 curUser.notifications.list = curUser.notifications.list.filter(cur => cur.notificationType !== 'frnd_req' && cur.userDetails.userId !== friendId);
                 curUser.notifications.count = curUser.notifications.list.length;
 
-                if(accept) {
+                if(accept == 'true') {
                     curUser.friendsList.push(newFriend._id);
                     newFriend.friendsList.push(curUser._id);
                 }
@@ -1362,7 +1367,7 @@ exports.postAddFriend = async(req, res, next) => {
                 await curUser.save();
                 await newFriend.save();
 
-                if(!accept) {
+                if(accept == 'false') {
 
                     return res.json({
                         acknowledgment: {
@@ -1375,7 +1380,7 @@ exports.postAddFriend = async(req, res, next) => {
                 return res.json({
                     acknowledgment: {
                         type: 'success',
-                        message: 'Added as a friend',
+                        message: 'Friend Request Accepted!',
                     }
                 })
             }

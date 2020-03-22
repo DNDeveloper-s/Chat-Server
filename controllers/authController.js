@@ -184,7 +184,7 @@ exports.postUpdateProfile = async (req, res, next) => {
             console.log(image);
             // const path = req
 
-            let input = 'productImages/user_images/*.{jpg,JPG,jpeg,JPEG,png,svg,gif}';
+            let input = `productImages/user_images/${image.filename}`;
             let output = 'productImages/user_images/resized/';
 
             compression(input, output, async (error, completed, statistic) => {
