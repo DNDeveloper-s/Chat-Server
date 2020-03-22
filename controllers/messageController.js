@@ -4,6 +4,8 @@ const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
 const compression = require('../compress-image');
+const path = require('path');
+
 
 exports.fetchMessages = async (req, res, next) => {
     const direct = req.query.direct;
@@ -95,6 +97,7 @@ exports.postMessages = async(req, res, next) => {
         const messageInput = req.body.message;
         const time = req.body.time;
         const embedded = req.query.embedded;
+        const pdfType = req.query.pdfType;
 
         if(direct) {
             const curUser = await User.findOne({email: req.session.user.email});
@@ -167,15 +170,6 @@ exports.postMessages = async(req, res, next) => {
 
             const user = await User.findOne({email: req.session.user.email});
 
-            let messageToPush = {
-                user: {
-                    id: user._id
-                },
-                msgType: req.body.msgType,
-                body: message,
-                time: time
-            }
-
             if(embedded) {
 
                 let input = `productImages/user_images/${req.file.filename}`;
@@ -191,11 +185,11 @@ exports.postMessages = async(req, res, next) => {
 
                     
     
-                    messageToPush = {
+                    let messageToPush = {
                         user: {
                             id: user._id
                         },
-                        msgType: messageInput.type,
+                        msgType: req.body.msgType,
                         body: messageBody,
                         time: time
                     }
@@ -203,17 +197,17 @@ exports.postMessages = async(req, res, next) => {
                     let image_path = statistic.path_out_new.slice(13);
 
                     roomMessage(nsEndPoint, roomId, messageToPush, messageBody, image_path);
-
-                    // return res.json({
-                    //     acknowledgment: {
-                    //         type: 'success',
-                    //         body: req.body,
-                    //         file: req.file,
-                    //         message: messageBody
-                    //     }
-                    // })
                 });
             } else {
+
+                let messageToPush = {
+                    user: {
+                        id: user._id
+                    },
+                    msgType: req.body.msgType,
+                    body: message,
+                    time: time
+                }
                 roomMessage(nsEndPoint, roomId, messageToPush, message, undefined);
             }
 
@@ -374,6 +368,26 @@ exports.postMessages = async(req, res, next) => {
             //     type: "toRoom",
             //     messageObj: messageObj
             // });
+        }
+
+        if(pdfType) {
+            const image = req.file;
+            console.log(path.dirname(require.main.filename));
+            // return res.download(`${path.dirname(require.main.filename)}/public/assets/images/default.jpg`, 'default.jpg', function(err) {
+            return res.download(`${__dirname}/messageController.js`, 'default.jpg', function(err) {
+                if(err) {
+                    return next(err);
+                } else {
+
+                }
+            });
+
+            // return res.json({
+            //     acknowledgment: {
+            //         type: 'success',
+            //         file: image
+            //     }
+            // })
         }
 
     } catch(e) {

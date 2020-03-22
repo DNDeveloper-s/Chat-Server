@@ -22,6 +22,9 @@ router.post('/add-friend', auth.isAuth, dashboardController.postAddFriend);
 
 router.get('/fetch', auth.isAuth, dashboardController.fetchDetails);
 
+router.post('/update_workspace', auth.isAuth, dashboardController.updateWorkSpaceDetails);
+
+
 
 // router.post('/workspace/connectByLink', auth.isAuth, dashboardController.connectByLinkToWorkspace);
 

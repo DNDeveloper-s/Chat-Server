@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
+const compression = require('../compress-image');
 
 exports.getDashboard = async (req, res, next) => {
     console.log('Rendering Dashboard');
@@ -68,68 +69,72 @@ exports.getDashboard = async (req, res, next) => {
 }
 
 exports.postWorkspace = async (req, res, next) => {
-    const title = req.body.title;
-    const defRoomTitle  = req.body.defRoomTitle;
+    try {
+        const title = req.body.title;
+        const defRoomTitle  = req.body.defRoomTitle;
 
-    const user = await User.findOne({email: req.session.user.email});
+        const user = await User.findOne({email: req.session.user.email});
 
-    const room = new Room({
-        name: defRoomTitle,
-        privacy: 'Public'
-    });
+        const room = new Room({
+            name: defRoomTitle,
+            privacy: 'Public'
+        });
 
-    await room.save();
+        await room.save();
 
-    let endPoint;
+        let endPoint;
 
-    while(true) {
-        let randomNum = Math.ceil(Math.random() * 8798778);
-        endPoint = `/${title}${randomNum}`;
+        while(true) {
+            let randomNum = Math.ceil(Math.random() * 8798778);
+            endPoint = `/${title}${randomNum}`;
 
-        const workSpace = await WorkSpace.findOne({endPoint: endPoint});
-        if(workSpace) {
-            continue;
-        } 
-        break;
-    }
-
-    const workSpace = new WorkSpace({
-        title: title,
-        defRoom: {
-            id: room._id
-        },
-        endPoint: endPoint,
-        roles: {
-            owner: req.session.user._id
-        },
-        rooms: [
-            room._id
-        ],
-        image: '/assets/images/Saurabh_DP_square.jpg'
-    });
-
-    workSpace.roles.members.push(req.session.user._id);
-
-    await workSpace.save();
-
-    room.workSpaceId = workSpace._id;
-
-    if(!user.workSpaces.length > 0) {
-        user.config.defaultWorkSpace = workSpace._id;
-    }
-
-    user.workSpaces.push(workSpace._id);
-
-    await room.save();
-    await user.save();
-
-    return res.json({
-        acknowledgment: {
-            type: 'success',
-            message: 'Succesfully Posted the Workspace!',
-            workSpace: workSpace
+            const workSpace = await WorkSpace.findOne({endPoint: endPoint});
+            if(workSpace) {
+                continue;
+            } 
+            break;
         }
-    })
+
+        const workSpace = new WorkSpace({
+            title: title,
+            defRoom: {
+                id: room._id
+            },
+            endPoint: endPoint,
+            roles: {
+                owner: req.session.user._id
+            },
+            rooms: [
+                room._id
+            ],
+            image: '/assets/images/default.jpg'
+        });
+
+        workSpace.roles.members.push(req.session.user._id);
+
+        await workSpace.save();
+
+        room.workSpaceId = workSpace._id;
+
+        if(!user.workSpaces.length > 0) {
+            user.config.defaultWorkSpace = workSpace._id;
+        }
+
+        user.workSpaces.push(workSpace._id);
+
+        await room.save();
+        await user.save();
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Created the Workspace!',
+                workSpace: workSpace
+            }
+        })
+    } catch(e) {
+        return next(e);
+    }
 }
 
 
@@ -1211,7 +1216,6 @@ exports.fetchDetails = async (req, res, next) => {
                                 name: cur.name,
                                 workSpaceId: workSpace._id,
                                 endPoint: nsEndPoint,
-                                workSpaceTitle: workSpace.title,
                                 privacy: cur.privacy,
                                 nothing: false,
                                 messages: roomMessages
@@ -1221,7 +1225,6 @@ exports.fetchDetails = async (req, res, next) => {
                             _id: cur._id,
                             workSpaceId: workSpace._id,
                             endPoint: nsEndPoint,
-                            workSpaceTitle: workSpace.title,
                             name: cur.name,
                             privacy: cur.privacy,
                             nothing: true,
@@ -1381,5 +1384,117 @@ exports.postAddFriend = async(req, res, next) => {
 
         // }
 
+    }
+}
+
+exports.updateWorkSpaceDetails = async(req, res, next) => {
+    const nsEndPoint = req.query.nsEndPoint;
+    const userId = req.query.userId;
+    const name = req.body.name;
+    const image = req.file;
+    const io = req.app.get('socketio');
+    let allowed = false,
+        ifNotMessage = '';
+
+    if(userId.toString() !== req.session.user._id.toString()) {
+        return next('You are not allowed for this action!');
+    }
+
+    const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint})
+        .populate('roles.members');
+
+    if(!workSpace) {
+        return next('Invalid Workspace! Line 1402');
+    }
+
+    if(workSpace.roles.owner.toString() !== userId.toString()) {
+        workSpace.roles.admins.forEach(admin => {
+            if(admin.toString() === userId.toString()) {
+                allowed = true;
+            }
+        })
+        if(!allowed) {
+            ifNotMessage = 'Only admins are allowed for such action!';
+        }
+    } else {
+        allowed = true;
+    }
+
+    if(allowed) {
+    
+        if(image) {
+            let input = `productImages/user_images/${image.filename}`;
+            let output = 'productImages/workspace_images/resized/';
+
+            compression(input, output, async(error, completed, statistic) => {
+                let image_path = statistic.path_out_new.slice(13);
+
+                workSpace.title = name;
+                workSpace.image = image_path;
+
+                await workSpace.save();
+
+                workSpace.roles.members.forEach(member => {
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('update', {
+                        type: 'workSpace',
+                        workSpace: {
+                            title: workSpace.title,
+                            image: workSpace.image
+                        },
+                        nsEndPoint: nsEndPoint
+                    })
+                })
+
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        allowed: allowed,
+                        message: 'Succesfully updated the worspace',
+                        data: {
+                            nsEndPoint: nsEndPoint,
+                            userId: userId,
+                            name: name,
+                            image: image,
+                        }
+                    }
+                })
+            });
+        } else {
+            workSpace.title = name;
+            await workSpace.save();
+
+            workSpace.roles.members.forEach(member => {
+                io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('update', {
+                    type: 'workSpace',
+                    workSpace: {
+                        title: workSpace.title
+                    },
+                    nsEndPoint: nsEndPoint
+                })
+            })
+
+            return res.json({
+                acknowledgment: {
+                    type: 'success',
+                    allowed: allowed,
+                    message: 'Succesfully updated the worspace',
+                    data: {
+                        nsEndPoint: nsEndPoint,
+                        userId: userId,
+                        name: name,
+                    }
+                }
+            })
+        }
+
+    } else {
+
+        return res.json({
+            acknowledgment: {
+                type: 'error',
+                allowed: allowed,
+                message: ifNotMessage
+            }
+        })
     }
 }

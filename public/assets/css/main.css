@@ -736,6 +736,12 @@ body {
   float: left;
   font-weight: 400;
   font-family: "Montserrat_SemiBold", sans-serif;
+  font-size: 18px;
+  text-transform: capitalize;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 88%;
+  white-space: nowrap;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown {
@@ -823,7 +829,7 @@ body {
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room > .room-name {
   position: relative;
-  width: 100%;
+  width: 90%;
   cursor: pointer;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -833,11 +839,22 @@ body {
           align-items: center;
 }
 
+#root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room > .room-name > .room-hash {
+  margin-right: 4px;
+}
+
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room > .room-name > span {
   -webkit-transition: .15s;
   transition: .15s;
   color: #fff;
   font-size: 13px;
+}
+
+#root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room > .room-name > .roomName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .roomContainer > .room > .room-name:hover > span {
@@ -1133,6 +1150,7 @@ body {
 }
 
 #root > .main_bar > .message-display__container > .messages {
+  position: relative;
   height: 100%;
   width: 100%;
   display: -webkit-box;
@@ -1143,6 +1161,14 @@ body {
       -ms-flex-direction: column-reverse;
           flex-direction: column-reverse;
   overflow: auto;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message-loader {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
 }
 
 #root > .main_bar > .message-display__container > .messages > .message {
@@ -3348,6 +3374,88 @@ body {
   font-size: 15px;
 }
 
+#root > .modal > .response_modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: url("/assets/images/blue-snow.png");
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .modal > .response_modal.success > .response_svg .path {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+#root > .modal > .response_modal.success > .response_message,
+#root > .modal > .response_modal.success > button {
+  opacity: 1;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  -webkit-transition: all 0.7s cubic-bezier(0.63, 1.19, 0, 1.02) 0.5s;
+  transition: all 0.7s cubic-bezier(0.63, 1.19, 0, 1.02) 0.5s;
+}
+
+#root > .modal > .response_modal.success > button {
+  -webkit-transition-delay: .7s;
+          transition-delay: .7s;
+}
+
+#root > .modal > .response_modal > .response_svg {
+  width: 70%;
+  height: auto;
+}
+
+#root > .modal > .response_modal > .response_svg > .zoom_svg {
+  zoom: 6;
+}
+
+#root > .modal > .response_modal > .response_svg .circ {
+  opacity: 0;
+  stroke-dasharray: 130;
+  stroke-dashoffset: 130;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+}
+
+#root > .modal > .response_modal > .response_svg .tick {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  -webkit-transition: stroke-dashoffset 1s 0.5s ease-out;
+  transition: stroke-dashoffset 1s 0.5s ease-out;
+}
+
+#root > .modal > .response_modal > .response_message {
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0;
+  -webkit-transform: translateY(-20px);
+          transform: translateY(-20px);
+  margin: 0 20px;
+  text-align: center;
+}
+
+#root > .modal > .response_modal > button {
+  opacity: 0;
+  -webkit-transform: translateY(-20px);
+          transform: translateY(-20px);
+}
+
 #root > .friends-list {
   height: 100%;
   background: -webkit-gradient(linear, left top, left bottom, from(#222235), to(#161623));
@@ -4105,6 +4213,11 @@ button:hover {
           align-items: center;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  margin: 0 auto;
+}
+
+.btn > .loader-container {
+  margin: 0 0 0 20px !important;
 }
 
 .btn.hold {
