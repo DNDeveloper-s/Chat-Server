@@ -436,6 +436,10 @@ body {
   background: linear-gradient(0deg, #e95151 0%, #b40505 100%) !important;
 }
 
+.redLinear .loader-container {
+  stroke: #e9f3fa !important;
+}
+
 .blackLinear {
   background: -webkit-gradient(linear, left top, left bottom, from(#303030), to(#0e0d0d)) !important;
   background: linear-gradient(180deg, #303030 0%, #0e0d0d 100%) !important;
@@ -454,6 +458,36 @@ body {
 .blueLinear:hover {
   background: -webkit-gradient(linear, left bottom, left top, from(#49a0b1), to(#1b5e6b)) !important;
   background: linear-gradient(0deg, #49a0b1 0%, #1b5e6b 100%) !important;
+}
+
+.purpleLinear {
+  background: -webkit-gradient(linear, left top, left bottom, from(#8b49b1), to(#511f6d));
+  background: linear-gradient(180deg, #8b49b1 0%, #511f6d 100%);
+}
+
+.purpleLinear:hover {
+  background: -webkit-gradient(linear, left bottom, left top, from(#8b49b1), to(#511f6d));
+  background: linear-gradient(0deg, #8b49b1 0%, #511f6d 100%);
+}
+
+.greenLinear {
+  background: -webkit-gradient(linear, left top, left bottom, from(#49b149), to(#1e6b1e));
+  background: linear-gradient(180deg, #49b149 0%, #1e6b1e 100%);
+}
+
+.greenLinear:hover {
+  background: -webkit-gradient(linear, left bottom, left top, from(#49b149), to(#1e6b1e));
+  background: linear-gradient(0deg, #49b149 0%, #1e6b1e 100%);
+}
+
+.darkBlueLinear {
+  background: -webkit-gradient(linear, left top, left bottom, from(#4954b1), to(#232c73));
+  background: linear-gradient(180deg, #4954b1 0%, #232c73 100%);
+}
+
+.darkBlueLinear:hover {
+  background: -webkit-gradient(linear, left top, left bottom, from(#4954b1), to(#232c73));
+  background: linear-gradient(180deg, #4954b1 0%, #232c73 100%);
 }
 
 .pl-10 {
@@ -3232,16 +3266,6 @@ body {
   border: 2px solid #49a0b1;
 }
 
-#root > .modal button {
-  background: -webkit-gradient(linear, left top, left bottom, from(#49a0b1), to(#1b5e6b));
-  background: linear-gradient(180deg, #49a0b1 0%, #1b5e6b 100%);
-}
-
-#root > .modal button:hover, #root > .modal button:active {
-  background: -webkit-gradient(linear, left bottom, left top, from(#49a0b1), to(#1b5e6b));
-  background: linear-gradient(0deg, #49a0b1 0%, #1b5e6b 100%);
-}
-
 #root > .modal .or {
   margin: 10px 0;
   text-align: center;
@@ -3280,7 +3304,6 @@ body {
   width: 100%;
   height: 100%;
   background: #fff;
-  overflow: hidden;
   -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
           box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   display: -webkit-box;
@@ -3291,6 +3314,25 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   border-radius: 0 4px 4px 0;
+  background: url("/assets/images/flower.png");
+}
+
+#root > .modal > .attached-modal .loader-container {
+  margin: 30px auto;
+}
+
+#root > .modal > .attached-modal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #0000001c;
+}
+
+#root > .modal > .attached-modal.roles {
+  padding: 0;
 }
 
 #root > .modal > .attached-modal > .head {
@@ -3479,6 +3521,348 @@ body {
 
 #root > .modal > .attached-modal > .controls > button > i {
   font-size: 15px;
+}
+
+#root > .modal > .attached-modal > h4 {
+  margin: 0 0 20px;
+  color: #fff;
+  background: #390556;
+  font-size: 41px;
+  text-transform: uppercase;
+  padding: 10px 0;
+  mix-blend-mode: darken;
+  text-align: center;
+  font-family: 'Montserrat_Bold', sans-serif;
+  letter-spacing: 2px;
+}
+
+#root > .modal > .attached-modal > .roles-head {
+  width: 100%;
+  height: 150px;
+  z-index: 21;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism {
+  position: relative;
+  width: calc(100% - 40px);
+  height: 100%;
+  margin: 0 auto;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .roles_container {
+  border: 1px solid #fff;
+  width: 100%;
+  height: 100%;
+  padding: 0 10px 10px;
+  overflow: auto;
+  -webkit-box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.2) inset;
+          box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.2) inset;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .roles_container > .role_tag {
+  border: 1px solid lightgrey;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  border-radius: 6px;
+  margin: 10px 5px 0 0;
+  padding: 0 8px;
+  background: white;
+  zoom: 0.8;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_name {
+  line-height: 30px;
+  color: #000;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .roles_container > .role_tag > i {
+  line-height: 30px;
+  font-size: 16px;
+  margin-left: 10px;
+  color: #020202;
+  font-weight: 800;
+  cursor: pointer;
+  -webkit-transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .roles_container > .role_tag > i:hover {
+  color: red;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism.adding_role > .back-drop {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  background: #0000008f;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .back-drop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  background: #0000008f;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles {
+  position: fixed;
+  bottom: 61%;
+  left: 181%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  z-index: 111;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles.active > input {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  -webkit-transform: translateY(-55%) translateX(0px);
+          transform: translateY(-55%) translateX(0px);
+  -webkit-transition: .2s;
+  transition: .2s;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > input {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  -webkit-transform: translateY(-55%) translateX(20px);
+          transform: translateY(-55%) translateX(20px);
+  height: 27px;
+  width: 150px;
+  margin: 0;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > i {
+  font-size: 35px;
+  cursor: pointer;
+  -webkit-transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > i:hover {
+  color: #390556;
+}
+
+#root > .modal > .attached-modal > h3 {
+  margin: 20px 20px 5px;
+  color: #390556;
+  text-transform: capitalize;
+}
+
+#root > .modal > .attached-modal .client {
+  height: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 10px;
+}
+
+#root > .modal > .attached-modal .client > .image {
+  position: relative;
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+  border-radius: 300px;
+}
+
+#root > .modal > .attached-modal .client > .image > .status {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 300px;
+}
+
+#root > .modal > .attached-modal .client > .image > .status[data-status="online"] {
+  border: 2px solid #1a1a27;
+  background: #2aa70b;
+}
+
+#root > .modal > .attached-modal .client > .image > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 300px;
+}
+
+#root > .modal > .attached-modal .client > .name {
+  color: #000;
+  font-size: 14px;
+}
+
+#root > .modal > .attached-modal .client > .name > p {
+  font-weight: 500;
+  font-family: 'Varela Round', sans-serif;
+}
+
+#root > .modal > .attached-modal > .members-list {
+  width: calc(100% - 40px);
+  margin: 10px auto 0;
+  max-height: 35%;
+  z-index: 12;
+  border: 1px solid lightgrey;
+  background: white;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+          box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients {
+  width: 100%;
+  height: 100%;
+  overflow: hidden auto;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client:hover .action_btn {
+  -webkit-transform: rotateZ(45deg) translate(0, 0);
+          transform: rotateZ(45deg) translate(0, 0);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .image {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .name {
+  color: #000;
+  width: calc(100% - 70px);
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .name > p {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn {
+  margin-left: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transform: rotateZ(45deg) translate(10px, -10px);
+          transform: rotateZ(45deg) translate(10px, -10px);
+  pointer-events: none;
+  opacity: 0;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn:hover > i {
+  color: red;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn > i {
+  -webkit-transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
+  color: #000;
+}
+
+#root > .modal > .attached-modal > .search-members {
+  width: calc(100% - 40px);
+  height: 40px;
+  margin: 20px auto;
+  position: relative;
+}
+
+#root > .modal > .attached-modal > .search-members > .member-search-box {
+  width: 100%;
+  height: 40px;
+}
+
+#root > .modal > .attached-modal > .search-members > .member-search-box > input {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container {
+  position: absolute;
+  width: 100%;
+  max-height: 250px;
+  overflow: auto;
+  bottom: 100%;
+  left: 0;
+  background: #262633;
+  z-index: 23;
+  -webkit-transform: translateY(-20px);
+          transform: translateY(-20px);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container.active {
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .image {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .name {
+  color: #fff;
+  width: calc(100% - 70px);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .name > p {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn {
+  margin-left: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
+  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn:hover > i {
+  color: lightgrey;
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn > i {
+  -webkit-transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
+  color: #fff;
 }
 
 #root > .modal > .response_modal {

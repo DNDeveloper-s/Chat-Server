@@ -14,6 +14,7 @@ const app = express();
 const authRoutes = require('./routes/authRoute');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const workSpaceRoutes = require('./routes/workSpaceRoutes');
 
 const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PWD}@cluster0-zlxgj.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
@@ -58,6 +59,7 @@ app.use(session({
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/message', messageRoutes);
+app.use('/workspace', workSpaceRoutes);
 
 // Redirecting to correct page even on bad URL
 app.use('/', (req, res, next) => {

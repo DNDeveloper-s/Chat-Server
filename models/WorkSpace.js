@@ -19,6 +19,20 @@ const workSpaceSchema = new Schema({
             type: Schema.Types.ObjectID,
             ref: 'User'
         },
+        custom: [
+            {
+                name: String,
+                roleTag: String,
+                members: [
+                    {
+                        type: Schema.Types.ObjectID,
+                        ref: 'User'
+                    }
+                ],
+                color: String,
+                premissions: Object
+            }
+        ],
         admins: [
             {
                 type: Schema.Types.ObjectID,

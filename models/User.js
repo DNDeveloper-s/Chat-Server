@@ -14,7 +14,6 @@ const userSchema = new Schema({
     },
     mentions: [
         {
-
             nsDetails: {
                 title: String,
                 image: String,

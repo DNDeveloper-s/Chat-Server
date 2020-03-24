@@ -86,7 +86,7 @@ exports.postWorkspace = async (req, res, next) => {
 
         while(true) {
             let randomNum = Math.ceil(Math.random() * 8798778);
-            endPoint = `/${title}${randomNum}`;
+            endPoint = `/${title.replace(/ /g,'')}${randomNum}`;
 
             const workSpace = await WorkSpace.findOne({endPoint: endPoint});
             if(workSpace) {
@@ -137,6 +137,92 @@ exports.postWorkspace = async (req, res, next) => {
     }
 }
 
+exports.postDeleteWorkspace = async(req, res, next) => {
+    const nsEndPoint = req.query.nsEndPoint;
+    const userId = req.query.userId;
+    const io = req.app.get('socketio');
+
+    if(userId.toString() !== req.session.user._id.toString()) {
+        return next('You are not allowed for this action!');
+    }
+
+    // Checking if the user is allowed for such action (Checking roles)
+    const {allowed, workSpace, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(userId, nsEndPoint);
+
+    if(allowed) {
+        // All rooms related to the workspace removed form db collections
+        workSpace.rooms.forEach(async (roomId) => {
+            await Room.findByIdAndRemove(roomId);
+        });
+
+        // Looping through members are in the workspace
+        workSpace.roles.members.forEach(async(memberId) => {
+            const user = await User.findById(memberId)
+                .populate('config.defaultWorkSpace');
+
+            // Removing entries from user model of workspaces
+            user.workSpaces = user.workSpaces.filter(cur => cur.toString() !== workSpace._id.toString());
+
+            // Checking if the user is connected to the workspace currently
+            let d;
+            nsEndPoint === user.connectedDetails.endPoint ? d = user.config.defaultWorkSpace.endPoint : d = false
+
+            // Emitting event to all the members of workspace to leave the ns if connected
+            io.of(user.connectedDetails.endPoint).to(user.connectedDetails.socketId).emit('workSpace', {
+                type: 'remove',
+                nsEndPoint: nsEndPoint,
+                defaultWorkSpace: d
+            });
+
+            if(memberId.toString() !== userId.toString()) {
+                // Pushing Notification to all members of workspace
+                const notificationOBJ = {
+                    message: `${req.session.user.name} has been deleted the workspace "${workSpace.title}"`, 
+                    notificationType: 'workspace_removed', 
+                    userDetails: {
+                        image: req.session.user.image, 
+                        userId: req.session.user._id, 
+                        userName: req.session.user.name
+                    }
+                };
+                user.notifications.list.push(notificationOBJ);
+                user.notifications.count = user.notifications.list.length;
+
+                // Emitting events to all the members of workspace of notification
+                io.of(user.connectedDetails.endPoint).to(user.connectedDetails.socketId).emit('notification', {
+                    curUser: {
+                        notifications: {
+                            count: user.notifications.filter(cur => cur.notificationType !== 'rcvd_msg').count
+                        }
+                    }
+                });
+            }
+            await user.save();
+        });
+
+        // Now time to remove the actual workspace
+        await WorkSpace.findByIdAndRemove(workSpace._id);
+
+        // Sending the JSON response with message and type in terms of acknowledgment
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Workspace Deleted Succesfully!'
+            }
+        })
+
+    } else {
+
+        return res.json({
+            acknowledgment: {
+                type: 'error',
+                allowed: allowed,
+                message: ifNotMessage
+            }
+        })
+    }
+    
+}
 
 exports.workSpaceFunctions = async(req, res, next) => {
 
@@ -254,7 +340,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
             acknowledgment: {
                 type: 'success',
                 message: 'Succesfully Deleted the notification!',
-                notificationCount: user.notifications.count
+                notificationCount: user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length
             }
         })
 
@@ -1398,33 +1484,13 @@ exports.updateWorkSpaceDetails = async(req, res, next) => {
     const name = req.body.name;
     const image = req.file;
     const io = req.app.get('socketio');
-    let allowed = false,
-        ifNotMessage = '';
 
     if(userId.toString() !== req.session.user._id.toString()) {
         return next('You are not allowed for this action!');
     }
 
-    const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint})
-        .populate('roles.members');
-
-    if(!workSpace) {
-        return next('Invalid Workspace! Line 1402');
-    }
-
-    if(workSpace.roles.owner.toString() !== userId.toString()) {
-        workSpace.roles.admins.forEach(admin => {
-            if(admin.toString() === userId.toString()) {
-                allowed = true;
-            }
-        })
-        if(!allowed) {
-            ifNotMessage = 'Only admins are allowed for such action!';
-        }
-    } else {
-        allowed = true;
-    }
-
+    const {allowed, workSpace, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(userId, nsEndPoint); 
+    
     if(allowed) {
     
         if(image) {
@@ -1440,13 +1506,19 @@ exports.updateWorkSpaceDetails = async(req, res, next) => {
                 await workSpace.save();
 
                 workSpace.roles.members.forEach(member => {
-                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('update', {
-                        type: 'workSpace',
+
+                    // Checking if the user is connected to the workspace currently
+                    let change;
+                    nsEndPoint === member.connectedDetails.endPoint ? change = true : change = false
+
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('workSpace', {
+                        type: 'update',
                         workSpace: {
                             title: workSpace.title,
                             image: workSpace.image
                         },
-                        nsEndPoint: nsEndPoint
+                        nsEndPoint: nsEndPoint,
+                        change: change
                     })
                 })
 
@@ -1469,12 +1541,19 @@ exports.updateWorkSpaceDetails = async(req, res, next) => {
             await workSpace.save();
 
             workSpace.roles.members.forEach(member => {
-                io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('update', {
-                    type: 'workSpace',
+
+                // Checking if the user is connected to the workspace currently
+                let change;
+                nsEndPoint === member.connectedDetails.endPoint ? change = true : change = false
+
+                io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('workSpace', {
+                    type: 'update',
                     workSpace: {
-                        title: workSpace.title
+                        title: workSpace.title,
+                        image: workSpace.image
                     },
-                    nsEndPoint: nsEndPoint
+                    nsEndPoint: nsEndPoint,
+                    change: change
                 })
             })
 

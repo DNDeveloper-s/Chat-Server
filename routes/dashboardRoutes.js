@@ -10,7 +10,9 @@ const dashboardController = require('../controllers/dashboardController');
 
 router.get('/home', auth.isAuth, dashboardController.getDashboard);
 
-router.post('/new/workspace', auth.isAuth, dashboardController.postWorkspace);
+router.post('/workspace/new', auth.isAuth, dashboardController.postWorkspace);
+
+router.post('/workspace/delete', auth.isAuth, dashboardController.postDeleteWorkspace);
 
 // router.get('/connect/namespace', auth.isAuth, dashboardController.postConnectionToNameSpace);
 
