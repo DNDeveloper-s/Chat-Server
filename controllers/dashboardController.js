@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
