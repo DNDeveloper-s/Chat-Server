@@ -249,6 +249,19 @@ exports.postMessages = async(req, res, next) => {
                         ids.push(...attr);
                     })
 
+                    const role_Tags = doc.getElementsByClassName('role');;
+                    let roleTags = [];
+                    role_Tags.forEach(roleTag => {
+                        const attr = roleTag.attributes.filter(cur => cur.name === 'data-role');
+                        roleTags.push(attr[0].value);
+                    })
+
+                    
+
+                    // return res.json({
+                    //     roleTags: roleTags
+                    // })
+
                     ids.forEach(async (cur) => {
                         const idUser = await User.findById(cur.value);
                         const mentionObj = {
@@ -300,6 +313,7 @@ exports.postMessages = async(req, res, next) => {
                     // Now time for message to workspace
                     await WorkSpace.findOne({endPoint: nsEndPoint})
                     .populate('roles.members')
+                    .populate('roles.custom.members')
                     .exec((err, workSpace) => {
                         if(!workSpace) {
                             return next('Invalid Workspace! Line 246');
@@ -352,6 +366,58 @@ exports.postMessages = async(req, res, next) => {
                                 })
                             }
                         })
+
+                        // Sending Mentioned Notifications to the Users comes under the ROLETAG
+                        roleTags.forEach(roleTag => {
+                            const role = workSpace.roles.custom.filter(role => role.roleTag === roleTag);
+                            role[0].members.forEach(async(member) => {
+                                if(member._id.toString() !== user._id.toString()) {
+                                    const mentionObj = {
+                                        nsDetails: {
+                                            title: workSpace.title,
+                                            image: workSpace.image,
+                                            endPoint: nsEndPoint
+                                        },
+                                        roomDetails: {
+                                            name: room.name,
+                                            _id: roomId
+                                        },
+                                        messageObj: {
+                                            _id: room.messages[room.messages.length - 1]._id,
+                                            userId: messageObj.user.id,
+                                            body: messageObj.body,
+                                            time: messageObj.time
+                                        }
+                                    };
+                                    member.mentions.push(mentionObj)
+                                    member.notifications.list.push({
+                                        message: `You are mentioned by <span class="primary">${user.name}</span> in room <span class="secondary">#${room.name.toLowerCase()}</span>`,
+                                        notificationType: 'mentioned_msg',
+                                        userDetails: {
+                                            image: user.image,
+                                            userId: user._id,
+                                            userName: user.name
+                                        },
+                                        nsEndPoint: nsEndPoint,
+                                        roomId: roomId,
+                                        messageId: messageObj._id
+                                    })
+                                    member.notifications.count = member.notifications.list.length;
+            
+                                    const notificationCount = member.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg');
+            
+                                    await member.save();
+                                    
+                                    // Socket for pushing notification to Mentioned Users
+                                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('messageToRoom', {
+                                        type: "toMentions",
+                                        count: notificationCount.length,
+                                        mentionDetails: mentionObj
+                                    })
+                                }
+                            })
+                        })
+
                         return res.json({
                             acknowledgment: {
                                 type: 'success',

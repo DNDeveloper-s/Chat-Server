@@ -1566,6 +1566,10 @@ $purple: #693089;
                                             padding-left: 27px;
                                             white-space: nowrap;
                                             user-select: none;
+
+                                            &.role {
+                                                padding-left: 8px;
+                                            }
         
                                             &:hover {
                                                 background: #161623;
@@ -1800,6 +1804,10 @@ $purple: #693089;
                                     white-space: nowrap;
                                     user-select: none;
 
+                                    &.role {
+                                        padding-left: 8px;
+                                    }
+
                                     &:hover {
                                         background: #161623;
                                     }
@@ -2023,7 +2031,18 @@ $purple: #693089;
                     display: block;
                 }
 
-                > .tag {
+                .group-heading {
+                    // margin: 0px 20px 10px;
+                    color: #525050;
+
+                    // &.role {
+                        margin: 10px 20px 10px;
+                        padding-top: 10px;
+                        border-top: 1px solid rgba(255, 255, 255, 0.089);
+                    // }
+                }
+
+                .tag {
                     display: flex;
                     padding: 10px 20px;
                     align-items: center;
@@ -2054,11 +2073,21 @@ $purple: #693089;
                                 height: 100%;
                             }
                         }
+
+                        > span {
+                            font-size: 12px;
+                        }
     
                         > .tag-name {
                             color: #a2abb4;
                             // font-family: 'ArimaMadurai_Regular', sans-serif;
                             font-size: 15px;
+
+                            &.role {
+                                text-shadow: 0px 1px 2px rgba(255,255,255, 0.1);
+                                font-size: 14px;
+                                margin-left: 5px;
+                            }
                         }
                     }
 
@@ -4408,6 +4437,10 @@ $purple: #693089;
                                                 padding-left: 27px;
                                                 white-space: nowrap;
                                                 user-select: none;
+
+                                                &.role {
+                                                    padding-left: 8px;
+                                                }
 
                                                 &:hover {
                                                     background: #161623;

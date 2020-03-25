@@ -107,7 +107,16 @@ exports.postWorkspace = async (req, res, next) => {
             rooms: [
                 room._id
             ],
-            image: '/assets/images/default.jpg'
+            image: '/assets/images/default.jpg',
+            custom: [
+                {
+                    name: 'everyone',
+                    roleTag: '/everyone',
+                    members: [],
+                    color: '#E5BACE',
+                    permissions: {}
+                }
+            ]
         });
 
         workSpace.roles.members.push(req.session.user._id);
@@ -289,6 +298,12 @@ exports.workSpaceFunctions = async(req, res, next) => {
                 }
             })
         }
+
+        workSpace.roles.custom.filter(cur => {
+            if(cur.roleTag === '/everyone') {
+                cur.members.push(req.session.user._id);
+            }
+        })
 
         workSpace.roles.members.push(req.session.user._id);
 
@@ -1186,6 +1201,7 @@ exports.fetchDetails = async (req, res, next) => {
             })
         })
     } else  {
+        
     
         const nsEndPoint = req.query.nsEndPoint;
         const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});

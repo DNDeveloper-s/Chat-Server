@@ -1681,6 +1681,10 @@ body {
           user-select: none;
 }
 
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .tag-details.role {
+  padding-left: 8px;
+}
+
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .tag-details:hover {
   background: #161623;
 }
@@ -1920,6 +1924,10 @@ body {
           user-select: none;
 }
 
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .tag-details.role {
+  padding-left: 8px;
+}
+
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p > .tag-details:hover {
   background: #161623;
 }
@@ -2155,7 +2163,14 @@ body {
   display: block;
 }
 
-#root > .main_bar > .send-message > .tag-list > .tag {
+#root > .main_bar > .send-message > .tag-list .group-heading {
+  color: #525050;
+  margin: 10px 20px 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.089);
+}
+
+#root > .main_bar > .send-message > .tag-list .tag {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2169,13 +2184,13 @@ body {
   cursor: pointer;
 }
 
-#root > .main_bar > .send-message > .tag-list > .tag:hover, #root > .main_bar > .send-message > .tag-list > .tag.focus-tag {
+#root > .main_bar > .send-message > .tag-list .tag:hover, #root > .main_bar > .send-message > .tag-list .tag.focus-tag {
   background: -webkit-gradient(linear, left top, left bottom, from(#1d1d2c), to(#151521));
   background: linear-gradient(180deg, #1d1d2c 0%, #151521 100%);
   outline: none;
 }
 
-#root > .main_bar > .send-message > .tag-list > .tag > .tag-body {
+#root > .main_bar > .send-message > .tag-list .tag > .tag-body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2184,7 +2199,7 @@ body {
           align-items: center;
 }
 
-#root > .main_bar > .send-message > .tag-list > .tag > .tag-body > .tag-img {
+#root > .main_bar > .send-message > .tag-list .tag > .tag-body > .tag-img {
   width: 40px;
   height: 40px;
   margin-right: 10px;
@@ -2197,17 +2212,27 @@ body {
           flex-grow: 0;
 }
 
-#root > .main_bar > .send-message > .tag-list > .tag > .tag-body > .tag-img > img {
+#root > .main_bar > .send-message > .tag-list .tag > .tag-body > .tag-img > img {
   width: 100%;
   height: 100%;
 }
 
-#root > .main_bar > .send-message > .tag-list > .tag > .tag-body > .tag-name {
+#root > .main_bar > .send-message > .tag-list .tag > .tag-body > span {
+  font-size: 12px;
+}
+
+#root > .main_bar > .send-message > .tag-list .tag > .tag-body > .tag-name {
   color: #a2abb4;
   font-size: 15px;
 }
 
-#root > .main_bar > .send-message > .tag-list > .tag > .tag-hash {
+#root > .main_bar > .send-message > .tag-list .tag > .tag-body > .tag-name.role {
+  text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+#root > .main_bar > .send-message > .tag-list .tag > .tag-hash {
   font-size: 12px;
   color: #d0cbbc47;
   font-weight: 800;
@@ -4721,6 +4746,10 @@ body {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+}
+
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details.role {
+  padding-left: 8px;
 }
 
 .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover {
