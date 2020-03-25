@@ -10,6 +10,8 @@ const messageController = require('../controllers/messageController');
 
 router.get('/fetch', auth.isAuth, messageController.fetchMessages);
 
+router.get('/download', messageController.download);
+
 router.post('/send', auth.isAuth, messageController.postMessages);
 
 module.exports = router;

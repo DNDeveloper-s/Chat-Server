@@ -24,10 +24,8 @@ module.exports.fetchRoles = async (req, res, next) => {
     const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint})
         .populate('roles.custom.members');
 
-    let memberDetails = [];
-
-    if(workSpace.roles.custom.members) {
-        memberDetails = workSpace.roles.custom.members.map(member => {
+    const customRoles = workSpace.roles.custom.map(role => {
+        const memberDetails = role.members.map(member => {
             return {
                 name: member.name,
                 image: member.image,
@@ -35,14 +33,12 @@ module.exports.fetchRoles = async (req, res, next) => {
                 _id: member._id,
             }
         })
-    }
-
-    const customRoles = workSpace.roles.custom.map(role => {
         return {
             name: role.name,
             color: role.color,
             permissions: role.permissions,
-            members: memberDetails
+            members: memberDetails,
+            roleTag: role.roleTag
         }
     });
 
@@ -60,11 +56,13 @@ module.exports.postRoles = async (req, res, next) => {
     try {
         const nsEndPoint = req.body.endPoint;
         const name = req.body.name;
+        const io = req.app.get('socketio');
 
         const {allowed, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(req.session.user._id, nsEndPoint);
 
         if(allowed) {
-            const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+            const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint})
+                .populate('roles.members');
 
             let roleTag;
 
@@ -93,14 +91,22 @@ module.exports.postRoles = async (req, res, next) => {
             const roleObj = {
                 name: name,
                 roleTag: roleTag,
-                memebers: [],
+                members: [],
                 color: color,
-                premissions: {}
+                permissions: {}
             }
 
             workSpace.roles.custom.push(roleObj);
 
             await workSpace.save();
+
+            workSpace.roles.members.forEach(member => {
+                io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+                    type: 'role_added',
+                    roleObj: roleObj,
+                    nsEndPoint: nsEndPoint
+                });
+            })
 
             return res.json({
                 acknowledgment: {
@@ -110,6 +116,110 @@ module.exports.postRoles = async (req, res, next) => {
                     roleDetails: roleObj
                 }
             })
+        } else {
+            return res.json({
+                acknowledgment: {
+                    type: 'error',
+                    allowed: allowed,
+                    message: ifNotMessage
+                }
+            })
+        }
+        
+    } catch(e) {
+        return next(e);
+    }
+}
+
+module.exports.postUserToRole = async (req, res, next) => {
+    try {
+        const nsEndPoint = req.query.nsEndPoint;
+        const action = req.query.action;
+        const userId = req.body.userId;
+        const roleTag = req.body.roleTag;
+        const io = req.app.get('socketio');
+
+        const {allowed, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(req.session.user._id, nsEndPoint);
+
+        if(allowed) {
+            const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint})
+                .populate('roles.members');
+            const user = await User.findById(userId);
+
+            if(action === 'add') {
+
+                workSpace.roles.custom.filter(cur => {
+                    if(cur.roleTag == roleTag) {
+                        cur.members.push(userId);
+                    }
+                });
+    
+                await workSpace.save();
+
+                workSpace.roles.members.forEach(member => {
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+                        type: 'user_added',
+                        roleTag: roleTag,
+                        nsEndPoint: nsEndPoint,
+                        user: {
+                            _id: user._id,
+                            name: user.name,
+                            image: user.image,
+                            status: user.status
+                        },
+                    });
+                })
+    
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        message: `User added to the role ${roleTag} successfully!`,
+                        nsEndPoint: nsEndPoint,
+                        user: {
+                            _id: user._id,
+                            name: user.name,
+                            image: user.image,
+                            status: user.status
+                        },
+                        roleTag: roleTag
+                    }
+                })
+            }
+
+            if(action === 'remove') {
+
+                workSpace.roles.custom.filter(cur => {
+                    if(cur.roleTag == roleTag) {
+                        cur.members = cur.members.filter(cur => cur.toString() !== userId.toString());
+                    }
+                });
+    
+                await workSpace.save();
+
+                workSpace.roles.members.forEach(member => {
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+                        type: 'user_removed',
+                        roleTag: roleTag,
+                        nsEndPoint: nsEndPoint,
+                        userId: userId
+                    });
+                })
+
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        message: `User removed from the role ${roleTag} successfully!`,
+                        nsEndPoint: nsEndPoint,
+                        user: {
+                            _id: user._id,
+                            name: user.name,
+                            image: user.image,
+                            status: user.status
+                        },
+                        roleTag: roleTag
+                    }
+                })
+            }
         } else {
             return res.json({
                 acknowledgment: {

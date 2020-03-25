@@ -30,7 +30,7 @@ const workSpaceSchema = new Schema({
                     }
                 ],
                 color: String,
-                premissions: Object
+                permissions: Object
             }
         ],
         admins: [

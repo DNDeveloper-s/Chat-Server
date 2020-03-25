@@ -2075,6 +2075,8 @@ body {
   height: 35px;
   margin-right: 10px;
   border-radius: 300px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 #root > .main_bar > .message-display__container > .workspace-clients .client > .image > .status {
@@ -2100,9 +2102,14 @@ body {
 #root > .main_bar > .message-display__container > .workspace-clients .client > .name {
   color: #c2c2c2;
   font-size: 14px;
+  width: calc(100% - 45px);
 }
 
 #root > .main_bar > .message-display__container > .workspace-clients .client > .name > p {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-weight: 500;
   font-family: 'Varela Round', sans-serif;
 }
@@ -3314,21 +3321,23 @@ body {
       -ms-flex-direction: column;
           flex-direction: column;
   border-radius: 0 4px 4px 0;
-  background: url("/assets/images/flower.png");
+  background: url("https://media.giphy.com/media/eHjYjMZsiFn6JUuPYJ/source.gif");
+  background-size: cover;
 }
 
 #root > .modal > .attached-modal .loader-container {
   margin: 30px auto;
 }
 
-#root > .modal > .attached-modal::before {
+#root > .modal > .attached-modal.roles::before {
   content: '';
   position: absolute;
-  top: 0;
+  top: 70px;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: #0000001c;
+  height: calc(100% - 70px);
+  background: url("/assets/images/blue-snow.png");
+  opacity: 0.88;
 }
 
 #root > .modal > .attached-modal.roles {
@@ -3526,7 +3535,8 @@ body {
 #root > .modal > .attached-modal > h4 {
   margin: 0 0 20px;
   color: #fff;
-  background: #390556;
+  background: -webkit-gradient(linear, left top, left bottom, from(#110319), to(#15041f));
+  background: linear-gradient(180deg, #110319 0%, #15041f 100%);
   font-size: 41px;
   text-transform: uppercase;
   padding: 10px 0;
@@ -3534,6 +3544,7 @@ body {
   text-align: center;
   font-family: 'Montserrat_Bold', sans-serif;
   letter-spacing: 2px;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8);
 }
 
 #root > .modal > .attached-modal > .roles-head {
@@ -3633,10 +3644,155 @@ body {
   transition: .2s;
 }
 
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles.loading > .loader-container {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles.success .checkmark {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  -webkit-animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+          animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles.failed .path {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > svg {
+  position: absolute;
+  top: 8.2px;
+  left: -25px;
+  width: 18px;
+  height: 18px;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > svg .circ {
+  opacity: 0;
+  stroke-dasharray: 130;
+  stroke-dashoffset: 130;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > svg .tick {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  -webkit-transition: stroke-dashoffset .5s 0.3s ease-out;
+  transition: stroke-dashoffset .5s 0.3s ease-out;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles .checkmark {
+  position: absolute;
+  top: 8.2px;
+  left: -25px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 2;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  -webkit-box-shadow: inset 0px 0px 0px #7ac142;
+          box-shadow: inset 0px 0px 0px #7ac142;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles .checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #7ac142;
+  fill: none;
+  -webkit-animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+          animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles .checkmark__check {
+  -webkit-transform-origin: 50% 50%;
+          transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  -webkit-animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+          animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@-webkit-keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@-webkit-keyframes scale {
+  0%, 100% {
+    -webkit-transform: none;
+            transform: none;
+  }
+  50% {
+    -webkit-transform: scale3d(1.1, 1.1, 1);
+            transform: scale3d(1.1, 1.1, 1);
+  }
+}
+
+@keyframes scale {
+  0%, 100% {
+    -webkit-transform: none;
+            transform: none;
+  }
+  50% {
+    -webkit-transform: scale3d(1.1, 1.1, 1);
+            transform: scale3d(1.1, 1.1, 1);
+  }
+}
+
+@-webkit-keyframes fill {
+  100% {
+    -webkit-box-shadow: inset 0px 0px 0px 30px #7ac142;
+            box-shadow: inset 0px 0px 0px 30px #7ac142;
+  }
+}
+
+@keyframes fill {
+  100% {
+    -webkit-box-shadow: inset 0px 0px 0px 30px #7ac142;
+            box-shadow: inset 0px 0px 0px 30px #7ac142;
+  }
+}
+
+#root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > .loader-container {
+  zoom: .4;
+  position: absolute;
+  top: 23px;
+  left: -56px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateX(15px);
+          transform: translateX(15px);
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
 #root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > input {
   position: absolute;
   right: 100%;
-  top: 50%;
+  top: 53%;
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
@@ -3652,6 +3808,7 @@ body {
   cursor: pointer;
   -webkit-transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
   transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
+  color: darkgrey;
 }
 
 #root > .modal > .attached-modal > .roles-head > .roles_mechanism > .add_roles > i:hover {
@@ -3662,6 +3819,8 @@ body {
   margin: 20px 20px 5px;
   color: #390556;
   text-transform: capitalize;
+  z-index: 2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 #root > .modal > .attached-modal .client {
@@ -3730,9 +3889,27 @@ body {
   overflow: hidden auto;
 }
 
+#root > .modal > .attached-modal > .members-list > .clients .client {
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client.remove {
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client.remove .action_btn {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  pointer-events: auto;
+  opacity: 1;
+}
+
 #root > .modal > .attached-modal > .members-list > .clients .client:hover .action_btn {
-  -webkit-transform: rotateZ(45deg) translate(0, 0);
-          transform: rotateZ(45deg) translate(0, 0);
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
   pointer-events: auto;
   opacity: 1;
 }
@@ -3765,10 +3942,82 @@ body {
   cursor: pointer;
   -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
   transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  -webkit-transform: rotateZ(45deg) translate(10px, -10px);
-          transform: rotateZ(45deg) translate(10px, -10px);
+  -webkit-transform: translateX(10px);
+          transform: translateX(10px);
   pointer-events: none;
   opacity: 0;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn > .loader-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  zoom: .55;
+  -webkit-transform: translateX(10px);
+          transform: translateX(10px);
+  pointer-events: none;
+  opacity: 0;
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn.loading {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn.loading > .loader-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  zoom: .55;
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn.loading > i {
+  -webkit-transform: rotateZ(45deg) translate(-20px, 19px);
+          transform: rotateZ(45deg) translate(-20px, 19px);
+  pointer-events: none;
+  opacity: 0;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn.loaded > .removed {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn.loaded > .loader-container {
+  -webkit-transform: translateX(-15px);
+          transform: translateX(-15px);
+  pointer-events: none;
+  opacity: 0;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn.loaded > i {
+  -webkit-transform: rotateZ(45deg) translate(-20px, 19px);
+          transform: rotateZ(45deg) translate(-20px, 19px);
+  pointer-events: none;
+  opacity: 0;
+}
+
+#root > .modal > .attached-modal > .members-list > .clients .client .action_btn > .removed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: greenyellow;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateX(15px);
+          transform: translateX(15px);
 }
 
 #root > .modal > .attached-modal > .members-list > .clients .client .action_btn:hover > i {
@@ -3776,6 +4025,8 @@ body {
 }
 
 #root > .modal > .attached-modal > .members-list > .clients .client .action_btn > i {
+  -webkit-transform: rotateZ(45deg);
+          transform: rotateZ(45deg);
   -webkit-transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
   transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
   color: #000;
@@ -3825,6 +4076,13 @@ body {
   visibility: visible;
 }
 
+#root > .modal > .attached-modal > .search-members > .search_member_container .client.remove {
+  height: 0;
+  overflow: hidden;
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
 #root > .modal > .attached-modal > .search-members > .search_member_container .image {
   -ms-flex-negative: 0;
       flex-shrink: 0;
@@ -3843,6 +4101,7 @@ body {
 }
 
 #root > .modal > .attached-modal > .search-members > .search_member_container .action_btn {
+  position: relative;
   margin-left: 4px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3855,14 +4114,79 @@ body {
   transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
 }
 
-#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn:hover > i {
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn:hover > .add_member_to_role {
   color: lightgrey;
 }
 
-#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn > i {
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn.loading > .add_member_to_role {
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateX(-20px);
+          transform: translateX(-20px);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn.loading > .loader-container {
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn.loaded > .add_member_to_role {
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateX(-20px);
+          transform: translateX(-20px);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn.loaded > .added {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: greenyellow;
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn > .added {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: greenyellow;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateX(20px);
+          transform: translateX(20px);
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn > .add_member_to_role {
   -webkit-transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
   transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
   color: #fff;
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal > .search-members > .search_member_container .action_btn > .loader-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  zoom: 0.6;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transform: translateX(20px);
+          transform: translateX(20px);
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
 }
 
 #root > .modal > .response_modal {

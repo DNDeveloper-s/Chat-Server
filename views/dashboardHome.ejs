@@ -598,7 +598,7 @@
             <div class="attached-modal roles" data-userid="${userId}">
                 <h4>Roles</h4>
                 <div class="roles-head">
-                    <div class="roles_mechanism">
+                    <div class="roles_mechanism adding_role">
                         <div class="roles_container">
                             <div class="role_tag" style="border-color: red;">
                                 <div class="role_name" style="color: red;">moderator</div>
@@ -626,8 +626,23 @@
                             </div>
                         </div>
                         <div class="back-drop"></div>
-                        <div class="add_roles">
+                        <div class="add_roles active">
                             <input type="text" placeholder="Enter role name...">
+                            <div class="loader-container">
+                                <svg width="40" height="40">
+                                    <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                </svg>
+                            </div>
+                            <svg class="zoom_svg" xmlns="http://www.w3.org/2000/svg" width="36.9" height="36.975" viewBox="0 0 36.9 36.975" id="tick">
+                                <g transform="translate(-0.05 0.025)">
+                                    <path id="Path_1" class="circ path" data-name="Path 1" d="M30.5,6.5h0a17.02,17.02,0,0,1,0,24h0a17.02,17.02,0,0,1-24,0h0a17.02,17.02,0,0,1,0-24h0A16.841,16.841,0,0,1,30.5,6.5Z" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+                                    <g id="middle">
+                                        <path id="Path_2" class="tick path" data-name="Path 2" d="M11.6,20l7.423-3.07L26.4,13.8" transform="translate(-4.467 9.107) rotate(-19)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+                                        <path id="Path_3" class="tick path" data-name="Path 3" d="M11.6,20l7.423-3.07L26.4,13.8" transform="matrix(0.391, 0.921, -0.921, 0.391, 27.133, -5.193)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+                                    </g>
+                                </g>
+                            </svg>
+                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
                             <i class="material-icons">add_box</i>
                         </div>
                     </div>
@@ -646,6 +661,11 @@
                                 <p>Saurabh Singh</p>
                             </div>
                             <div class="action_btn">
+                                <div class="loader-container">
+                                    <svg width="40" height="40">
+                                        <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                    </svg>
+                                </div>
                                 <i class="material-icons">add_circle</i>
                             </div>
                         </div>
@@ -683,7 +703,13 @@
                                 <p>Saurabh Singh</p>
                             </div>
                             <div class="action_btn">
-                                <i class="material-icons">add_box</i>
+                                <div class="loader-container">
+                                    <svg width="40" height="40">
+                                        <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                    </svg>
+                                </div>
+                                <i class="material-icons add_member_to_role">add_box</i>
+                                <i class="material-icons added">assignment_turned_in</i>
                             </div>
                         </div>
                         <div class="client">

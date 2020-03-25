@@ -1218,6 +1218,7 @@ exports.fetchDetails = async (req, res, next) => {
             .populate('roles.members')
             .populate('roles.owner')
             .populate('roles.admins')
+            .populate('roles.custom.members')
             .exec((err, workSpace) => {
                 // Checking for internal error
                 if(err) {
@@ -1252,6 +1253,24 @@ exports.fetchDetails = async (req, res, next) => {
                             uniqueTag: cur.uniqueTag
                         }
                     });
+                    const custom = workSpace.roles.custom.map(cur => {
+                        const memberDetails = cur.members.map(member => {
+                            return {
+                                name: member.name,
+                                image: member.image,
+                                status: member.status,
+                                _id: member._id
+                            }
+                        })
+
+                        return {
+                            name: cur.name,
+                            roleTag: cur.roleTag,
+                            members: memberDetails,
+                            color: cur.color,
+                            permissions: cur.permissions
+                        }
+                    })
                     const owner = {
                         name: workSpace.roles.owner.name,
                         _id: workSpace.roles.owner._id,
@@ -1277,7 +1296,8 @@ exports.fetchDetails = async (req, res, next) => {
                         roles: {
                             owner: owner,
                             admins: admins,
-                            members: members
+                            members: members,
+                            custom: custom
                         },
                         rooms: rooms,
                         connectedClients: workSpaceConnectedClients

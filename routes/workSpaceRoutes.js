@@ -12,4 +12,6 @@ router.get('/roles', auth.isAuth, workSpaceController.fetchRoles);
 
 router.post('/roles', auth.isAuth, workSpaceController.postRoles);
 
+router.post('/roles/user', auth.isAuth, workSpaceController.postUserToRole);
+
 module.exports = router;

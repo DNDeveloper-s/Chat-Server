@@ -396,3 +396,15 @@ exports.postMessages = async(req, res, next) => {
     }
 }
 
+exports.download = async(req, res, next) => {
+    var pathUrl = req.path;
+    if(pathUrl !== '/') {
+        res.download(path.dirname(require.main.filename) + '/public/assets/images/add.png', function (err) {
+            if(err) {
+                console.log(err);
+            }
+        });
+    } else {
+        next();
+    }
+}

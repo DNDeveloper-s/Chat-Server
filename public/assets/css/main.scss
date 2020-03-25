@@ -1944,6 +1944,7 @@ $purple: #693089;
                         height: 35px;
                         margin-right: 10px;
                         border-radius: 300px;
+                        flex-shrink: 0;
 
                         > .status {
                             position: absolute;
@@ -1969,8 +1970,13 @@ $purple: #693089;
                     > .name {
                         color: #c2c2c2;
                         font-size: 14px;
+                        width: calc(100% - 45px);
 
                         > p {
+                            width: 100%;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
                             font-weight: 500;
                             font-family: 'Varela Round', sans-serif;
                         }
@@ -3077,24 +3083,30 @@ $purple: #693089;
             display: flex;
             flex-direction: column;
             border-radius: 0 4px 4px 0;
-            background: url('/assets/images/flower.png');
+            background: url("https://media.giphy.com/media/eHjYjMZsiFn6JUuPYJ/source.gif");
+            background-size: cover;
 
             .loader-container {
                 margin: 30px auto;
             }
 
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: #0000001c;
+            &.roles {
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 70px;
+                    left: 0;
+                    width: 100%;
+                    height: calc(100% - 70px);
+                    // background: #e5fbffe6;
+                    background: url("/assets/images/blue-snow.png");
+                    opacity: 0.88;
+                }
             }
 
             &.roles {
-                padding: 0  ;
+                padding: 0;
             }
 
 
@@ -3268,7 +3280,7 @@ $purple: #693089;
             > h4 {
                 margin: 0 0 20px;
                 color: #fff;
-                background: #390556;
+                background: linear-gradient(180deg, #110319 0%, #15041f 100%);
                 font-size: 41px;
                 text-transform: uppercase;
                 padding: 10px 0;
@@ -3276,6 +3288,7 @@ $purple: #693089;
                 text-align: center;
                 font-family: 'Montserrat_Bold', sans-serif;
                 letter-spacing: 2px;
+                text-shadow: 0 3px 6px rgba(0,0,0,.8);
             }
 
             > .roles-head {
@@ -3368,10 +3381,144 @@ $purple: #693089;
                             }
                         }
 
+                        &.loading {
+
+                            > .loader-container {
+                                opacity: 1;
+                                pointer-events: auto;
+                                transform: translateX(0);
+                            }
+                        }
+
+                        // Checkmark
+                        // Colors
+                        $green: #7ac142;
+                        $white: #fff;
+
+                        // Misc
+                        $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
+
+                        &.success {
+
+                            .checkmark {
+                                opacity: 1;
+                                pointer-events: auto;
+                                transform: translateX(0);
+                                animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+                            }
+                        }
+
+                        &.failed {
+
+                            .path {
+                                opacity: 1;
+                                stroke-dashoffset: 0;
+                            }
+                        }
+
+                        > svg {
+                            position: absolute;
+                            top: 8.2px;
+                            left: -25px;
+                            width: 18px;
+                            height: 18px;
+
+
+                            .circ{
+                               opacity: 0;
+                               stroke-dasharray: 130;
+                               stroke-dashoffset: 130;
+                               -webkit-transition: all .5s;
+                               -moz-transition: all .5s;
+                               -ms-transition: all .5s;
+                               -o-transition: all .5s;
+                               transition: all .5s;
+                           }
+                            .tick{
+                               stroke-dasharray: 50;
+                               stroke-dashoffset: 50;
+                               -webkit-transition: stroke-dashoffset .5s 0.3s ease-out;
+                               -moz-transition: stroke-dashoffset .5s 0.3s ease-out;
+                               -ms-transition: stroke-dashoffset .5s 0.3s ease-out;
+                               -o-transition: stroke-dashoffset .5s 0.3s ease-out;
+                               transition: stroke-dashoffset .5s 0.3s ease-out;
+                           }
+                        }
+                        
+                        .checkmark {
+                            position: absolute;
+                            top: 8.2px;
+                            left: -25px;
+                            width: 18px;
+                            height: 18px;
+                            border-radius: 50%;
+                            display: block;
+                            stroke-width: 2;
+                            stroke: $white;
+                            stroke-miterlimit: 10;
+                            box-shadow: inset 0px 0px 0px $green;
+                            opacity: 0;
+                            pointer-events: none;
+                            // transform: translateX(-15px);
+                            transition: .3s $fashioned_bezier;
+                        }
+                        
+                        .checkmark__circle {
+                            stroke-dasharray: 166;
+                            stroke-dashoffset: 166;
+                            stroke-width: 2;
+                            stroke-miterlimit: 10;
+                            stroke: $green;
+                            fill: none;
+                            animation: stroke .6s $curve forwards;
+                        }
+                        
+                        .checkmark__check {
+                            transform-origin: 50% 50%;
+                            stroke-dasharray: 48;
+                            stroke-dashoffset: 48;
+                            animation: stroke .3s $curve .8s forwards;
+                        }
+                        
+                        @keyframes stroke {
+                            100% {
+                            stroke-dashoffset: 0;
+                            }
+                        }
+                        
+                        @keyframes scale {
+                            0%, 100% {
+                            transform: none;
+                            }
+                            50% {
+                            transform: scale3d(1.1, 1.1, 1);
+                            }
+                        }
+                        
+                        @keyframes fill {
+                            100% {
+                            box-shadow: inset 0px 0px 0px 30px $green;
+                            }
+                        }
+
+                        // Loader
+
+                        > .loader-container {
+                            zoom: .4;
+                            position: absolute;
+                            top: 23px;
+                            left: -56px;
+                            margin: 0;
+                            opacity: 0;
+                            pointer-events: none;
+                            transform: translateX(15px);
+                            transition: .3s $fashioned_bezier;
+                        }
+
                         > input {
                             position: absolute;
                             right: 100%;
-                            top: 50%;
+                            top: 53%;
                             opacity: 0;
                             pointer-events: none;
                             visibility: hidden;
@@ -3385,6 +3532,7 @@ $purple: #693089;
                             font-size: 35px;
                             cursor: pointer;
                             transition: .155s $fashioned_bezier;
+                            color: darkgrey;
 
                             &:hover {
                                 color: #390556;
@@ -3398,6 +3546,8 @@ $purple: #693089;
                 margin: 20px 20px 5px;
                 color: #390556;
                 text-transform: capitalize;
+                z-index: 2;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
             }
                     
 
@@ -3461,11 +3611,24 @@ $purple: #693089;
                     overflow: hidden auto;
 
                     .client {
+                        transition: .3s $fashioned_bezier;
+
+                        &.remove {
+                            height: 0;
+                            overflow: hidden;
+                            pointer-events: none;
+
+                            .action_btn {
+                                transform: translateX(0);
+                                pointer-events: auto;
+                                opacity: 1;
+                            }
+                        }
 
                         &:hover {
 
                             .action_btn {
-                                transform: rotateZ(45deg) translate(0, 0);
+                                transform: translateX(0);
                                 pointer-events: auto;
                                 opacity: 1;
                             }
@@ -3493,9 +3656,74 @@ $purple: #693089;
                             align-items: center;
                             cursor: pointer;
                             transition: .3s $fashioned_bezier;
-                            transform: rotateZ(45deg) translate(10px, -10px);
+                            transform: translateX(10px);
                             pointer-events: none;
                             opacity: 0;
+
+                            > .loader-container {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                margin: 0;
+                                zoom: .55;
+                                transform: translateX(10px);
+                                pointer-events: none;
+                                opacity: 0;
+                                transition: .3s $fashioned_bezier;
+                            }
+
+                            &.loading {
+                                transform: translateX(0);
+                                pointer-events: auto;
+                                opacity: 1;
+
+                                > .loader-container {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    margin: 0;
+                                    zoom: .55;
+                                    transform: translateX(0);
+                                    pointer-events: auto;
+                                    opacity: 1;
+                                }
+    
+                                > i {
+                                    transform: rotateZ(45deg) translate(-20px, 19px);
+                                    pointer-events: none;
+                                    opacity: 0;
+                                }
+                            }
+
+                            &.loaded {
+                                > .removed {
+                                    opacity: 1;
+                                    pointer-events: auto;
+                                    transform: translateX(0);
+                                }
+
+                                > .loader-container {
+                                    transform: translateX(-15px);
+                                    pointer-events: none;
+                                    opacity: 0;
+                                }
+    
+                                > i {
+                                    transform: rotateZ(45deg) translate(-20px, 19px);
+                                    pointer-events: none;
+                                    opacity: 0;
+                                }
+                            }
+
+                            > .removed {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                color: greenyellow;
+                                opacity: 0;
+                                pointer-events: none;
+                                transform: translateX(15px);
+                            }
     
                             &:hover {
                                 
@@ -3505,6 +3733,7 @@ $purple: #693089;
                             }
     
                             > i {
+                                transform: rotateZ(45deg);
                                 transition: .23s $fashioned_bezier;
                                 color: #000;
                             }
@@ -3552,6 +3781,15 @@ $purple: #693089;
                         visibility: visible;
                     }
 
+                    .client {
+
+                        &.remove {
+                            height: 0;
+                            overflow: hidden;
+                            transition: .3s $fashioned_bezier;
+                        }
+                    }
+
                     .image {
                         flex-shrink: 0;
                     }
@@ -3569,6 +3807,7 @@ $purple: #693089;
                     }
 
                     .action_btn {
+                        position: relative;
                         margin-left: 4px;
                         display: flex;
                         align-items: center;
@@ -3577,14 +3816,75 @@ $purple: #693089;
 
                         &:hover {
                                 
-                            > i {
+                            > .add_member_to_role {
                                 color: lightgrey;
                             }
                         }
 
-                        > i {
+                        &.loading {
+
+                            > .add_member_to_role {
+                                opacity: 0;
+                                pointer-events: none;
+                                transform: translateX(-20px);
+                            }
+
+                            > .loader-container {
+                                opacity: 1;
+                                pointer-events: auto;
+                                transform: translateX(0);
+                            }
+                        }
+
+                        &.loaded {
+
+                            > .add_member_to_role {
+                                opacity: 0;
+                                pointer-events: none;
+                                transform: translateX(-20px);
+                            }
+
+                            > .added {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                color: greenyellow;
+                                opacity: 1;
+                                pointer-events: auto;
+                                transform: translateX(0);
+                            }
+                        }
+
+                        > .added {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            color: greenyellow;
+                            opacity: 0;
+                            pointer-events: none;
+                            transform: translateX(20px);
+                            transition: .3s $fashioned_bezier;
+                        }
+
+                        > .add_member_to_role {
                             transition: .23s $fashioned_bezier;
                             color: #fff;
+                            opacity: 1;
+                            pointer-events: auto;
+                            transform: translateX(0);
+                            transition: .3s $fashioned_bezier;
+                        }
+
+                        > .loader-container {
+                            position: absolute;   
+                            top: 0;
+                            left: 0;
+                            margin: 0;
+                            zoom: 0.6;
+                            opacity: 0;
+                            pointer-events: none;
+                            transform: translateX(20px);
+                            transition: .3s $fashioned_bezier;
                         }
                     }
                 }

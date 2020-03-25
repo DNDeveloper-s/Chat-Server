@@ -9,7 +9,7 @@ module.exports = async (userId, nsEndPoint) => {
         .populate('roles.members');
 
     if(!workSpace) {
-        return next('Invalid Workspace! Line 1402');
+        ifNotMessage = 'Invalid Workspace! Line 1402';
     }
 
     if(workSpace.roles.owner.toString() !== userId.toString()) {
