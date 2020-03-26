@@ -597,146 +597,219 @@
                     </button>
                 </div>
             </div>
-            <div class="attached-modal roles" data-userid="${userId}">
-                <h4>Roles</h4>
-                <div class="roles-head">
-                    <div class="roles_mechanism adding_role">
-                        <div class="roles_container">
-                            <div class="role_tag" style="border-color: red;">
-                                <div class="role_name" style="color: red;">moderator</div>
-                                <i class="material-icons">close</i>
-                            </div>
-                            <div class="role_tag" style="border-color: darkgreen;">
-                                <div class="role_name" style="color: darkgreen;">owner</div>
-                                <i class="material-icons">close</i>
-                            </div>
-                            <div class="role_tag">
-                                <div class="role_name">a</div>
-                                <i class="material-icons">close</i>
-                            </div>
-                            <div class="role_tag">
-                                <div class="role_name">moderator</div>
-                                <i class="material-icons">close</i>
-                            </div>
-                            <div class="role_tag">
-                                <div class="role_name">owner</div>
-                                <i class="material-icons">close</i>
-                            </div>
-                            <div class="role_tag">
-                                <div class="role_name">admin</div>
-                                <i class="material-icons">close</i>
-                            </div>
-                        </div>
-                        <div class="back-drop"></div>
-                        <div class="add_roles active">
-                            <input type="text" placeholder="Enter role name...">
-                            <div class="loader-container">
-                                <svg width="40" height="40">
-                                    <circle class="loader" cx="20" cy="20" r="17"></circle>
-                                </svg>
-                            </div>
-                            <svg class="zoom_svg" xmlns="http://www.w3.org/2000/svg" width="36.9" height="36.975" viewBox="0 0 36.9 36.975" id="tick">
-                                <g transform="translate(-0.05 0.025)">
-                                    <path id="Path_1" class="circ path" data-name="Path 1" d="M30.5,6.5h0a17.02,17.02,0,0,1,0,24h0a17.02,17.02,0,0,1-24,0h0a17.02,17.02,0,0,1,0-24h0A16.841,16.841,0,0,1,30.5,6.5Z" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
-                                    <g id="middle">
-                                        <path id="Path_2" class="tick path" data-name="Path 2" d="M11.6,20l7.423-3.07L26.4,13.8" transform="translate(-4.467 9.107) rotate(-19)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
-                                        <path id="Path_3" class="tick path" data-name="Path 3" d="M11.6,20l7.423-3.07L26.4,13.8" transform="matrix(0.391, 0.921, -0.921, 0.391, 27.133, -5.193)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
-                                    </g>
-                                </g>
-                            </svg>
-                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
-                            <i class="material-icons">add_box</i>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>Role Name</h3>
-
-                <div class="members-list">
-                    <div class="clients">
-                        <div class="client">
-                            <div class="image">
-                                <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                <span class="status" data-status="online"></span>
-                            </div>
-                            <div class="name">
-                                <p>Saurabh Singh</p>
-                            </div>
-                            <div class="action_btn">
-                                <div class="loader-container">
-                                    <svg width="40" height="40">
-                                        <circle class="loader" cx="20" cy="20" r="17"></circle>
-                                    </svg>
+            <div class="attached-modal roles switchToAdvanced" data-userid="${userId}">
+                <div class="modal_wrapper">
+                    <h4>Roles</h4>
+                    <div class="simple-settings">
+                        <div class="roles-head">
+                            <div class="roles_mechanism adding_role">
+                                <div class="roles_container">
+                                    <div class="role_tag" style="border-color: red;">
+                                        <div class="role_name" style="color: red;">moderator</div>
+                                        <i class="material-icons">close</i>
+                                    </div>
+                                    <div class="role_tag" style="border-color: darkgreen;">
+                                        <div class="role_name" style="color: darkgreen;">owner</div>
+                                        <i class="material-icons">close</i>
+                                    </div>
+                                    <div class="role_tag">
+                                        <div class="role_name">a</div>
+                                        <i class="material-icons">close</i>
+                                    </div>
+                                    <div class="role_tag">
+                                        <div class="role_name">moderator</div>
+                                        <i class="material-icons">close</i>
+                                    </div>
+                                    <div class="role_tag">
+                                        <div class="role_name">owner</div>
+                                        <i class="material-icons">close</i>
+                                    </div>
+                                    <div class="role_tag">
+                                        <div class="role_name">admin</div>
+                                        <i class="material-icons">close</i>
+                                    </div>
                                 </div>
-                                <i class="material-icons">add_circle</i>
-                            </div>
-                        </div>
-                        <div class="client">
-                            <div class="image">
-                                <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                <span class="status" data-status="online"></span>
-                            </div>
-                            <div class="name">
-                                <p>Saurabh Singh</p>
-                            </div>
-                        </div>
-                        <div class="client">
-                            <div class="image">
-                                <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                <span class="status" data-status="online"></span>
-                            </div>
-                            <div class="name">
-                                <p>Saurabh Singh</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="search-members">
-                    <div class="member-search-box">
-                        <input type="text" placeholder="Search members to add...">
-                    </div>
-                    <div class="search_member_container">
-                        <div class="client">
-                            <div class="image">
-                                <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                <span class="status" data-status="online"></span>
-                            </div>
-                            <div class="name">
-                                <p>Saurabh Singh</p>
-                            </div>
-                            <div class="action_btn">
-                                <div class="loader-container">
-                                    <svg width="40" height="40">
-                                        <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                <div class="back-drop"></div>
+                                <div class="add_roles active">
+                                    <input type="text" placeholder="Enter role name...">
+                                    <div class="loader-container">
+                                        <svg width="40" height="40">
+                                            <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                        </svg>
+                                    </div>
+                                    <svg class="zoom_svg" xmlns="http://www.w3.org/2000/svg" width="36.9" height="36.975" viewBox="0 0 36.9 36.975" id="tick">
+                                        <g transform="translate(-0.05 0.025)">
+                                            <path id="Path_1" class="circ path" data-name="Path 1" d="M30.5,6.5h0a17.02,17.02,0,0,1,0,24h0a17.02,17.02,0,0,1-24,0h0a17.02,17.02,0,0,1,0-24h0A16.841,16.841,0,0,1,30.5,6.5Z" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+                                            <g id="middle">
+                                                <path id="Path_2" class="tick path" data-name="Path 2" d="M11.6,20l7.423-3.07L26.4,13.8" transform="translate(-4.467 9.107) rotate(-19)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+                                                <path id="Path_3" class="tick path" data-name="Path 3" d="M11.6,20l7.423-3.07L26.4,13.8" transform="matrix(0.391, 0.921, -0.921, 0.391, 27.133, -5.193)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
+                                            </g>
+                                        </g>
                                     </svg>
+                                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+                                    <i class="material-icons">add_box</i>
                                 </div>
-                                <i class="material-icons add_member_to_role">add_box</i>
-                                <i class="material-icons added">assignment_turned_in</i>
                             </div>
                         </div>
-                        <div class="client">
-                            <div class="image">
-                                <img src="/assets/images/Saurabh_DP_square.jpg" class="message-user_dp" alt="">
-                                <span class="status" data-status="online"></span>
-                            </div>
-                            <div class="name">
-                                <p>Suraj Singh</p>
-                            </div>
-                            <div class="action_btn">
-                                <i class="material-icons">add_box</i>
+
+                        <h3>Role Name</h3>
+
+                        <div class="members-list">
+                            <div class="clients">
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Saurabh Singh</p>
+                                    </div>
+                                    <div class="action_btn">
+                                        <div class="loader-container">
+                                            <svg width="40" height="40">
+                                                <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                            </svg>
+                                        </div>
+                                        <i class="material-icons">add_circle</i>
+                                    </div>
+                                </div>
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Saurabh Singh</p>
+                                    </div>
+                                </div>
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Saurabh Singh</p>
+                                    </div>
+                                </div>
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Saurabh Singh</p>
+                                    </div>
+                                </div>
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Saurabh Singh</p>
+                                    </div>
+                                </div>
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Saurabh Singh</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="client">
-                            <div class="image">
-                                <img src="/assets/images/Saurabh_DP_square.jpg" class="message-user_dp" alt="">
-                                <span class="status" data-status="online"></span>
+                        <div class="search-members">
+                            <div class="member-search-box">
+                                <input type="text" placeholder="Search members to add...">
                             </div>
-                            <div class="name">
-                                <p>Suraj Singh</p>
+                            <div class="search_member_container">
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Saurabh Singh</p>
+                                    </div>
+                                    <div class="action_btn">
+                                        <div class="loader-container">
+                                            <svg width="40" height="40">
+                                                <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                            </svg>
+                                        </div>
+                                        <i class="material-icons add_member_to_role">add_box</i>
+                                        <i class="material-icons added">assignment_turned_in</i>
+                                    </div>
+                                </div>
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/Saurabh_DP_square.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Suraj Singh</p>
+                                    </div>
+                                    <div class="action_btn">
+                                        <i class="material-icons">add_box</i>
+                                    </div>
+                                </div>
+                                <div class="client">
+                                    <div class="image">
+                                        <img src="/assets/images/Saurabh_DP_square.jpg" class="message-user_dp" alt="">
+                                        <span class="status" data-status="online"></span>
+                                    </div>
+                                    <div class="name">
+                                        <p>Suraj Singh</p>
+                                    </div>
+                                    <div class="action_btn">
+                                        <i class="material-icons">add_box</i>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="action_btn">
-                                <i class="material-icons">add_box</i>
-                            </div>
+                        </div>
+                    </div>
+                    <button class="btn blendedLinear pointer">Advanced Settings
+                        <i class="material-icons drop-down-icon">arrow_drop_down</i>
+                    </button>
+                    <div class="advanced-settings">
+                        <div class="l-wrapper">
+                            <ul class="c-list">
+                              <div class="c-list__item">
+                                <h2>Permissions</h2>
+                              </div>
+                              <li class="c-list__item"><span class="c-toggle__text">Gives Access to everything</span>
+                                <button class="c-toggle everything c-toggle--active">
+                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
+                                </button>
+                              </li>
+                              <li class="c-list__item"><span class="c-toggle__text">Join private room</span>
+                                <button class="c-toggle c-toggle--active">
+                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
+                                </button>
+                              </li>
+                              <li class="c-list__item"><span class="c-toggle__text">Can change roles</span>
+                                <button class="c-toggle c-toggle--active">
+                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
+                                </button>
+                              </li>
+                              <li class="c-list__item"><span class="c-toggle__text u-text--secondary">Can delete messages</span>
+                                <button class="c-toggle">
+                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">off</span>
+                                </button>
+                              </li>
+                              <li class="c-list__item"><span class="c-toggle__text u-text--secondary">Can pin messages</span>
+                                <button class="c-toggle">
+                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">off</span>
+                                </button>
+                              </li>
+                              <li class="c-list__item"><span class="c-toggle__text">Can create/delete rooms</span>
+                                <button class="c-toggle c-toggle--active">
+                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
+                                </button>
+                              </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

@@ -30,7 +30,16 @@ const workSpaceSchema = new Schema({
                     }
                 ],
                 color: String,
-                permissions: Object
+                permissions: {
+                    fullAccess: Boolean,
+                    privateRooms: Boolean,
+                    editRoles: Boolean,
+                    deltedMessages: Boolean,
+                    pinMessages: Boolean,
+                    roomHandler: Boolean,
+                    workSpaceSettings: Boolean,
+                    invitations: Boolean,
+                }
             }
         ],
         admins: [

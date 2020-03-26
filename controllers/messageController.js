@@ -196,7 +196,7 @@ exports.postMessages = async(req, res, next) => {
 
                     let image_path = statistic.path_out_new.slice(13);
 
-                    roomMessage(nsEndPoint, roomId, messageToPush, messageBody, image_path);
+                    roomMessage(nsEndPoint, roomId, messageToPush, messageBody, image_path, image.filename);
                 });
             } else {
 
@@ -208,10 +208,10 @@ exports.postMessages = async(req, res, next) => {
                     body: message,
                     time: time
                 }
-                roomMessage(nsEndPoint, roomId, messageToPush, message, undefined);
+                roomMessage(nsEndPoint, roomId, messageToPush, message, undefined, undefined);
             }
 
-            async function roomMessage(nsEndPoint, roomId, messageToPush, message, image_path) {
+            async function roomMessage(nsEndPoint, roomId, messageToPush, message, image_path, image_name) {
 
                 const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
                 const room = await Room.findById(roomId);
@@ -362,7 +362,8 @@ exports.postMessages = async(req, res, next) => {
                                     roomId: roomId,
                                     nsEndPoint: nsEndPoint,
                                     messageObj: messageObj,
-                                    image_path: image_path
+                                    image_path: image_path,
+                                    image_name: image_name
                                 })
                             }
                         })

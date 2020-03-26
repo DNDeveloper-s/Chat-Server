@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
-const compression = require('../compress-image');
+const checkPermissions = require('../middleware/checkPermissions');
 
 let colors = [
     '#121218',
@@ -93,7 +93,16 @@ module.exports.postRoles = async (req, res, next) => {
                 roleTag: roleTag,
                 members: [],
                 color: color,
-                permissions: {}
+                permissions: {
+                    fullAccess: false,
+                    privateRooms: false,
+                    editRoles: false,
+                    deltedMessages: false,
+                    pinMessages: false,
+                    roomHandler: false,
+                    workSpaceSettings: false,
+                    invitations: false,
+                }
             }
 
             workSpace.roles.custom.push(roleObj);
@@ -233,4 +242,47 @@ module.exports.postUserToRole = async (req, res, next) => {
     } catch(e) {
         return next(e);
     }
+}
+
+module.exports.postPermissionsToRole = async(req, res, next) => {
+    const permission = req.body.permission;
+    const nsEndPoint = req.body.nsEndPoint;
+    const roleTag = req.body.roleTag;
+    const value = req.body.value;
+    const userId = req.session.user._id;
+    const io = req.app.get('socketio');
+
+    const {allowed, workSpace} = await checkPermissions({
+        endPoint: nsEndPoint,
+        userId: userId,
+        permission: 'editRoles'
+    });
+
+    if(allowed) {
+        workSpace.roles.custom.filter(custom => {
+            if(custom.roleTag === roleTag) {
+                custom.permissions[permission] = value;
+            }
+        })
+
+        await workSpace.save();
+    }
+
+    workSpace.roles.members.forEach(member => {
+        io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+            type: 'permission_edit',
+            roleTag: roleTag,
+            nsEndPoint: nsEndPoint,
+            permission: permission,
+            value: value
+        });
+    })
+
+    return res.json({
+        permission: permission,
+        nsEndPoint: nsEndPoint,
+        value: value,
+        roleTag: roleTag,
+        allowed: allowed
+    })
 }

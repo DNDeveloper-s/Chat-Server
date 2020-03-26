@@ -112,7 +112,16 @@ exports.postWorkspace = async (req, res, next) => {
                     roleTag: '/everyone',
                     members: [],
                     color: '#E5BACE',
-                    permissions: {}
+                    permissions: {
+                        fullAccess: false,
+                        privateRooms: false,
+                        editRoles: false,
+                        deltedMessages: false,
+                        pinMessages: false,
+                        roomHandler: false,
+                        workSpaceSettings: false,
+                        invitations: false,
+                    }
                 }
             ]
         });
