@@ -2497,6 +2497,11 @@ body {
   opacity: 1;
 }
 
+#root > .back-drop.confirmation {
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 250;
+}
+
 #root > .back-drop.remove {
   opacity: 1;
   -webkit-animation: removeBackDrop .19s ease-in-out forwards;
@@ -2589,12 +2594,31 @@ body {
   max-height: 70vh;
 }
 
+#root > .modal[data-id="confirmation"] {
+  top: -15%;
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  z-index: 301;
+}
+
+#root > .modal[data-id="confirmation"].comeDown {
+  top: 10%;
+}
+
 #root > .modal .invite-code {
-  padding: 50px 0;
-  text-align: center;
+  height: 150px;
   border: 1px solid #e5e8e9;
   background: #b5bebf59;
   margin: 10px 0 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 #root > .modal .invite-code > p {
@@ -2603,7 +2627,8 @@ body {
 }
 
 #root > .modal .invite-code > .loader-container {
-  margin: 30px auto;
+  margin: 0 auto;
+  line-height: 0;
 }
 
 #root > .modal .first-choice {
@@ -3684,6 +3709,8 @@ body {
   pointer-events: none;
   visibility: hidden;
   background: #0000008f;
+  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .add_roles {
@@ -3880,12 +3907,32 @@ body {
   color: #390556;
 }
 
-#root > .modal > .attached-modal h3 {
-  margin: 20px 20px 5px;
+#root > .modal > .attached-modal .role_name_heading {
+  margin: 15px 0 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .modal > .attached-modal .role_name_heading > h3 {
+  margin: 10px;
   color: #390556;
   text-transform: capitalize;
   z-index: 2;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+#root > .modal > .attached-modal .role_name_heading > .pickr {
+  -webkit-transform: translateY(-4px);
+          transform: translateY(-4px);
+}
+
+#root > .modal > .attached-modal .role_name_heading > .pickr > button {
+  width: 1em;
+  height: 1em;
 }
 
 #root > .modal > .attached-modal .client {
@@ -5243,8 +5290,9 @@ button:hover {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -ms-flex-pack: distribute;
-      justify-content: space-around;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   margin: 0 auto;
 }
 
@@ -5588,5 +5636,187 @@ button:hover {
 
 .u-text--secondary {
   color: var(--neutral-medium) !important;
+}
+
+.disableMinHeight {
+  min-height: auto !important;
+}
+
+.confirmHeading {
+  font-size: 14px;
+  color: #5d5858de;
+  font-weight: 300;
+}
+
+.focusTitle {
+  color: red !important;
+}
+
+.disconnected-modal {
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: 1000;
+  background: #1c1c2a;
+  color: #EBA63F;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  -webkit-transition: opacity 0.5s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: opacity 0.5s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+.disconnected-modal.enable {
+  opacity: 1;
+  pointer-events: all;
+  visibility: visible;
+}
+
+.disconnected-modal > .loader-container {
+  margin-top: 10px;
+  zoom: 1.5;
+}
+
+.disconnected-modal > .loader-container > svg {
+  stroke: #e3a13e08;
+}
+
+.disconnected-modal > .loader-container > svg > circle {
+  stroke-width: 2px;
+}
+
+.disconnected-modal > svg {
+  position: absolute;
+  fill: #f7f4e903;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  top: 200px;
+  width: 600px;
+}
+
+.disconnected-modal > .wifi_disconnected {
+  zoom: .3;
+  opacity: 1;
+}
+
+.disconnected-modal > p {
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+}
+
+.circular {
+  -webkit-animation: rotate 2s linear infinite;
+          animation: rotate 2s linear infinite;
+  height: 100%;
+  -webkit-transform-origin: center center;
+          transform-origin: center center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  -webkit-animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+          animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  stroke-linecap: round;
+}
+
+@-webkit-keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+@-webkit-keyframes color {
+  100%,
+  0% {
+    stroke: #d62d203d;
+  }
+  40% {
+    stroke: #0057e73d;
+  }
+  66% {
+    stroke: #0087433d;
+  }
+  80%,
+  90% {
+    stroke: #ffa7003d;
+  }
+}
+
+@keyframes color {
+  100%,
+  0% {
+    stroke: #d62d203d;
+  }
+  40% {
+    stroke: #0057e73d;
+  }
+  66% {
+    stroke: #0087433d;
+  }
+  80%,
+  90% {
+    stroke: #ffa7003d;
+  }
 }
 /*# sourceMappingURL=main.css.map */

@@ -148,95 +148,99 @@ module.exports.postUserToRole = async (req, res, next) => {
         const roleTag = req.body.roleTag;
         const io = req.app.get('socketio');
 
-        const {allowed, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(req.session.user._id, nsEndPoint);
+        if(roleTag !== '/everyone') {
+            const {allowed, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(req.session.user._id, nsEndPoint);
 
-        if(allowed) {
-            const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint})
-                .populate('roles.members');
-            const user = await User.findById(userId);
+            if(allowed) {
+                const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint})
+                    .populate('roles.members');
+                const user = await User.findById(userId);
 
-            if(action === 'add') {
+                if(action === 'add') {
 
-                workSpace.roles.custom.filter(cur => {
-                    if(cur.roleTag == roleTag) {
-                        cur.members.push(userId);
-                    }
-                });
-    
-                await workSpace.save();
-
-                workSpace.roles.members.forEach(member => {
-                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
-                        type: 'user_added',
-                        roleTag: roleTag,
-                        nsEndPoint: nsEndPoint,
-                        user: {
-                            _id: user._id,
-                            name: user.name,
-                            image: user.image,
-                            status: user.status
-                        },
+                    workSpace.roles.custom.filter(cur => {
+                        if(cur.roleTag == roleTag) {
+                            cur.members.push(userId);
+                        }
                     });
-                })
-    
+        
+                    await workSpace.save();
+
+                    workSpace.roles.members.forEach(member => {
+                        io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+                            type: 'user_added',
+                            roleTag: roleTag,
+                            nsEndPoint: nsEndPoint,
+                            user: {
+                                _id: user._id,
+                                name: user.name,
+                                image: user.image,
+                                status: user.status
+                            },
+                        });
+                    })
+        
+                    return res.json({
+                        acknowledgment: {
+                            type: 'success',
+                            message: `User added to the role ${roleTag} successfully!`,
+                            nsEndPoint: nsEndPoint,
+                            user: {
+                                _id: user._id,
+                                name: user.name,
+                                image: user.image,
+                                status: user.status
+                            },
+                            roleTag: roleTag
+                        }
+                    })
+                }
+
+                if(action === 'remove') {
+
+                    workSpace.roles.custom.filter(cur => {
+                        if(cur.roleTag == roleTag) {
+                            cur.members = cur.members.filter(cur => cur.toString() !== userId.toString());
+                        }
+                    });
+        
+                    await workSpace.save();
+
+                    workSpace.roles.members.forEach(member => {
+                        io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+                            type: 'user_removed',
+                            roleTag: roleTag,
+                            nsEndPoint: nsEndPoint,
+                            userId: userId
+                        });
+                    })
+
+                    return res.json({
+                        acknowledgment: {
+                            type: 'success',
+                            message: `User removed from the role ${roleTag} successfully!`,
+                            nsEndPoint: nsEndPoint,
+                            user: {
+                                _id: user._id,
+                                name: user.name,
+                                image: user.image,
+                                status: user.status
+                            },
+                            roleTag: roleTag
+                        }
+                    })
+                }
+            } else {
                 return res.json({
                     acknowledgment: {
-                        type: 'success',
-                        message: `User added to the role ${roleTag} successfully!`,
-                        nsEndPoint: nsEndPoint,
-                        user: {
-                            _id: user._id,
-                            name: user.name,
-                            image: user.image,
-                            status: user.status
-                        },
-                        roleTag: roleTag
-                    }
-                })
-            }
-
-            if(action === 'remove') {
-
-                workSpace.roles.custom.filter(cur => {
-                    if(cur.roleTag == roleTag) {
-                        cur.members = cur.members.filter(cur => cur.toString() !== userId.toString());
-                    }
-                });
-    
-                await workSpace.save();
-
-                workSpace.roles.members.forEach(member => {
-                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
-                        type: 'user_removed',
-                        roleTag: roleTag,
-                        nsEndPoint: nsEndPoint,
-                        userId: userId
-                    });
-                })
-
-                return res.json({
-                    acknowledgment: {
-                        type: 'success',
-                        message: `User removed from the role ${roleTag} successfully!`,
-                        nsEndPoint: nsEndPoint,
-                        user: {
-                            _id: user._id,
-                            name: user.name,
-                            image: user.image,
-                            status: user.status
-                        },
-                        roleTag: roleTag
+                        type: 'error',
+                        allowed: allowed,
+                        message: ifNotMessage
                     }
                 })
             }
         } else {
-            return res.json({
-                acknowledgment: {
-                    type: 'error',
-                    allowed: allowed,
-                    message: ifNotMessage
-                }
-            })
+            throw new Error('You cannot edit the universal role!');
         }
         
     } catch(e) {
@@ -258,31 +262,153 @@ module.exports.postPermissionsToRole = async(req, res, next) => {
         permission: 'editRoles'
     });
 
-    if(allowed) {
-        workSpace.roles.custom.filter(custom => {
-            if(custom.roleTag === roleTag) {
-                custom.permissions[permission] = value;
+    // if(allowed) {
+    //     workSpace.roles.custom.filter(custom => {
+    //         if(custom.roleTag === roleTag) {
+    //             custom.permissions[permission] = value;
+    //         }
+    //     })
+
+    //     await workSpace.save();
+    // }
+
+    const rolePriority = workSpace.roles.custom.map(cur => {
+        let priorityLenth = [];
+        const arr = Object.values(cur.permissions);
+        arr.splice(0, 4);
+        arr.forEach(cur1 => {
+            if(cur1 === true) {
+                priorityLenth.push('');
             }
         })
+        return {
+            name: cur.name,
+            roleTag: cur.roleTag,
+            priority: priorityLenth.length
+        }
+    });
 
-        await workSpace.save();
-    }
-
-    workSpace.roles.members.forEach(member => {
-        io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
-            type: 'permission_edit',
-            roleTag: roleTag,
-            nsEndPoint: nsEndPoint,
-            permission: permission,
-            value: value
-        });
-    })
+    // workSpace.roles.members.forEach(member => {
+    //     io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+    //         type: 'permission_edit',
+    //         roleTag: roleTag,
+    //         nsEndPoint: nsEndPoint,
+    //         permission: permission,
+    //         value: value
+    //     });
+    // })
 
     return res.json({
         permission: permission,
         nsEndPoint: nsEndPoint,
         value: value,
         roleTag: roleTag,
-        allowed: allowed
+        allowed: allowed,
+        rolePriority: rolePriority
     })
+}
+
+module.exports.deleteRoles = async (req, res, next) => {
+    try {
+        const nsEndPoint = req.query.nsEndPoint;
+        const roleTag = req.body.roleTag;
+        const io = req.app.get('socketio');
+
+        if(roleTag !== '/everyone') {
+            const {workSpace, allowed, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(req.session.user._id, nsEndPoint);
+
+            if(allowed) {
+
+                workSpace.roles.custom = workSpace.roles.custom.filter(cur => cur.roleTag !== roleTag);
+
+                await workSpace.save();
+
+                workSpace.roles.members.forEach(member => {
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+                        type: 'role_deleted',
+                        roleTag: roleTag,
+                        nsEndPoint: nsEndPoint
+                    });
+                })
+
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        mesage: 'Role deleted successfully!',
+                        nsEndPoint: nsEndPoint,
+                        roleDetails: roleTag
+                    }
+                });
+            } else {
+                return res.json({
+                    acknowledgment: {
+                        type: 'error',
+                        allowed: allowed,
+                        message: ifNotMessage
+                    }
+                })
+            }
+        } else {
+            throw new Error('You cannot edit the universal role!');
+        }
+        
+    } catch(e) {
+        return next(e);
+    }
+}
+
+module.exports.updateColorToRole = async (req, res, next) => {
+    try {
+        const nsEndPoint = req.query.nsEndPoint;
+        const roleTag = req.body.roleTag;
+        const color = req.body.color;
+        const io = req.app.get('socketio');
+
+        if(roleTag !== '/everyone') {
+            const {workSpace, allowed, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(req.session.user._id, nsEndPoint);
+
+            if(allowed) {
+
+                workSpace.roles.custom.filter(cur => {
+                    if(cur.roleTag === roleTag) {
+                        cur.color = color;
+                    }
+                })
+
+                await workSpace.save();
+
+                workSpace.roles.members.forEach(member => {
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('role', {
+                        type: 'color_updated',
+                        roleTag: roleTag,
+                        nsEndPoint: nsEndPoint,
+                        color: color
+                    });
+                })
+
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        mesage: 'Role colored successfully!',
+                        nsEndPoint: nsEndPoint,
+                        roleDetails: roleTag,
+                        color: color
+                    }
+                });
+            } else {
+                return res.json({
+                    acknowledgment: {
+                        type: 'error',
+                        allowed: allowed,
+                        message: ifNotMessage
+                    }
+                })
+            }
+        } else {
+            throw new Error('You cannot edit the universal role!');
+        }
+        
+    } catch(e) {
+        return next(e);
+    }
 }

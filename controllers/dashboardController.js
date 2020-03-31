@@ -3,6 +3,9 @@ const Room = require('../models/Room');
 const User = require('../models/User');
 const compression = require('../compress-image');
 
+// Utils
+const utils = require('../middleware/utils');
+
 exports.getDashboard = async (req, res, next) => {
     console.log('Rendering Dashboard');
 
@@ -100,33 +103,34 @@ exports.postWorkspace = async (req, res, next) => {
             },
             endPoint: endPoint,
             roles: {
-                owner: req.session.user._id
+                owner: req.session.user._id,
+                custom: [
+                    {
+                        name: 'everyone',
+                        roleTag: '/everyone',
+                        members: [],
+                        color: 'rgb(116, 113, 110)',
+                        permissions: {
+                            fullAccess: false,
+                            privateRooms: false,
+                            editRoles: false,
+                            deltedMessages: false,
+                            pinMessages: false,
+                            roomHandler: false,
+                            workSpaceSettings: false,
+                            invitations: false,
+                        }
+                    }
+                ]
             },
             rooms: [
                 room._id
             ],
             image: '/assets/images/default.jpg',
-            custom: [
-                {
-                    name: 'everyone',
-                    roleTag: '/everyone',
-                    members: [],
-                    color: '#E5BACE',
-                    permissions: {
-                        fullAccess: false,
-                        privateRooms: false,
-                        editRoles: false,
-                        deltedMessages: false,
-                        pinMessages: false,
-                        roomHandler: false,
-                        workSpaceSettings: false,
-                        invitations: false,
-                    }
-                }
-            ]
         });
 
         workSpace.roles.members.push(req.session.user._id);
+        workSpace.roles.custom[0].members.push(req.session.user._id);
 
         await workSpace.save();
 
@@ -166,31 +170,40 @@ exports.postDeleteWorkspace = async(req, res, next) => {
     const {allowed, workSpace, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(userId, nsEndPoint);
 
     if(allowed) {
-        // All rooms related to the workspace removed form db collections
-        workSpace.rooms.forEach(async (roomId) => {
-            await Room.findByIdAndRemove(roomId);
-        });
 
         // Looping through members are in the workspace
-        workSpace.roles.members.forEach(async(memberId) => {
+        for(let i = 0; i < workSpace.roles.members.length; i++) {
+            const memberId = workSpace.roles.members[i]._id;
+
+            // Fetching every user of the workspace
             const user = await User.findById(memberId)
                 .populate('config.defaultWorkSpace');
 
             // Removing entries from user model of workspaces
             user.workSpaces = user.workSpaces.filter(cur => cur.toString() !== workSpace._id.toString());
 
+            // Checking if its the default workspace
+            user.config.defaultWorkSpace._id.toString() === workSpace._id.toString() ? clearDefWorkSpace = true : clearDefWorkSpace = false;
+            if(clearDefWorkSpace) {
+                user.config.defaultWorkSpace = user.workSpaces[0];
+            }
+
+            // Fetching new default workspace
+            const defWorkSpace = await WorkSpace.findById(user.config.defaultWorkSpace);
+
             // Checking if the user is connected to the workspace currently
+            const connectedEndPoint = utils.getEndPoint(user.connectedDetails.endPoint);
             let d;
-            nsEndPoint === user.connectedDetails.endPoint ? d = user.config.defaultWorkSpace.endPoint : d = false
+            nsEndPoint === connectedEndPoint ? d = defWorkSpace.endPoint : d = false;
 
             // Emitting event to all the members of workspace to leave the ns if connected
-            io.of(user.connectedDetails.endPoint).to(user.connectedDetails.socketId).emit('workSpace', {
+            io.of(connectedEndPoint).to(user.connectedDetails.socketId).emit('workSpace', {
                 type: 'remove',
                 nsEndPoint: nsEndPoint,
                 defaultWorkSpace: d
             });
 
-            if(memberId.toString() !== userId.toString()) {
+            if(memberId.toString() !== req.session.user._id.toString()) {
                 // Pushing Notification to all members of workspace
                 const notificationOBJ = {
                     message: `${req.session.user.name} has been deleted the workspace "${workSpace.title}"`, 
@@ -205,16 +218,23 @@ exports.postDeleteWorkspace = async(req, res, next) => {
                 user.notifications.count = user.notifications.list.length;
 
                 // Emitting events to all the members of workspace of notification
-                io.of(user.connectedDetails.endPoint).to(user.connectedDetails.socketId).emit('notification', {
+                io.of(connectedEndPoint).to(user.connectedDetails.socketId).emit('notification', {
                     curUser: {
                         notifications: {
-                            count: user.notifications.filter(cur => cur.notificationType !== 'rcvd_msg').count
+                            count: user.notifications.list.filter(cur => cur.notificationType !== 'rcvd_msg').length
                         }
                     }
                 });
             }
+
             await user.save();
-        });
+        }
+
+        // All rooms related to the workspace removed form db collections
+        for(let i = 0; i < workSpace.rooms.length; i++) {
+            const roomId = workSpace.rooms[i];
+            await Room.findByIdAndRemove(roomId);
+        }
 
         // Now time to remove the actual workspace
         await WorkSpace.findByIdAndRemove(workSpace._id);
@@ -229,6 +249,7 @@ exports.postDeleteWorkspace = async(req, res, next) => {
 
     } else {
 
+        // Sending the JSON response with message and type in terms of acknowledgment
         return res.json({
             acknowledgment: {
                 type: 'error',
@@ -517,7 +538,7 @@ exports.workSpaceFunctions = async(req, res, next) => {
 
         nsp.emit('roomDeleted', {
             roomId: roomId,
-            nsId: nsId
+            nsEndPoint: workSpace.endPoint
         })
 
         return res.json({

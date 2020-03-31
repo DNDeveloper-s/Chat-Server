@@ -23,6 +23,7 @@ const workSpaceSchema = new Schema({
             {
                 name: String,
                 roleTag: String,
+                priority: Number,
                 members: [
                     {
                         type: Schema.Types.ObjectID,

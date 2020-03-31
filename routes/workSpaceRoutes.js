@@ -10,10 +10,14 @@ const workSpaceController = require('../controllers/workSpaceController');
 
 router.get('/roles', auth.isAuth, workSpaceController.fetchRoles);
 
-router.post('/roles', auth.isAuth, workSpaceController.postRoles);
+router.post('/postroles', auth.isAuth, workSpaceController.postRoles);
 
 router.post('/roles/user', auth.isAuth, workSpaceController.postUserToRole);
 
 router.post('/roles/permissions', auth.isAuth, workSpaceController.postPermissionsToRole);
+
+router.post('/deleteroles', auth.isAuth, workSpaceController.deleteRoles);
+
+router.post('/roles/color', auth.isAuth, workSpaceController.updateColorToRole);
 
 module.exports = router;
