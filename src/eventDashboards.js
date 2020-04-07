@@ -79,9 +79,11 @@ module.exports = () => {
     workspaceSettings.addEventListener('click', async(e) => {
         e.preventDefault();
 
-        addModal(`WORKSPACESETTINGS`);
+        const nsEndPoint = workspaceSettings.closest('.ns-options').dataset.id;
 
-        // const nsEndPoint = workspaceSettings.closest('.ns-options').dataset.id;
+        addModal(`WORKSPACESETTINGS`, {
+            nsEndPoint: nsEndPoint
+        });
         // const res = await fetch(`${window.location.origin}/dashboard/workspace?nsEndPoint=${nsEndPoint}&getWorkspaceDetails=true`, {
         //     method: "GET"
         // });

@@ -1312,6 +1312,7 @@ exports.fetchDetails = async (req, res, next) => {
                             roleTag: cur.roleTag,
                             members: memberDetails,
                             color: cur.color,
+                            priority: cur.priority,
                             permissions: cur.permissions
                         }
                     })

@@ -1,6 +1,6 @@
 const { addResponseModal, updateWorkSpaceImage, loader, toggleSwitch, permissionDescription, initPickr } = require('../../../utilities');
 
-const { fetchRoles } = require('./SettingsHandle/Roles/fetchRoles');
+const { fetchRoles } = require('./SettingsHandle/Roles/Server/fetchRoles');
 
 // Local Settings Import
 const { navItemHandler } = require('./settings_nav');

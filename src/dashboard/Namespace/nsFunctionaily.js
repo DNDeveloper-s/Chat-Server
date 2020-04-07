@@ -16,6 +16,7 @@ function getNsSocket() {
 
 async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
     const { fetchRooms } = require('../../utilities');
+    let connecting = true;
 
     if (!window.location.search.split('&').includes('showUserModalDefault=true') && window.history.replaceState) {
         //prevents browser from storing history with each change:
@@ -36,8 +37,8 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
     });
 
     // Global variables
-    const MAX_RECONNECTS = 500000;
-    const RECONNECTION_DELAY = 300;
+    const MAX_RECONNECTS = 500;
+    const RECONNECTION_DELAY = 100000;
 
     // Creating connection to socket.io with custom namespace - 'nsEndPoint'
     nsSocket = io(`${window.location.origin}${nsEndPoint}`, {
@@ -178,15 +179,6 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
 
         console.log(data);
         deleteRooom(data);
-    });
-
-    nsSocket.on('disconnected', function(data) {
-        console.log(data);
-        // updateClients(data.clients.length);
-        const roomId = document.querySelector('.room-details').dataset.roomid;
-        nsSocket.emit('roomClients', {roomId: roomId}, (data) => {
-            updateClients(data.length);
-        })
     });
 
     nsSocket.on('messageToRoom', async(data) => {
@@ -395,21 +387,17 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
     });
 
     // Disconnection Handler
-    // nsSocket.on('disconnect', async (data) => {
-    //     connected = false;
-    //     setTimeout(() => {
-    //         if(!connected) {
-    //             disconnectedModal.classList.add('enable');
-    //             console.log('Disconnected from the server!', data);
-    //         }
-    //     }, 1000);
-    // });
+    nsSocket.on('disconnect', async (data) => {
+        connecting = false;
+    });
     
     nsSocket.on('reconnect', (attemptNumber) => {
-        loadNamespace(nsEndPoint);
-        connectToNs(nsEndPoint);
-        disconnectedModal.classList.remove('enable');
-        console.log('Reconnected!', attemptNumber);
+        if(!connecting) {
+            loadNamespace(nsEndPoint);
+            connectToNs(nsEndPoint);
+            disconnectedModal.classList.remove('enable');
+            console.log('Reconnected!', attemptNumber);
+        }
     })
 }
 

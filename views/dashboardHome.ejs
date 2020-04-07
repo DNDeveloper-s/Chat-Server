@@ -3,19 +3,26 @@
 <link rel="stylesheet" href="/assets/css/main.css">
 <link rel="stylesheet" href="/css/material-icons.css">
 <link rel="stylesheet" href="/css/emojionearea.min.css">
-<link rel="stylesheet" href="/assets/css/monolith.min.css">
+<!-- <link rel="stylesheet" href="/assets/css/monolith.min.css">
+<link rel="stylesheet" href="/assets/css/classic.min.css">
+<link rel="stylesheet" href="/assets/css/nano.min.css"> -->
 </head>
+
 <body>
 
-    <div id="root" > <!-- class="namespace-interchange" -->
+    <div id="root">
+        <!-- class="namespace-interchange" -->
         <!-- Left Side Nav bar -->
         <div class="nav_bar">
             <div class="userDetails-NameSpace_container">
                 <!-- User Details Container -->
                 <div class="user_dp image_holder remove_sidebar" data-userId="<%= user._id %>" tabindex="0">
-                    <img id="user-dp" class="userLink" data-userId="<%= user._id %>" src="<%= user.image %>" alt="<%= user.name %>">
+                    <img id="user-dp" class="userLink" data-userId="<%= user._id %>" src="<%= user.image %>"
+                        alt="<%= user.name %>">
                     <!-- Notification Count -->
-                    <div class="notification-count remove_sidebar" data-nothing="<%= user.notificationCount == 0 ? 'true' : 'false' %>" ><%= user.notificationCount %></div>
+                    <div class="notification-count remove_sidebar"
+                        data-nothing="<%= user.notificationCount == 0 ? 'true' : 'false' %>">
+                        <%= user.notificationCount %></div>
                 </div>
                 <hr>
                 <!-- Add New NameSpace Container -->
@@ -24,13 +31,18 @@
                 </div>
                 <hr>
                 <!-- NameSpace Container -->
-                <div class="nameSpaceContainer"> <!-- class="tut_mode" -->
+                <div class="nameSpaceContainer">
+                    <!-- class="tut_mode" -->
                     <% for(let workSpace of workSpaces) { %>
-    <!-- class="tut_focus" --><div class="name_space image_holder anim" data-ns="<%= workSpace.endPoint %>" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">
-                            <img src="<%= workSpace.image %>" alt="<%= workSpace.title %>" title="<%= workSpace.title %>">
-                            <!-- <p><%= workSpace.title %></p> -->
-                            <div class="ns-notification" data-nothing="<%= workSpace.nothing %>"></div>
-                        </div>
+                    <!-- class="tut_focus" -->
+                    <div class="name_space image_holder anim" data-ns="<%= workSpace.endPoint %>"
+                        data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom"
+                        data-startoffset="3px"
+                        style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">
+                        <img src="<%= workSpace.image %>" alt="<%= workSpace.title %>" title="<%= workSpace.title %>">
+                        <!-- <p><%= workSpace.title %></p> -->
+                        <div class="ns-notification" data-nothing="<%= workSpace.nothing %>"></div>
+                    </div>
                     <% } %>
                     <!-- <div class="back-drop"></div> -->
 
@@ -44,21 +56,21 @@
                     </div> -->
 
 
-<!--                    <div class="name_space image_holder anim" ns="/wikit" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
-<!--                        <img src="/assets/images/Capture.PNG" alt="wikit" title="wikit">-->
-<!--                    </div>-->
-<!--                    <div class="name_space image_holder" ns="/dndeveloper">-->
-<!--                         <img src="./assets/images/Capture.PNG" alt="DNDeveloper" title="">-->
-<!--                    </div>-->
-<!--                    <div class="name_space image_holder" ns="/ewl">-->
-<!--                         <img src="./assets/images/IMG_20191019_011435.jpg" alt="DNDeveloper">-->
-<!--                    </div>-->
-<!--                    <div class="name_space image_holder" ns="/devils">-->
-<!--                         <img src="./assets/images/saurabh_with_laptop_front.jpg" alt="DNDeveloper">-->
-<!--                    </div>-->
-<!--                    <div class="name_space image_holder">-->
-<!--                         <img src="./assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">-->
-<!--                    </div>-->
+                    <!--                    <div class="name_space image_holder anim" ns="/wikit" data-animtochilds="false" data-animdelay="0" data-animdirection="topToBottom" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
+                    <!--                        <img src="/assets/images/Capture.PNG" alt="wikit" title="wikit">-->
+                    <!--                    </div>-->
+                    <!--                    <div class="name_space image_holder" ns="/dndeveloper">-->
+                    <!--                         <img src="./assets/images/Capture.PNG" alt="DNDeveloper" title="">-->
+                    <!--                    </div>-->
+                    <!--                    <div class="name_space image_holder" ns="/ewl">-->
+                    <!--                         <img src="./assets/images/IMG_20191019_011435.jpg" alt="DNDeveloper">-->
+                    <!--                    </div>-->
+                    <!--                    <div class="name_space image_holder" ns="/devils">-->
+                    <!--                         <img src="./assets/images/saurabh_with_laptop_front.jpg" alt="DNDeveloper">-->
+                    <!--                    </div>-->
+                    <!--                    <div class="name_space image_holder">-->
+                    <!--                         <img src="./assets/images/Saurabh_DP_square.jpg" alt="DNDeveloper">-->
+                    <!--                    </div>-->
                 </div>
                 <hr class="logout">
                 <!-- Logout Button Element -->
@@ -67,9 +79,12 @@
                 </div>
             </div>
             <div class="nameSpaceDetails-Room_container">
-<!-- class="tut_focus" --><div class="namespace-name">
+                <!-- class="tut_focus" -->
+                <div class="namespace-name">
                     <div class="namespace-event">
-                        <h3 title="<%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : '' %>"><%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : "" %></h3><i class="material-icons">arrow_drop_down</i>
+                        <h3 title="<%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : '' %>">
+                            <%= config.defaultWorkSpace ? config.defaultWorkSpace.title.toUpperCase() : "" %></h3><i
+                            class="material-icons">arrow_drop_down</i>
                     </div>
                     <div class="ns-options dropdown">
                         <div class="ns-option workspace-settings removeBackDropOnClick remove_sidebar">
@@ -90,7 +105,8 @@
                 </div>
                 <!-- <div class="back-drop"></div> -->
                 <!-- Room Container -->
-<!-- class="tut_focus" --><div class="roomContainer">
+                <!-- class="tut_focus" -->
+                <div class="roomContainer">
 
                     <!-- <div class="tut_message toRight">
                         <p>Click here to get anything here</p>
@@ -112,36 +128,36 @@
                         
                         <hr>
                     </div> -->
-<!--                    <div class="room anim" data-id="5e0f1444ff19141a58ef4ce0" data-nsid="5e0e4d536ab3a74520d9e359" data-ns="wikit" data-animtochilds="false" data-animdelay="0.1" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
-<!--                        <div class="room-name">-->
-<!--                            <span># </span><span>2345</span></div>-->
-<!--                        <i class="pointer material-icons delete-room">delete</i>-->
-<!--                    </div>-->
-<!--                    <div class="room anim" data-id="5e0f1444ff19141a58ef4ce0" data-nsid="5e0e4d536ab3a74520d9e359" data-ns="wikit" data-animtochilds="false" data-animdelay="0.1" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
-<!--                        <div class="room-name"><span># </span><span>2345</span></div>-->
-<!--                        <i class="pointer material-icons delete-room">delete</i>-->
-<!--                    </div>-->
-<!--                        <div class="room">-->
-<!--                            <div class="room-name"><span># </span><span>general</span></div>-->
-<!--                            <i class="pointer material-icons">delete</i>-->
-<!--                        </div>-->
-<!--                        <hr>-->
-<!--                    <div class="room">-->
-<!--                        <div class="room-name"><span># </span><span>announcements</span></div>-->
-<!--                    </div>-->
-<!--                    <hr>-->
-<!--                    <div class="room">-->
-<!--                        <div class="room-name"><span># </span><span>bots</span></div>-->
-<!--                    </div>-->
-<!--                    <hr>-->
-<!--                    <div class="room">-->
-<!--                        <div class="room-name"><span># </span><span>music</span></div>-->
-<!--                    </div>-->
-<!--                    <hr>-->
-<!--                    <div class="room">-->
-<!--                        <div class="room-name"><span># </span><span>others</span></div>-->
-<!--                    </div>-->
-<!--                    <hr>-->
+                    <!--                    <div class="room anim" data-id="5e0f1444ff19141a58ef4ce0" data-nsid="5e0e4d536ab3a74520d9e359" data-ns="wikit" data-animtochilds="false" data-animdelay="0.1" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
+                    <!--                        <div class="room-name">-->
+                    <!--                            <span># </span><span>2345</span></div>-->
+                    <!--                        <i class="pointer material-icons delete-room">delete</i>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="room anim" data-id="5e0f1444ff19141a58ef4ce0" data-nsid="5e0e4d536ab3a74520d9e359" data-ns="wikit" data-animtochilds="false" data-animdelay="0.1" data-animchilddelays="0.1" data-animdirection="leftToRight" data-startoffset="3px" style="transition: all 0.25s ease-in-out 0s; opacity: 1; animation: 0s ease 0s 1 normal none running none; transform: none;">-->
+                    <!--                        <div class="room-name"><span># </span><span>2345</span></div>-->
+                    <!--                        <i class="pointer material-icons delete-room">delete</i>-->
+                    <!--                    </div>-->
+                    <!--                        <div class="room">-->
+                    <!--                            <div class="room-name"><span># </span><span>general</span></div>-->
+                    <!--                            <i class="pointer material-icons">delete</i>-->
+                    <!--                        </div>-->
+                    <!--                        <hr>-->
+                    <!--                    <div class="room">-->
+                    <!--                        <div class="room-name"><span># </span><span>announcements</span></div>-->
+                    <!--                    </div>-->
+                    <!--                    <hr>-->
+                    <!--                    <div class="room">-->
+                    <!--                        <div class="room-name"><span># </span><span>bots</span></div>-->
+                    <!--                    </div>-->
+                    <!--                    <hr>-->
+                    <!--                    <div class="room">-->
+                    <!--                        <div class="room-name"><span># </span><span>music</span></div>-->
+                    <!--                    </div>-->
+                    <!--                    <hr>-->
+                    <!--                    <div class="room">-->
+                    <!--                        <div class="room-name"><span># </span><span>others</span></div>-->
+                    <!--                    </div>-->
+                    <!--                    <hr>-->
                 </div>
 
                 <!-- <div class="back-drop"></div> -->
@@ -174,19 +190,22 @@
                 </div>
                 <div class="keepItRight mob-drop-down">
                     <div class="emoji-input">
-                        <input id="emoji" type="text" class="search-bar" placeholder="Search here!"> 
-                    </div> 
+                        <input id="emoji" type="text" class="search-bar" placeholder="Search here!">
+                    </div>
                     <button id="search-btn" class="pointer">Search</button>
                 </div>
                 <div class="toRight">
-                    <!-- class="tut_focus" --><div class="mentions-btn alignCenter">
-                        <img src="/assets/images/mention.svg" class="mention" title="Sneek on your mentions" alt="mentions">
+                    <!-- class="tut_focus" -->
+                    <div class="mentions-btn alignCenter">
+                        <img src="/assets/images/mention.svg" class="mention" title="Sneek on your mentions"
+                            alt="mentions">
 
                         <div class="mentions-modal">
                             <div class="mentions-container">
                                 <div class="loader-container">
                                     <svg class="circular" viewBox="25 25 50 50">
-                                      <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2"
+                                            stroke-miterlimit="10" />
                                     </svg>
                                 </div>
                             </div>
@@ -201,7 +220,8 @@
                         </div> -->
                     </div>
                     <!-- <div class="back-drop"></div> -->
-                    <!-- class="tut_focus" --><div class="workspace-clients-icon alignCenter">
+                    <!-- class="tut_focus" -->
+                    <div class="workspace-clients-icon alignCenter">
                         <img src="/assets/images/friends.svg" class="message-user_dp" alt="workspace-clients-icon">
 
                         <!-- <div class="tut_message toBottomLeft">
@@ -221,10 +241,11 @@
                 </div>
             </div>
             <!-- Message display container -->
-            <!-- class="tut_mode" --><div class="message-display__container">
+            <!-- class="tut_mode" -->
+            <div class="message-display__container">
 
                 <div class="messages">
-                    
+
                     <!-- Message Loader -->
                     <div class="message-loader">
                         <div class="loader-container">
@@ -313,7 +334,8 @@
 
                 </div>
                 <!-- <div class="back-drop"></div> -->
-                <!-- class="tut_focus" --><div class="workspace-clients open">
+                <!-- class="tut_focus" -->
+                <div class="workspace-clients open">
 
                     <!-- <div class="tut_message toLeft">
                         <p>Click here to get anything here</p>
@@ -390,21 +412,21 @@
                         </div>
                     </div>
                 </div> -->
-<!--                <div class="message">-->
-<!--                    <div class="message-header">-->
-<!--                        <div class="user">-->
-<!--                            <img src="./assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">-->
-<!--                            <span class="message-user_name">Saurabh Singh</span>-->
-<!--                        </div>-->
-<!--                        <span class="message-time_stamp">5:20 am</span>-->
-<!--                    </div>-->
-<!--                    <div class="message-data">-->
-<!--                        <p>This is not my first one though!</p>-->
-<!--                    </div>-->
-<!--                    <div class="message-status">-->
-<!--                        <i class="material-icons">done_all</i>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div class="message">-->
+                <!--                    <div class="message-header">-->
+                <!--                        <div class="user">-->
+                <!--                            <img src="./assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">-->
+                <!--                            <span class="message-user_name">Saurabh Singh</span>-->
+                <!--                        </div>-->
+                <!--                        <span class="message-time_stamp">5:20 am</span>-->
+                <!--                    </div>-->
+                <!--                    <div class="message-data">-->
+                <!--                        <p>This is not my first one though!</p>-->
+                <!--                    </div>-->
+                <!--                    <div class="message-status">-->
+                <!--                        <i class="material-icons">done_all</i>-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
             <!-- Send Message Element -->
             <form class="send-message">
@@ -448,8 +470,9 @@
                         <div class="tag-hash">Ishu Sinha#13125</div>
                     </div> -->
                 </div>
-                <div class="input" id="editable" data-text="Enter your message!" contenteditable="true" role="textbox" tabindex="0">
-                    
+                <div class="input" id="editable" data-text="Enter your message!" contenteditable="true" role="textbox"
+                    tabindex="0">
+
                 </div>
                 <!-- <div class="emoji-input">
                     <div class="input" id="editable" data-text="Enter your message!" contenteditable="true" role="textbox" tabindex="0"></div>
@@ -471,11 +494,13 @@
 
         <div class="friends-list">
             <% for(let friend of friends) { %>
-                <div class="friend pointer userLink remove_frndslist" data-userId="<%= friend._id %>" data-status="<%= friend.status %>" data-profileurl="http://localhost:3000/dashboard/home">
-                    <span class="status"></span>
-                    <img src="<%= friend.image %>" alt="<%= friend.name %>">
-                    <div class="new-notification" data-nothing="<%= friend.notificationCount == 0 ? 'true' : 'false' %>" ><%= friend.notificationCount %></div>
-                </div>
+            <div class="friend pointer userLink remove_frndslist" data-userId="<%= friend._id %>"
+                data-status="<%= friend.status %>" data-profileurl="http://localhost:3000/dashboard/home">
+                <span class="status"></span>
+                <img src="<%= friend.image %>" alt="<%= friend.name %>">
+                <div class="new-notification" data-nothing="<%= friend.notificationCount == 0 ? 'true' : 'false' %>">
+                    <%= friend.notificationCount %></div>
+            </div>
             <% } %>
             <!-- data-nothing="0" -->
             <!-- <div class="friend pointer" data-status="idle" data-profileurl="http://localhost:3000/dashboard/home">
@@ -492,149 +517,170 @@
         </div>
 
         <% if( loadOnDefault ) { %>
-            <div class="back-drop"></div>
-            <div class="modal" data-id="user_profile" data-userId="<%= gotUser._id %>" tabindex="0">
-                <form action="/auth/update_profile" method="POST" enctype="multipart/form-data">
-                    <div class="first-choice center-content alone">  
-                        <h5 class="bigger">User Profile</h5>
-                        <div class="modal_image user_dp">
-                            <input name="image" type="file" class="input__file input__dp">
-                            <figure>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
-                            </figure>
-                            <label for="image" class="dp__name"></label>
-                            <img class="user_modal_img" src="<%= gotUser.image %>" alt="<%= gotUser.name %>">
-                        </div>
-                        <div class="input-control">
-                            <label class="finalize" for="">Full Name</label>
-                            <input type="text" name="user_name" value="<%= gotUser.name %>" placeholder="Enter Workspace name..." <%= isItAuthenticatedUser ? '' : 'readonly' %>>
-                        </div>
-                        <div class="input-control">
-                            <label for="" class="finalize">Unique userId</label>
-                            <input type="text" name="user_id" value="<%= gotUser._id %>" placeholder="Enter Workspace name..." disabled>
-                        </div>
-                        <% if(isItAuthenticatedUser) { %>
-                            <div class="input-control">
-                                <label class="finalize" for="Finalize Changes">Finalize Changes</label>
-                                <button type="submit" id="update-profile" class="pointer blueLienar btn yes">Save Changes
-                                    <div class="loader-container">
-                                        <svg width="40" height="40">
-                                            <circle class="loader" cx="20" cy="20" r="17"></circle>
-                                        </svg>
-                                    </div>
-                                </button>
-                            </div>
-                        <% } else if(isFriend) { %>
-                            <div class="input-control">
-                                <label class="finalize" for="">Write a Message</label>
-                                <button class="pointer blueLienar yes" data-togglechat="true" data-closemodal="false">Toggle Chatbox</button>
-                            </div>
-                        <% } %>
+        <div class="back-drop"></div>
+        <div class="modal" data-id="user_profile" data-userId="<%= gotUser._id %>" tabindex="0">
+            <form action="/auth/update_profile" method="POST" enctype="multipart/form-data">
+                <div class="first-choice center-content alone">
+                    <h5 class="bigger">User Profile</h5>
+                    <div class="modal_image user_dp">
+                        <input name="image" type="file" class="input__file input__dp">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17">
+                                <path
+                                    d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                </svg>
+                        </figure>
+                        <label for="image" class="dp__name"></label>
+                        <img class="user_modal_img" src="<%= gotUser.image %>" alt="<%= gotUser.name %>">
                     </div>
-                    <% if(!isItAuthenticatedUser && !isFriend) { %>
-                        <div class="option-choice center-content" data-id="add_friend">
-                            <div class="input-control">
-                                <label class="strict-action" for="">Such Action</label>
-                                <button class="pointer redLinear another">Add as a Friend</button>
+                    <div class="input-control">
+                        <label class="finalize" for="">Full Name</label>
+                        <input type="text" name="user_name" value="<%= gotUser.name %>"
+                            placeholder="Enter Workspace name..." <%= isItAuthenticatedUser ? '' : 'readonly' %>>
+                    </div>
+                    <div class="input-control">
+                        <label for="" class="finalize">Unique userId</label>
+                        <input type="text" name="user_id" value="<%= gotUser._id %>"
+                            placeholder="Enter Workspace name..." disabled>
+                    </div>
+                    <% if(isItAuthenticatedUser) { %>
+                    <div class="input-control">
+                        <label class="finalize" for="Finalize Changes">Finalize Changes</label>
+                        <button type="submit" id="update-profile" class="pointer blueLienar btn yes">Save Changes
+                            <div class="loader-container">
+                                <svg width="40" height="40">
+                                    <circle class="loader" cx="20" cy="20" r="17"></circle>
+                                </svg>
                             </div>
-                        </div>
-                    <% } else if(!isItAuthenticatedUser) { %>
-                        <div class="option-choice center-content" data-id="remove_friend">
-                            <div class="input-control">
-                                <label class="strict-action" for="">Such Action</label>
-                                <button class="pointer redLinear another">Remove Friend</button>
-                            </div>
-                        </div>
+                        </button>
+                    </div>
+                    <% } else if(isFriend) { %>
+                    <div class="input-control">
+                        <label class="finalize" for="">Write a Message</label>
+                        <button class="pointer blueLienar yes" data-togglechat="true" data-closemodal="false">Toggle
+                            Chatbox</button>
+                    </div>
                     <% } %>
-                </form>
-            </div>
+                </div>
+                <% if(!isItAuthenticatedUser && !isFriend) { %>
+                <div class="option-choice center-content" data-id="add_friend">
+                    <div class="input-control">
+                        <label class="strict-action" for="">Such Action</label>
+                        <button class="pointer redLinear another">Add as a Friend</button>
+                    </div>
+                </div>
+                <% } else if(!isItAuthenticatedUser) { %>
+                <div class="option-choice center-content" data-id="remove_friend">
+                    <div class="input-control">
+                        <label class="strict-action" for="">Such Action</label>
+                        <button class="pointer redLinear another">Remove Friend</button>
+                    </div>
+                </div>
+                <% } %>
+            </form>
+        </div>
         <% } %>
 
         <div class="disconnected-modal">
             <?xml version="1.0" encoding="iso-8859-1"?>
             <!-- Generator: Adobe Illustrator 18.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                preserveAspectRatio="none" viewBox="0 0 493.266 493.266" style="enable-background:new 0 0 493.266 493.266;" xml:space="preserve">
-            <g>
-                <path d="M353.877,94.284c18.179,0,32.951,14.792,32.951,32.965v49.32h32.828v-49.32c0-36.273-29.515-65.785-65.779-65.785h-16.016
-                    c0.966,5.342,1.545,10.809,1.545,16.414s-0.579,11.073-1.545,16.406H353.877z"/>
-                <path d="M106.432,127.249c0-18.173,14.777-32.965,32.957-32.965h15.995c-0.966-5.333-1.539-10.801-1.539-16.406
-                    s0.573-11.072,1.539-16.414h-15.995c-36.265,0-65.784,29.512-65.784,65.785v49.32h32.827V127.249z"/>
-                <path d="M153.339,198.824c-31.799,0-125.345-0.034-125.345-0.034C12.544,198.79,0,212.401,0,229.126v232.449
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px" y="0px" preserveAspectRatio="none" viewBox="0 0 493.266 493.266"
+                style="enable-background:new 0 0 493.266 493.266;" xml:space="preserve">
+                <g>
+                    <path d="M353.877,94.284c18.179,0,32.951,14.792,32.951,32.965v49.32h32.828v-49.32c0-36.273-29.515-65.785-65.779-65.785h-16.016
+                    c0.966,5.342,1.545,10.809,1.545,16.414s-0.579,11.073-1.545,16.406H353.877z" />
+                    <path d="M106.432,127.249c0-18.173,14.777-32.965,32.957-32.965h15.995c-0.966-5.333-1.539-10.801-1.539-16.406
+                    s0.573-11.072,1.539-16.414h-15.995c-36.265,0-65.784,29.512-65.784,65.785v49.32h32.827V127.249z" />
+                    <path
+                        d="M153.339,198.824c-31.799,0-125.345-0.034-125.345-0.034C12.544,198.79,0,212.401,0,229.126v232.449
                     c0,16.736,12.544,30.355,27.994,30.355h124.047c15.437,0,27.995-13.619,27.995-30.355V229.126
                     C180.036,213.564,167.385,198.824,153.339,198.824z M32.827,231.608h114.382v202.57H32.827V231.608z M90.051,477.477
                     c-5.879,0-10.777-3.203-13.748-7.781c-1.688-2.603-2.941-5.534-2.941-8.865c0-9.195,7.487-16.656,16.689-16.656
-                    c9.155,0,16.624,7.461,16.624,16.656c0,3.331-1.224,6.263-2.907,8.865C100.796,474.274,95.898,477.477,90.051,477.477z"/>
-                <path d="M464.719,198.768c-31.801,0.041-126.664,0.358-126.664,0.358c-13.94,1.718-24.83,14.438-24.83,30v232.449
+                    c9.155,0,16.624,7.461,16.624,16.656c0,3.331-1.224,6.263-2.907,8.865C100.796,474.274,95.898,477.477,90.051,477.477z" />
+                    <path
+                        d="M464.719,198.768c-31.801,0.041-126.664,0.358-126.664,0.358c-13.94,1.718-24.83,14.438-24.83,30v232.449
                     c0,16.736,12.544,30.355,27.98,30.355h124.053c15.431,0,28.009-13.619,28.009-30.355V229.126
                     C493.266,212.401,480.149,198.747,464.719,198.768z M346.053,231.608h114.385v202.57H346.053V231.608z M403.246,477.477
                     c-5.865,0-10.762-3.203-13.748-7.781c-1.689-2.603-2.907-5.534-2.907-8.865c0-9.195,7.452-16.656,16.655-16.656
-                    c9.17,0,16.652,7.461,16.652,16.656c0,3.331-1.252,6.263-2.935,8.865C413.992,474.274,409.089,477.477,403.246,477.477z"/>
-                <path d="M246.622,1.334c-42.206,0-76.545,34.336-76.545,76.543s34.339,76.543,76.545,76.543c42.208,0,76.547-34.336,76.547-76.543
+                    c9.17,0,16.652,7.461,16.652,16.656c0,3.331-1.252,6.263-2.935,8.865C413.992,474.274,409.089,477.477,403.246,477.477z" />
+                    <path d="M246.622,1.334c-42.206,0-76.545,34.336-76.545,76.543s34.339,76.543,76.545,76.543c42.208,0,76.547-34.336,76.547-76.543
                     S288.83,1.334,246.622,1.334z M246.622,131.229c-29.42,0-53.349-23.928-53.349-53.352c0-29.413,23.929-53.352,53.349-53.352
-                    c29.422,0,53.355,23.938,53.355,53.352C299.977,107.301,276.044,131.229,246.622,131.229z"/>
-                <path d="M278.614,45.894c-5.442-5.438-14.258-5.438-19.69,0l-12.302,12.309l-12.301-12.309c-5.428-5.438-14.246-5.438-19.689,0
+                    c29.422,0,53.355,23.938,53.355,53.352C299.977,107.301,276.044,131.229,246.622,131.229z" />
+                    <path d="M278.614,45.894c-5.442-5.438-14.258-5.438-19.69,0l-12.302,12.309l-12.301-12.309c-5.428-5.438-14.246-5.438-19.689,0
                     c-5.428,5.427-5.428,14.252,0,19.683l12.315,12.301l-12.315,12.311c-5.428,5.428-5.428,14.246,0,19.673
                     c2.73,2.724,6.294,4.08,9.83,4.08c3.565,0,7.145-1.356,9.859-4.08l12.301-12.308l12.302,12.308c2.715,2.724,6.299,4.08,9.846,4.08
                     c3.55,0,7.116-1.356,9.845-4.08c5.432-5.427,5.432-14.245,0-19.673l-12.317-12.311l12.317-12.301
-                    C284.046,60.146,284.046,51.321,278.614,45.894z"/>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
-            <g>
-            </g>
+                    C284.046,60.146,284.046,51.321,278.614,45.894z" />
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
             </svg>
 
-            <svg class="wifi_disconnected" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="496.747" height="404.5" viewBox="0 0 496.747 404.5">
+            <svg class="wifi_disconnected" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                width="496.747" height="404.5" viewBox="0 0 496.747 404.5">
                 <defs>
                     <filter id="Ellipse_1" x="265.5" y="251.5" width="153" height="153" filterUnits="userSpaceOnUse">
-                    <feOffset dy="3" input="SourceAlpha"/>
-                    <feGaussianBlur stdDeviation="3" result="blur"/>
-                    <feFlood flood-opacity="0.522"/>
-                    <feComposite operator="in" in2="blur"/>
-                    <feComposite in="SourceGraphic"/>
+                        <feOffset dy="3" input="SourceAlpha" />
+                        <feGaussianBlur stdDeviation="3" result="blur" />
+                        <feFlood flood-opacity="0.522" />
+                        <feComposite operator="in" in2="blur" />
+                        <feComposite in="SourceGraphic" />
                     </filter>
                 </defs>
                 <g id="Wifi_Disconnected" data-name="Wifi Disconnected" transform="translate(-1192.5 -586.5)">
                     <g id="XMLID_358_" transform="translate(1194 534.104)">
-                    <path id="XMLID_362_" d="M212.524,356.921a48.586,48.586,0,1,0,68.715,0A48.594,48.594,0,0,0,212.524,356.921Z" fill="rgba(0,0,0,0.17)"/>
-                    <path id="XMLID_361_" d="M246.882,241.383A148.83,148.83,0,0,0,140.911,285.29,28.435,28.435,0,0,0,181.124,325.5a92.982,92.982,0,0,1,131.517,0,28.435,28.435,0,1,0,40.213-40.213A148.834,148.834,0,0,0,246.882,241.383Z" fill="rgba(0,0,0,0.17)"/>
-                    <path id="XMLID_360_" d="M246.882,147.743a241.917,241.917,0,0,0-172.2,71.331A28.435,28.435,0,1,0,114.9,259.287a186.63,186.63,0,0,1,263.953,0,28.435,28.435,0,0,0,40.213-40.213A241.871,241.871,0,0,0,246.882,147.743Z" fill="none" stroke="#242435" stroke-width="3"/>
-                    <path id="XMLID_359_" d="M485.436,152.721a337.336,337.336,0,0,0-477.108,0,28.435,28.435,0,1,0,40.213,40.214,280.45,280.45,0,0,1,396.664,0,28.442,28.442,0,0,0,40.231-40.214Z" fill="none" stroke="#242435" stroke-width="3"/>
+                        <path id="XMLID_362_"
+                            d="M212.524,356.921a48.586,48.586,0,1,0,68.715,0A48.594,48.594,0,0,0,212.524,356.921Z"
+                            fill="rgba(0,0,0,0.17)" />
+                        <path id="XMLID_361_"
+                            d="M246.882,241.383A148.83,148.83,0,0,0,140.911,285.29,28.435,28.435,0,0,0,181.124,325.5a92.982,92.982,0,0,1,131.517,0,28.435,28.435,0,1,0,40.213-40.213A148.834,148.834,0,0,0,246.882,241.383Z"
+                            fill="rgba(0,0,0,0.17)" />
+                        <path id="XMLID_360_"
+                            d="M246.882,147.743a241.917,241.917,0,0,0-172.2,71.331A28.435,28.435,0,1,0,114.9,259.287a186.63,186.63,0,0,1,263.953,0,28.435,28.435,0,0,0,40.213-40.213A241.871,241.871,0,0,0,246.882,147.743Z"
+                            fill="none" stroke="#242435" stroke-width="3" />
+                        <path id="XMLID_359_"
+                            d="M485.436,152.721a337.336,337.336,0,0,0-477.108,0,28.435,28.435,0,1,0,40.213,40.214,280.45,280.45,0,0,1,396.664,0,28.442,28.442,0,0,0,40.231-40.214Z"
+                            fill="none" stroke="#242435" stroke-width="3" />
                     </g>
                     <g id="Cross">
-                    <g transform="matrix(1, 0, 0, 1, 1192.5, 586.5)" filter="url(#Ellipse_1)">
-                        <circle id="Ellipse_1-2" data-name="Ellipse 1" cx="67.5" cy="67.5" r="67.5" transform="translate(274.5 257.5)" fill="#3e0404"/>
-                    </g>
-                    <rect id="Rectangle_1" data-name="Rectangle 1" width="8.045" height="90.104" rx="4.023" transform="translate(1563.541 877.21) rotate(45)" fill="#fff"/>
-                    <rect id="Rectangle_2" data-name="Rectangle 2" width="8.045" height="90.104" rx="4.022" transform="translate(1569.229 940.923) rotate(135)" fill="#fff"/>
+                        <g transform="matrix(1, 0, 0, 1, 1192.5, 586.5)" filter="url(#Ellipse_1)">
+                            <circle id="Ellipse_1-2" data-name="Ellipse 1" cx="67.5" cy="67.5" r="67.5"
+                                transform="translate(274.5 257.5)" fill="#3e0404" />
+                        </g>
+                        <rect id="Rectangle_1" data-name="Rectangle 1" width="8.045" height="90.104" rx="4.023"
+                            transform="translate(1563.541 877.21) rotate(45)" fill="#fff" />
+                        <rect id="Rectangle_2" data-name="Rectangle 2" width="8.045" height="90.104" rx="4.022"
+                            transform="translate(1569.229 940.923) rotate(135)" fill="#fff" />
                     </g>
                 </g>
             </svg>
@@ -644,321 +690,133 @@
 
             <div class="loader-container">
                 <svg class="circular" viewBox="25 25 50 50">
-                  <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
                 </svg>
             </div>
-            
+
+        </div>
+
+
+        <div class="save_modal">
+            <p>You have some unsaved changes!</p>
+            <button class="btn red">Reset</button>
+            <button class="btn green">Save Changes</button>
         </div>
 
         <!--  Modal with BackDrop  -->
-        <!-- <div class="back-drop"></div> -->
-        
         <!-- <div class="back-drop"></div>
-        <div class="modal" data-id="workspace_settings" tabindex="0">
-            <div class="first-choice center-content alone">  
-                <h5 class="bigger">Your Workspace</h5>
-                <div class="modal_image">
-                    <input name="nsImage" type="file" class="input__file input__dp">
-                    <figure>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="30%" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg>
-                    </figure>
-                    <label for="image" class="dp__name"></label>
-                    <img src="/workspace_images/resized/1584952566437-cross.png" alt="DNDeveloper">
+        <div class="modal" data-id="workspace_settings" data-ns="/Done4213734" tabindex="0">
+            <div class="side_bar">
+                <div class="bg_image">
+                    <img src="/assets/images/draw.svg" alt="vector">
                 </div>
-                <div class="input-control">
-                    <label for="">Edit workspace name</label>
-                    <input type="text" name="nsName" value="DNDevelopers" placeholder="Enter Workspace name...">
+                <div class="overview_section side_nav_section">
+                    <div class="header">
+                        DNDevelopers
+                    </div>
+                    <ul class="list">
+                        <li class="list_item settings_nav_item" data-navsetting="overview">Overview</li>
+                        <li class="list_item settings_nav_item" data-navsetting="roles">Roles</li>
+                        <li class="list_item settings_nav_item" data-navsetting="moderation">Moderation</li>
+                        <li class="list_item settings_nav_item" data-navsetting="activities">Activities</li>
+                    </ul>
                 </div>
-                <div class="input-control">
-                    <label for="" class="small">Edit Your Workspace EndPoint</label>
-                    <input type="text" name="" value="DNDevelopers4897867" placeholder="Enter Workspace name...">
-                </div>
-                <div class="input-control">
-                    <label class="finalize" for="">Advance settings</label>
-                    <button class="pointer purpleLinear" data-closemodal="false">Toggle Roles</button>
-                </div>
-                <div class="input-control">
-                    <label class="finalize" for="">Finalize changes</label>
-                    <button class="pointer blueLinear yes btn" data-closemodal="false">Save Changes
-                        <div class="loader-container">
-                            <svg width="40" height="40">
-                                <circle class="loader" cx="20" cy="20" r="17"></circle>
-                            </svg>
-                        </div>
-                    </button>
+                <div class="user_section side_nav_section">
+                    <div class="header">
+                        User Management
+                    </div>
+                    <ul class="list">
+                        <li class="list_item">Members</li>
+                        <li class="list_item">Invites</li>
+                        <li class="list_item">Bans</li>
+                    </ul>
                 </div>
             </div>
-            <div class="option-choice center-content">
-                <div class="input-control">
-                    <label class="strict-action" for="">Strict Action</label>
-                    <button class="pointer redLinear another btn" data-ns="${data.acknowledgment.workSpace.endPoint}" >Delete Workspace
-                        <div class="loader-container">
-                            <svg width="40" height="40">
-                                <circle class="loader" cx="20" cy="20" r="17"></circle>
-                            </svg>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <div class="attached-modal roles" data-userid="${userId}">
-                <div class="modal_wrapper">
-                    <h4>Roles</h4>
-                    <div class="simple-settings">
-                        <div class="roles-head">
-                            <div class="roles_mechanism">
-                                <div class="roles_container">
-                                    <div class="role_tag" style="border-color: red;">
-                                        <div class="role_name" style="color: red;">moderator</div>
-                                        <i class="material-icons">close</i>
-                                    </div>
-                                    <div class="role_tag" style="border-color: darkgreen;">
-                                        <div class="role_name" style="color: darkgreen;">gs</div>
-                                        <i class="material-icons">close</i>
-                                    </div>
-                                    <div class="role_tag">
-                                        <div class="role_name">a</div>
-                                        <i class="material-icons">close</i>
-                                    </div>
-                                    <div class="role_tag">
-                                        <div class="role_name">moderator</div>
-                                        <i class="material-icons">close</i>
-                                    </div>
-                                    <div class="role_tag">
-                                        <div class="role_name">owner</div>
-                                        <i class="material-icons">close</i>
-                                    </div>
-                                    <div class="role_tag">
-                                        <div class="role_type_dropdown_event">
-                                            <img src="/assets/images/role_types/user-avatar-with-check-mark.svg" alt="">
-                                        </div>
 
-                                        <div class="role_type_drop-down">
-                                            <div class="role_type">
-                                                <div class="role_type_img">
-                                                    <img src="/assets/images/role_types/user-avatar-with-check-mark.svg" alt="">
-                                                </div>
-                                                <div class="role_type_name">
-                                                    <p>Administrator</p>
-                                                </div>
-                                            </div>
-                                            <div class="role_type">
-                                                <div class="role_type_img">
-                                                    <img src="/assets/images/role_types/thinking.svg" alt="">
-                                                </div>
-                                                <div class="role_type_name">
-                                                    <p>Moderator</p>
-                                                </div>
-                                            </div>
-                                            <div class="role_type">
-                                                <div class="role_type_img">
-                                                    <img src="/assets/images/role_types/cop.svg" alt="">
-                                                </div>
-                                                <div class="role_type_name">
-                                                    <p>Officer</p>
-                                                </div>
-                                            </div>
-                                            <div class="role_type">
-                                                <div class="role_type_img">
-                                                    <img src="/assets/images/role_types/user.svg" alt="">
-                                                </div>
-                                                <div class="role_type_name">
-                                                    <p>Constable</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="role_name">admin</div>
-                                        <i class="material-icons">close</i>
-                                    </div>
-                                </div>
-                                <div class="back-drop"></div>
-                                <div class="add_roles">
-                                    <input type="text" placeholder="Enter role name...">
-                                    <div class="loader-container">
-                                        <svg width="40" height="40">
-                                            <circle class="loader" cx="20" cy="20" r="17"></circle>
-                                        </svg>
-                                    </div>
-                                    <svg class="zoom_svg" xmlns="http://www.w3.org/2000/svg" width="36.9" height="36.975" viewBox="0 0 36.9 36.975" id="tick">
-                                        <g transform="translate(-0.05 0.025)">
-                                            <path id="Path_1" class="circ path" data-name="Path 1" d="M30.5,6.5h0a17.02,17.02,0,0,1,0,24h0a17.02,17.02,0,0,1-24,0h0a17.02,17.02,0,0,1,0-24h0A16.841,16.841,0,0,1,30.5,6.5Z" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
-                                            <g id="middle">
-                                                <path id="Path_2" class="tick path" data-name="Path 2" d="M11.6,20l7.423-3.07L26.4,13.8" transform="translate(-4.467 9.107) rotate(-19)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
-                                                <path id="Path_3" class="tick path" data-name="Path 3" d="M11.6,20l7.423-3.07L26.4,13.8" transform="matrix(0.391, 0.921, -0.921, 0.391, 27.133, -5.193)" fill="none" stroke="#ff5e4c" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="3"/>
-                                            </g>
-                                        </g>
-                                    </svg>
-                                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
-                                    <i class="material-icons">add_box</i>
-                                </div>
-                            </div>
+            <div class="main_nav">
+                <div class="settings" data-setting="roles">
+                    <div class="roles_nav">
+                        <div class="header">
+                            Roles
                         </div>
+                        <div class="notice">
+                            <p><span class="note">Note</span> :- Drag and Drop items to set the priority among roles!
+                            </p>
+                        </div>
+                        <div class="roles_container">
+                            <div class="cursor hide" style="top: 90.5469px; left: 228.992px;">
+                                <svg height="512pt" viewBox="-149 0 512 512.10667" width="512pt"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="m170.71875 256.105469c0 35.347656-28.652344 64-64 64-35.34375 0-64-28.652344-64-64 0-35.34375 28.65625-64 64-64 35.347656 0 64 28.65625 64 64zm0 0">
+                                    </path>
+                                    <path
+                                        d="m192.054688 362.773438h-170.667969c-11.753907 0-21.3320315 9.578124-21.3320315 21.332031 0 4.03125 1.0664065 7.832031 3.2851565 11.5625.382812.640625.808594 1.261719 1.277344 1.835937l86.570312 108.03125c4.269531 4.246094 9.773438 6.570313 15.53125 6.570313 5.761719 0 11.265625-2.324219 16.769531-7.914063l85.332031-106.667968c.46875-.574219.898438-1.214844 1.28125-1.832032 2.21875-3.753906 3.285157-7.554687 3.285157-11.585937 0-11.753907-9.578125-21.332031-21.332031-21.332031zm0 0">
+                                    </path>
+                                    <path
+                                        d="m21.386719 149.441406h170.667969c11.753906 0 21.332031-9.578125 21.332031-21.335937 0-4.03125-1.066407-7.828125-3.285157-11.5625-.382812-.640625-.8125-1.257813-1.28125-1.832031l-86.570312-108.035157c-8.53125-8.445312-21.289062-9.8125-32.296875 1.367188l-85.335937 106.667969c-.46875.574218-.894532 1.214843-1.277344 1.832031-2.21875 3.734375-3.2851565 7.53125-3.2851565 11.5625 0 11.757812 9.5781245 21.335937 21.3320315 21.335937zm0 0">
+                                    </path>
+                                </svg>
+                                <div class="spread"></div>
+                            </div>
+                            <div class="role_list" style="height: 200px;">
+                                <div class="role_list_item" data-count="2" data-roletag="/everyone" style="top: 40px;">
+                                    <div class="place_holder" style="color: rgb(116, 113, 110)">everyone</div>
+                                </div>
 
-                        <div class="role_name_heading">
-                            <h3>Role Name</h3>
-                            <div class="role_color_picker"></div>
-                        </div>
+                                <div class="role_list_item" data-count="4" data-roletag="/founder1742426"
+                                    style="top: 120px;">
+                                    <div class="place_holder" style="color: #9A0405">founder</div>
+                                </div>
 
-                        <div class="members-list">
-                            <div class="clients">
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Saurabh Singh</p>
-                                    </div>
-                                    <div class="action_btn">
-                                        <div class="loader-container">
-                                            <svg width="40" height="40">
-                                                <circle class="loader" cx="20" cy="20" r="17"></circle>
-                                            </svg>
-                                        </div>
-                                        <i class="material-icons">add_circle</i>
-                                    </div>
+                                <div class="role_list_item active" data-count="3" data-roletag="/recruits6024355"
+                                    style="top: 80px;">
+                                    <div class="place_holder" style="color: #121218">recruits</div>
                                 </div>
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Saurabh Singh</p>
-                                    </div>
+
+                                <div class="role_list_item" data-count="5" data-roletag="/officers1419503"
+                                    style="top: 160px;">
+                                    <div class="place_holder" style="color: #ED56BA">officers</div>
                                 </div>
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Saurabh Singh</p>
-                                    </div>
+
+                                <div class="role_list_item" data-count="1" data-roletag="/lurkers4722073"
+                                    style="top: 0px;">
+                                    <div class="place_holder" style="color: #FCC133">lurkers</div>
                                 </div>
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Saurabh Singh</p>
-                                    </div>
-                                </div>
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Saurabh Singh</p>
-                                    </div>
-                                </div>
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Saurabh Singh</p>
-                                    </div>
-                                </div>
+                            </div>
+                            <div class="drop_places">
+                                <div class="drop_place" data-count="1"></div>
+                                <div class="drop_place" data-count="2"></div>
+                                <div class="drop_place" data-count="3"></div>
+                                <div class="drop_place" data-count="4"></div>
+                                <div class="drop_place" data-count="5"></div>
                             </div>
                         </div>
-                        <div class="search-members">
-                            <div class="member-search-box">
-                                <input type="text" placeholder="Search members to add...">
-                            </div>
-                            <div class="search_member_container">
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/IMG_20191019_011435.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Saurabh Singh</p>
-                                    </div>
-                                    <div class="action_btn">
-                                        <div class="loader-container">
-                                            <svg width="40" height="40">
-                                                <circle class="loader" cx="20" cy="20" r="17"></circle>
-                                            </svg>
-                                        </div>
-                                        <i class="material-icons add_member_to_role">add_box</i>
-                                        <i class="material-icons added">assignment_turned_in</i>
-                                    </div>
-                                </div>
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/Saurabh_DP_square.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Suraj Singh</p>
-                                    </div>
-                                    <div class="action_btn">
-                                        <i class="material-icons">add_box</i>
-                                    </div>
-                                </div>
-                                <div class="client">
-                                    <div class="image">
-                                        <img src="/assets/images/Saurabh_DP_square.jpg" class="message-user_dp" alt="">
-                                        <span class="status" data-status="online"></span>
-                                    </div>
-                                    <div class="name">
-                                        <p>Suraj Singh</p>
-                                    </div>
-                                    <div class="action_btn">
-                                        <i class="material-icons">add_box</i>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="actions">
+                            <input type="text" placeholder="Type and Hit Enter....">
+                            <button class="btn">Add Role</button>
                         </div>
-                    </div> -->
-                    <!-- <button class="btn blendedLinear pointer">Advanced Settings
-                        <i class="material-icons drop-down-icon">arrow_drop_down</i>
-                    </button>
-                    <div class="advanced-settings">
-                        <div class="l-wrapper">
-                            <ul class="c-list">
-                              <div class="c-list__item">
-                                <h2>Permissions</h2>
-                              </div>
-                              <li class="c-list__item"><span class="c-toggle__text">Gives Access to everything</span>
-                                <button class="c-toggle everything c-toggle--active">
-                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
-                                </button>
-                              </li>
-                              <li class="c-list__item"><span class="c-toggle__text">Join private room</span>
-                                <button class="c-toggle c-toggle--active">
-                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
-                                </button>
-                              </li>
-                              <li class="c-list__item"><span class="c-toggle__text">Can change roles</span>
-                                <button class="c-toggle c-toggle--active">
-                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
-                                </button>
-                              </li>
-                              <li class="c-list__item"><span class="c-toggle__text u-text--secondary">Can delete messages</span>
-                                <button class="c-toggle">
-                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">off</span>
-                                </button>
-                              </li>
-                              <li class="c-list__item"><span class="c-toggle__text u-text--secondary">Can pin messages</span>
-                                <button class="c-toggle">
-                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">off</span>
-                                </button>
-                              </li>
-                              <li class="c-list__item"><span class="c-toggle__text">Can create/delete rooms</span>
-                                <button class="c-toggle c-toggle--active">
-                                  <div class="c-toggle__handle"></div><span class="c-toggle__label">on</span>
-                                </button>
-                              </li>
-                            </ul>
+                    </div>
+                    <div class="roles_overview">
+                        <div class="role_details">
+                            <div class="role_name">
+                                <div class="head">Edit Role Name</div>
+                                <input type="text" placeholder="Enter role name!" value="everyone">
+                            </div>
+                            <div class="role_color">
+                                <div class="head">Edit Role Color</div>
+                                <div class="color_picker"></div>
+                                <div class="notice">
+                                    <p><span class="note">Note</span> :- Click to choose the color for your role!
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div> -->
+
         <!-- <div class="back-drop"></div>
         <div class="modal padding_enable" data-id="send_file" tabindex="0">
             <div class="first-choice center-content alone noRightPadding">  
@@ -1066,8 +924,8 @@
                 </div>
             </div>
         </div> -->
-       <!-- <div class="back-drop"></div> -->
-       <!-- <div class="modal confirmModal max-width-500 disableMinHeight comeDown" data-id="confirmation">
+        <!-- <div class="back-drop"></div> -->
+        <!-- <div class="modal confirmModal max-width-500 disableMinHeight comeDown" data-id="confirmation">
             <div class="first-choice alone">  
                 <h4 class="pl-10 confirmHeading">Are you sure?... You want to delete the room <span class="focusTitle" style="color: red"># general</span>!</h4>
                 <div class="flex align btns">
@@ -1086,6 +944,7 @@
 
 
     <script src="/assets/js/dashBoard.bundle.js"></script>
-    
+
 </body>
+
 </html>

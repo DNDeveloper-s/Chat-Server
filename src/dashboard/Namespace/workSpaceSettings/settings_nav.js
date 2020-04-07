@@ -1,5 +1,4 @@
-const { loadSettingHTML } = require('./SettingsHandle/loadSetting'); 
-const { dragNdrop } = require('../../../utilities');
+const { loadSettingHTML } = require('./SettingsHandle/settings'); 
 
 module.exports.navItemHandler = () => {
     // Current Modal Element
@@ -15,11 +14,6 @@ module.exports.navItemHandler = () => {
             
             // Loading HTML
             loadSettingHTML(setting, modalEl);
-
-            if(setting === 'roles') {
-                // Special Utility Function for roles Drag And Drop
-                dragNdrop('.roles_container');
-            }
         })
     })
 }

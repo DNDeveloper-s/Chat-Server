@@ -1,6 +1,6 @@
 
 
-module.exports.settingHTML = (settingName = String) => {
+module.exports.settingHTML = (settingName = String, options = Object) => {
     try {
         const roles = `
             <div class="settings" data-setting="roles">
@@ -55,6 +55,23 @@ module.exports.settingHTML = (settingName = String) => {
                 </div>
                 <div class="roles_overview">
                     
+                </div>
+            </div>
+        `;
+
+        const loadRoleDetails = `
+            <div class="role_details">
+                <div class="role_name" data-roleTag="${options.roleTag}">
+                    <div class="head">Edit Role Name</div>
+                    <input type="text" placeholder="Enter role name!" value="${options.name}">
+                </div>
+                <div class="role_color">
+                    <div class="head">Edit Role Color</div>
+                    <div class="color_picker"></div>
+                    <div class="notice">
+                        <p><span class="note">Note</span> :- Click to choose the color for your role!
+                        </p>
+                    </div>
                 </div>
             </div>
         `;

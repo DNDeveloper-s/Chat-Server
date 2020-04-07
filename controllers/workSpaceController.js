@@ -38,7 +38,8 @@ module.exports.fetchRoles = async (req, res, next) => {
             color: role.color,
             permissions: role.permissions,
             members: memberDetails,
-            roleTag: role.roleTag
+            roleTag: role.roleTag,
+            priority: role.priority
         }
     });
 

@@ -722,7 +722,7 @@ function outOfTarget(target, callback) {
 function initPickr(el, defaultColor, cb) {
     const pickr = Pickr.create({
         el: el,
-        theme: 'monolith', // or 'monolith', or 'nano'
+        theme: 'classic', // or 'monolith', or 'nano'
         position: 'bottom-middle',
         default: defaultColor,
 
@@ -771,6 +771,14 @@ function initPickr(el, defaultColor, cb) {
         cb(hexColor);
     });
 
+    pickr.on('change', color => {
+        pickr.setColorRepresentation('HEX');
+        const hexColor = color.toHEXA().toString(0);
+        pickr.applyColor();
+        pickr.show();
+        cb(hexColor);
+    });
+
     return pickr;
 }
 
@@ -796,14 +804,16 @@ function dragNdrop(containerEl) {
     }
 
     const container = document.querySelector(config.ui.containerEl);
-    const cursor = container.querySelector('.cursor');
+    // const cursor = container.querySelector('.cursor');
 
     // Setting up UI
     function arrangeItems() {
         let prevHeight = 0;
         const roleListContainer = container.querySelector('.role_list');
         const roleListItems = container.querySelectorAll('.role_list_item');
-        roleListItems.forEach((item, ind) => {
+        for(let i = 1; i <= roleListItems.length; i++) {
+            const item = roleListContainer.querySelector(`[data-count="${i}"]`);
+
             const calcTop = prevHeight;
             
             // Setting style "top"
@@ -817,7 +827,7 @@ function dragNdrop(containerEl) {
             })
 
             prevHeight = calcTop + config.ui.itemHeight + config.ui.itemMarginTop;
-        })
+        }
         roleListContainer.insertAdjacentHTML('afterend', '<div class="drop_places"></div>');
 
         for(let i = 0; i < roleListItems.length; i++) {
@@ -827,17 +837,45 @@ function dragNdrop(containerEl) {
         roleListContainer.style.height = `${(roleListItems.length * (config.ui.itemMarginTop + config.ui.itemHeight))}px`
         return roleListItems;
     }
+    // function arrangeItems() {
+    //     let prevHeight = 0;
+    //     const roleListContainer = container.querySelector('.role_list');
+    //     const roleListItems = container.querySelectorAll('.role_list_item');
+    //     roleListItems.forEach((item, ind) => {
+    //         const calcTop = prevHeight;
+            
+    //         // Setting style "top"
+    //         item.style.top = `${calcTop}px`;
+            
+    //         config.positions.push({
+    //             top: calcTop,
+    //             bottom: calcTop + config.ui.itemHeight,
+    //             item: item,
+    //             itemNo: item.dataset.count
+    //         })
+
+    //         prevHeight = calcTop + config.ui.itemHeight + config.ui.itemMarginTop;
+    //     })
+    //     roleListContainer.insertAdjacentHTML('afterend', '<div class="drop_places"></div>');
+
+    //     for(let i = 0; i < roleListItems.length; i++) {
+    //         container.querySelector('.drop_places').insertAdjacentHTML('beforeend', `<div class="drop_place" data-count="${i+1}"></div>`);
+    //     }
+
+    //     roleListContainer.style.height = `${(roleListItems.length * (config.ui.itemMarginTop + config.ui.itemHeight))}px`
+    //     return roleListItems;
+    // }
 
     arrangeItems();
 
     const containerCoords = container.getBoundingClientRect();
 
     container.addEventListener('mousedown', function(e) {
-        let spread = cursor.querySelector('.spread');
-        if(spread) {
-            spread.remove();
-        }
-        cursor.insertAdjacentHTML('beforeend', `<div class="spread"></div>`);
+        // let spread = cursor.querySelector('.spread');
+        // if(spread) {
+        //     spread.remove();
+        // }
+        // cursor.insertAdjacentHTML('beforeend', `<div class="spread"></div>`);
 
         if(e.srcElement.classList.contains('place_holder')) {
             const roleItem = e.srcElement.closest('.role_list_item');
@@ -868,18 +906,18 @@ function dragNdrop(containerEl) {
 
     container.addEventListener('mousemove', function(e) {
         if(config.interactions.itsEnter) {
-            x = e.pageX - containerCoords.left + 14; // Updated +14 for this particularly
-            y = e.pageY - containerCoords.top + 14; // Updated +14 for this particularly
+            x = e.pageX - containerCoords.left; // Updated +14 for this particularly
+            y = e.pageY - containerCoords.top; // Updated +14 for this particularly
         }
-        if(e.srcElement.classList.contains('place_holder')) {
-            cursor.classList.remove('hide');
-            cursor.style.top = `${y - 10}px`;
-            cursor.style.left = `${x - 10}px`;
-        }
+        // if(e.srcElement.classList.contains('place_holder')) {
+        //     cursor.classList.remove('hide');
+        //     cursor.style.top = `${y - 10}px`;
+        //     cursor.style.left = `${x - 10}px`;
+        // }
     });
 
     container.addEventListener('mouseleave', function(e) {
-        cursor.classList.add('hide');
+        // cursor.classList.add('hide');
         config.interactions.itsEnter = false;
         if(config.interactions.itsDown) {
             const pos = getPosition(config.interactions.curUpItemNo);

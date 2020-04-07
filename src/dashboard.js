@@ -1,7 +1,7 @@
 const { nsListeners } = require('./dashboard/Namespace/nsFunctionaily');
 const { addModal } = require('./dashboard/Modal/addModal'); 
 const { addFriend, addMessageModal } = require('./dashboard/User/friend');
-const { remove_sidebar, sendImageData, loader, fetchWorkSpaces, tagImplementation, toggleSwitch, outOfTarget } = require('./utilities');
+const { remove_sidebar, sendImageData, initPickr, loader, dragNdrop, fetchWorkSpaces, tagImplementation, toggleSwitch, outOfTarget } = require('./utilities');
 
 // const $ = require('jquery');
 // window.jQuery = $;
@@ -14,7 +14,10 @@ const { remove_sidebar, sendImageData, loader, fetchWorkSpaces, tagImplementatio
 
 window.addEventListener('load', function(e) {
     tagImplementation('#editable');
+    // dragNdrop('.roles_container');
 });
+
+// initPickr('.role_color > .color_picker');
 
 // searchBtn.addEventLi stener('click', async function(e) {
 //     console.log('clicked');

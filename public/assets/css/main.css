@@ -1,5 +1,8 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Varela+Round&display=swap");
+@import url("/assets/css/monolith.min.css");
+@import url("/assets/css/classic.min.css");
+@import url("/assets/css/nano.min.css");
 * {
   margin: 0;
   padding: 0;
@@ -2705,9 +2708,28 @@ body {
       flex-shrink: 0;
 }
 
+#root > .modal[data-id="workspace_settings"] > .main_nav .notice {
+  width: 80%;
+  padding: 0 4px;
+  margin: 0 auto 20px;
+  color: #ffffff36;
+  font-size: 12px;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav .notice .note {
+  color: #ffffff73;
+}
+
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings {
+  position: relative;
   width: 100%;
   height: 100%;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav {
@@ -2715,6 +2737,8 @@ body {
   border-right: 1px solid rgba(214, 210, 210, 0.5);
   height: 100%;
   padding: 40px 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .header {
@@ -2726,18 +2750,6 @@ body {
   margin: 0 auto 10px;
   font-family: 'Verdana Pro W01 Light';
   letter-spacing: 1px;
-}
-
-#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .notice {
-  width: 80%;
-  padding: 0 4px;
-  margin: 0 auto 20px;
-  color: #ffffff36;
-  font-size: 12px;
-}
-
-#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .notice .note {
-  color: #ffffff73;
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container {
@@ -2810,6 +2822,46 @@ body {
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview {
+  position: relative;
+  padding: 40px 30px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: calc(100% - 300px);
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_details {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_details .head {
+  color: rgba(216, 216, 216, 0.87);
+  margin: 30px 0 10px;
+  font-family: 'Microsoft_taile';
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_details input {
+  margin: 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_details > .role_color .pickr > button {
+  width: 100%;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_details > .role_color > .notice {
+  padding: 0;
+  margin: 10px 0;
 }
 
 #root > .modal[data-id="workspace_settings"] .cursor {
@@ -2908,7 +2960,10 @@ body {
   z-index: auto;
   overflow: hidden;
   color: white;
-  cursor: none;
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list_item:hover {
+  background: #0a1014;
 }
 
 #root > .modal[data-id="workspace_settings"] .role_list_item.itsDown {
@@ -2921,7 +2976,7 @@ body {
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item:hover {
+#root > .modal[data-id="workspace_settings"] .role_list_item.active {
   background: #0a1014;
 }
 
@@ -6267,6 +6322,7 @@ button:hover {
   -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
           box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
+  z-index: 1000;
   -webkit-transition: 0.3s cubic-bezier(0, 0.71, 0.28, 1.23);
   transition: 0.3s cubic-bezier(0, 0.71, 0.28, 1.23);
 }

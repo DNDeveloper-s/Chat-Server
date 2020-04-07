@@ -94,7 +94,7 @@ const addModal = (el, options) => {
         `;
     } else if(el === 'WORKSPACESETTINGS') {
         addModalHTML = `
-            <div class="modal" data-id="workspace_settings" tabindex="0">
+            <div class="modal" data-id="workspace_settings" data-ns="${options.nsEndPoint}" tabindex="0">
                 <div class="side_bar">
                     <div class="bg_image">
                         <img src="/assets/images/draw.svg" alt="vector">
