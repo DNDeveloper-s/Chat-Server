@@ -114,7 +114,7 @@ exports.postWorkspace = async (req, res, next) => {
                             fullAccess: false,
                             privateRooms: false,
                             editRoles: false,
-                            deltedMessages: false,
+                            deletedMessages: false,
                             pinMessages: false,
                             roomHandler: false,
                             workSpaceSettings: false,

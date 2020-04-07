@@ -2605,6 +2605,372 @@ body {
   top: 10%;
 }
 
+#root > .modal[data-id="workspace_settings"] {
+  width: 90vw;
+  height: 90vh;
+  max-width: 1400px;
+  max-height: 900px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  background: #16202b;
+  -webkit-box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  padding: 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar {
+  position: relative;
+  height: 100%;
+  width: 350px;
+  padding: 80px 0;
+  overflow: hidden;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .bg_image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section {
+  width: 200px;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section:not(:last-child) {
+  margin-bottom: 50px;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section > .header {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(196, 188, 188, 0.53);
+  font-weight: 600;
+  font-family: 'Verdana Pro W01 Light';
+  margin-bottom: 5px;
+  padding: 0 10px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section .list {
+  list-style: none;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section .list_item {
+  margin: 2px 0;
+  padding: 4px 10px;
+  -webkit-transition: .15s ease;
+  transition: .15s ease;
+  cursor: pointer;
+  font-size: 15px;
+  color: #f7f7f7;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section .list_item:hover {
+  background: rgba(38, 55, 73, 0.418);
+  color: #d3d1d1;
+}
+
+#root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section .list_item:active {
+  -webkit-transform: scale(0.97);
+          transform: scale(0.97);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav {
+  position: relative;
+  background: #363b40;
+  width: calc(100% - 350px);
+  height: 100%;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings {
+  width: 100%;
+  height: 100%;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav {
+  width: 300px;
+  border-right: 1px solid rgba(214, 210, 210, 0.5);
+  height: 100%;
+  padding: 40px 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .header {
+  font-weight: 900;
+  font-size: 17px;
+  color: #a7a2a2;
+  width: 80%;
+  padding: 0 4px;
+  margin: 0 auto 10px;
+  font-family: 'Verdana Pro W01 Light';
+  letter-spacing: 1px;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .notice {
+  width: 80%;
+  padding: 0 4px;
+  margin: 0 auto 20px;
+  color: #ffffff36;
+  font-size: 12px;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .notice .note {
+  color: #ffffff73;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 80%;
+  margin: 0 auto;
+  -webkit-transform: translate(0px);
+          transform: translate(0px);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container .place_holder {
+  font-family: 'Microsoft_taile';
+  font-weight: 400;
+  color: #8091a2;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions {
+  margin: 10px auto;
+  width: 80%;
+  text-align: center;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions > .btn {
+  cursor: pointer;
+  width: 100%;
+  outline: none;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 4px 20px;
+  background: #363b40;
+  color: #93a9b5;
+  border-radius: 4px;
+  border: 2px solid #3b4c5f;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  -webkit-transition: .25s ease;
+  transition: .25s ease;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions > .btn:hover {
+  background: #2c3033;
+  -webkit-transform: scale(1.01);
+          transform: scale(1.01);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions > .btn:active {
+  -webkit-transform: scale(0.98);
+          transform: scale(0.98);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions:hover > input {
+  -webkit-transform: scaleY(1);
+          transform: scaleY(1);
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions > input {
+  width: 100%;
+  margin-bottom: 5px;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  -webkit-transform-origin: bottom;
+          transform-origin: bottom;
+  -webkit-transition: .25s ease;
+  transition: .25s ease;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+#root > .modal[data-id="workspace_settings"] .cursor {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  z-index: 25;
+}
+
+#root > .modal[data-id="workspace_settings"] .cursor.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#root > .modal[data-id="workspace_settings"] .spread {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-radius: 200px;
+  overflow: hidden;
+  background: #fffbfb28;
+  /* z-index: -1; */
+  /* transition: all .8s cubic-bezier(0,.71,.28,1.23); */
+  /* opacity: 0;
+                visibility: hidden; */
+  pointer-events: none;
+  -webkit-animation: anim 0.25s cubic-bezier(0, 0.71, 0.28, 1.23);
+          animation: anim 0.25s cubic-bezier(0, 0.71, 0.28, 1.23);
+}
+
+@-webkit-keyframes anim {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  90% {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+@keyframes anim {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  90% {
+    width: 55px;
+    height: 55px;
+  }
+}
+
+#root > .modal[data-id="workspace_settings"] .cursor > svg {
+  width: 20px;
+  height: 25px;
+  fill: #83b8db;
+}
+
+#root > .modal[data-id="workspace_settings"] .roles_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list {
+  position: relative;
+  width: 100%;
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list_item {
+  position: absolute;
+  margin: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  width: 100%;
+  height: 40px;
+  -webkit-transition: all .15s ease;
+  transition: all .15s ease;
+  z-index: auto;
+  overflow: hidden;
+  color: white;
+  cursor: none;
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list_item.itsDown {
+  z-index: 23;
+  -webkit-transition: width .15s, border .2s;
+  transition: width .15s, border .2s;
+  width: 90%;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list_item:hover {
+  background: #0a1014;
+}
+
+#root > .modal[data-id="workspace_settings"] .place_holder {
+  position: relative;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: .15s ease;
+  transition: .15s ease;
+  padding: 5px 10px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+#root > .modal[data-id="workspace_settings"] .drop_places {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background: #1c272e;
+}
+
+#root > .modal[data-id="workspace_settings"] .drop_places > .drop_place {
+  margin: 0 auto;
+  width: 90%;
+  height: 40px;
+  -webkit-transition: .3s ease-out;
+  transition: .3s ease-out;
+}
+
+#root > .modal[data-id="workspace_settings"] .drop_places > .drop_place.active {
+  background: rgba(169, 169, 169, 0.192);
+  border-radius: 4px;
+  border: 1.3px dashed black;
+}
+
 #root > .modal .invite-code {
   height: 150px;
   border: 1px solid #e5e8e9;
@@ -3516,6 +3882,7 @@ body {
 
 #root > .modal > .attached-modal .body > .message > .body {
   position: relative;
+  width: auto;
   max-width: 250px;
   min-width: 80px;
   display: inline-block;
@@ -3661,6 +4028,7 @@ body {
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag {
+  position: relative;
   border: 1px solid lightgrey;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -3670,6 +4038,68 @@ body {
   padding: 0 8px;
   background: white;
   zoom: 0.8;
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_dropdown_event {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-right: 4px;
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_dropdown_event > svg,
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_dropdown_event > img {
+  width: 20px;
+  height: 20px;
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  z-index: 4;
+  background: white;
+  padding: 4px 0;
+  border-radius: 0 0 6px 6px;
+  -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down > svg {
+  width: 20px;
+  height: 20px;
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down .role_type {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin: 2px 0;
+  -webkit-transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down .role_type:hover {
+  background: lightgrey;
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down .role_type_img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down .role_type_img > img {
+  width: 100%;
+}
+
+#root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down .role_type_name {
+  color: #464646;
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_name {
@@ -5719,7 +6149,7 @@ button:hover {
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
 }
 
-.circular {
+.loader-container .circular {
   -webkit-animation: rotate 2s linear infinite;
           animation: rotate 2s linear infinite;
   height: 100%;
@@ -5734,11 +6164,11 @@ button:hover {
   margin: auto;
 }
 
-.path {
+.loader-container .path {
   stroke-dasharray: 1, 200;
   stroke-dashoffset: 0;
-  -webkit-animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
-          animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  -webkit-animation: loadingDash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+          animation: loadingDash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
   stroke-linecap: round;
 }
 
@@ -5756,7 +6186,7 @@ button:hover {
   }
 }
 
-@-webkit-keyframes dash {
+@-webkit-keyframes loadingDash {
   0% {
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
@@ -5771,7 +6201,7 @@ button:hover {
   }
 }
 
-@keyframes dash {
+@keyframes loadingDash {
   0% {
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
@@ -5818,5 +6248,93 @@ button:hover {
   90% {
     stroke: #ffa7003d;
   }
+}
+
+.save_modal {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #2a2c2f;
+  padding: 7px 20px;
+  -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  -webkit-transition: 0.3s cubic-bezier(0, 0.71, 0.28, 1.23);
+  transition: 0.3s cubic-bezier(0, 0.71, 0.28, 1.23);
+}
+
+.save_modal.savePopup {
+  -webkit-transform: translateY(-100px) translateX(-50%);
+          transform: translateY(-100px) translateX(-50%);
+}
+
+.save_modal > p {
+  font-size: 14px;
+  color: #a7b5c3;
+}
+
+.save_modal input[type="text"] {
+  outline: none;
+  border: 2px solid #ffffff;
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  padding: 4px 8px;
+  background: #dedede;
+  color: #000;
+  border-radius: 4px;
+}
+
+.save_modal > .btn {
+  margin-left: 40px;
+  cursor: pointer;
+  outline: none;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 4px 20px 3px;
+  background: #363b40;
+  color: #93a9b5;
+  border-radius: 4px;
+  border: 2px solid #3b4c5f;
+  -webkit-transform: scale(0.94);
+          transform: scale(0.94);
+  -webkit-transition: .25s ease;
+  transition: .25s ease;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.save_modal > .btn.red {
+  color: #D9514EFF;
+}
+
+.save_modal > .btn.green {
+  color: #6DAC4FFF;
+}
+
+.save_modal > .btn:last-child {
+  margin-left: 0;
+}
+
+.save_modal > .btn:hover {
+  background: #2c3033;
+  -webkit-transform: scale(0.97);
+          transform: scale(0.97);
+}
+
+.save_modal > .btn:active {
+  -webkit-transform: scale(0.91);
+          transform: scale(0.91);
 }
 /*# sourceMappingURL=main.css.map */

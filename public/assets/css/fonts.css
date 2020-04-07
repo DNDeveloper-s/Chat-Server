@@ -44,3 +44,18 @@
     font-family: 'ArimaMadurai_ExtraBold';
     src: url('../fonts/ArimaMadurai/ArimaMadurai-ExtraBold.ttf');
 }
+
+@font-face {
+    font-family: 'Microsoft_taile';
+    src: url('../fonts/taile.ttf');
+}
+
+@font-face {
+    font-family: "Verdana Pro W01 Light";
+    src: url("../fonts/Verdana/8e61b0b984ebefdb7dbb89d0d2b8dbdf.eot"); /* IE9*/
+    src: url("../fonts/Verdana/8e61b0b984ebefdb7dbb89d0d2b8dbdf.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("../fonts/Verdana/8e61b0b984ebefdb7dbb89d0d2b8dbdf.woff2") format("woff2"), /* chrome、firefox */
+    url("../fonts/Verdana/8e61b0b984ebefdb7dbb89d0d2b8dbdf.woff") format("woff"), /* chrome、firefox */
+    url("../fonts/Verdana/8e61b0b984ebefdb7dbb89d0d2b8dbdf.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url("../fonts/Verdana/8e61b0b984ebefdb7dbb89d0d2b8dbdf.svg#Verdana Pro W01 Light") format("svg"); /* iOS 4.1- */
+}

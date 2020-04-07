@@ -35,11 +35,11 @@ const workSpaceSchema = new Schema({
                     fullAccess: Boolean,
                     privateRooms: Boolean,
                     editRoles: Boolean,
-                    deltedMessages: Boolean,
+                    deletedMessages: Boolean,
                     pinMessages: Boolean,
                     roomHandler: Boolean,
                     workSpaceSettings: Boolean,
-                    invitations: Boolean,
+                    invitations: Boolean
                 }
             }
         ],
