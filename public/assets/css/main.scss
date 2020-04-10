@@ -2758,7 +2758,11 @@ $purple: #693089;
                 z-index: auto;
                 overflow: hidden;
                 color: white;
-                // cursor: none;  
+                cursor: grab;
+                
+                &:active {
+                    cursor: grabbing;
+                }
 
                 &:hover {
                     background: rgb(10, 16, 20);
@@ -2773,7 +2777,7 @@ $purple: #693089;
                 }
 
                 &.active {
-                    background: rgb(10, 16, 20);
+                    background: #0000004a;
                 }
             }
             
@@ -5879,5 +5883,42 @@ $white: #eeeeee3d;
         &:active {
             transform: scale(0.91);
         }
+    }
+}
+
+.settingContainer {
+    position: relative;
+    border: 2px solid transparent;
+    transition: .15s $fashioned_bezier;
+
+    &.toBeSaved {
+        border: 2px solid #f14d48;
+        border-radius: 6px;
+
+        &:before {
+            pointer-events: auto;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0px);
+        }
+    }
+
+    &:before {
+        content: attr(aria-label);
+        position: absolute;
+        top: 126%;
+        right: 0;
+        width: auto;
+        padding: 3px 15px;
+        font-size: 13px;
+        font-family: 'Microsoft_taile';
+        color: #bfbfbfb8;
+        border-radius: 4px;
+        background: #5b5c5d;
+        transition: .15s $fashioned_bezier;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
     }
 }

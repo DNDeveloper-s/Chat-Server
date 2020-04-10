@@ -20,4 +20,6 @@ router.post('/deleteroles', auth.isAuth, workSpaceController.deleteRoles);
 
 router.post('/roles/color', auth.isAuth, workSpaceController.updateColorToRole);
 
+router.post('/settings', auth.isAuth, workSpaceController.postSettings)
+
 module.exports = router;

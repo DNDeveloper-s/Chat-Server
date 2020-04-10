@@ -367,38 +367,38 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
     let connected;
     const disconnectedModal = document.querySelector('.disconnected-modal');
 
-    nsSocket.on('connect', (data) => {
-        connected = true;
-        disconnectedModal.classList.remove('enable');
-    })
+    // nsSocket.on('connect', (data) => {
+    //     connected = true;
+    //     disconnectedModal.classList.remove('enable');
+    // })
 
-    nsSocket.on('reconnecting', (delay, attempt) => {
-        console.log(attempt);
-        if(attempt === MAX_RECONNECTS) {
-            console.log('Not able to reconnect succesfully!');
-        }
-    })
+    // nsSocket.on('reconnecting', (delay, attempt) => {
+    //     console.log(attempt);
+    //     if(attempt === MAX_RECONNECTS) {
+    //         console.log('Not able to reconnect succesfully!');
+    //     }
+    // })
 
-    nsSocket.on('reconnect_error', (error) => {
-        if(error) {
-            disconnectedModal.classList.add('enable');
-            console.log('Disconnected from the server!', error.message);
-        }
-    });
+    // nsSocket.on('reconnect_error', (error) => {
+    //     if(error) {
+    //         disconnectedModal.classList.add('enable');
+    //         console.log('Disconnected from the server!', error.message);
+    //     }
+    // });
 
     // Disconnection Handler
-    nsSocket.on('disconnect', async (data) => {
-        connecting = false;
-    });
+    // nsSocket.on('disconnect', async (data) => {
+    //     connecting = false;
+    // });
     
-    nsSocket.on('reconnect', (attemptNumber) => {
-        if(!connecting) {
-            loadNamespace(nsEndPoint);
-            connectToNs(nsEndPoint);
-            disconnectedModal.classList.remove('enable');
-            console.log('Reconnected!', attemptNumber);
-        }
-    })
+    // nsSocket.on('reconnect', (attemptNumber) => {
+    //     if(!connecting) {
+    //         loadNamespace(nsEndPoint);
+    //         connectToNs(nsEndPoint);
+    //         disconnectedModal.classList.remove('enable');
+    //         console.log('Reconnected!', attemptNumber);
+    //     }
+    // })
 }
 
 function isItSameNs(nsSocket, nsEndPoint) {

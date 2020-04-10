@@ -413,3 +413,47 @@ module.exports.updateColorToRole = async (req, res, next) => {
         return next(e);
     }
 }
+
+module.exports.postSettings = async(req, res, next) => {
+    try {
+        const save = req.query.save;
+        const settingObj = req.body.settingObj;
+
+        if(save) {
+            // Fetching Workspace from Database
+            const workSpace = await WorkSpace.findOne({endPoint: settingObj.nsEndPoint});
+
+            // Handling If Something went wrong with workSpace
+            if(!workSpace) {
+                return next('Something went wrong with the workspace, Try again!');
+            }
+
+            // Updating the workSpace Object | Instance (Mongoose Obj Model)
+            workSpace.title = settingObj.title || workSpace.title;
+            workSpace.image = settingObj.image || workSpace.image;
+
+            workSpace.roles.custom.forEach(role => {
+                // RoleTag ['/everyone'] is not editable
+                if(role.roleTag !== '/everyone') {
+                    role.name = settingObj.roles.custom[role.roleTag].name || role.name;
+                    role.color = settingObj.roles.custom[role.roleTag].color || role.color;
+                    role.priority = settingObj.roles.custom[role.roleTag].priority || role.priority;
+                }
+            });
+
+            // Posting Save to Database
+            await workSpace.save();
+
+            // Sending Response to the Client
+            return res.json({
+                acknowledgment: {
+                    type: 'success',
+                    mesage: 'Settings posted successfully!',
+                    nsEndPoint: settingObj.nsEndPoint
+                }
+            });
+        }
+    } catch (e) {
+        return next(e);
+    }
+}

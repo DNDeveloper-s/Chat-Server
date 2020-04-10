@@ -1,5 +1,4 @@
-const { initPickr } = require('../../../../../../utilities');
-const { updateSettingsChangeSS, deleteSettingsChangeSS } = require('../../../settingsServer');
+const roleSettings = require('./roleSettings');
 
 /**
  * New UI
@@ -93,33 +92,12 @@ function show_role_settings(roleTag = String, nsEndPoint = String) {
     // Injecting HTML
     container.innerHTML = htmlToAdd;
     
-    let roleColor = role.color;
+    // Initializing Color Pikcer Setting
+    roleSettings.initColorPickrForRole(role, nsEndPoint);
 
-    // Fetching Temp Settings
-    const settings = require('../../../settingsServer').fetchChangedSettings();
-    let curSetting = settings.filter(cur => cur.uniqueId === role.roleTag && cur.setting === 'role_color' && cur.nsEndPoint === nsEndPoint)[0];
-    if(curSetting) {
-        roleColor = curSetting.value;
-    }
+    // Initializing  Role_Name input setting
+    roleSettings.initRoleName(role, nsEndPoint);
 
-    // Initializing Color Picker
-    initPickr('.role_color > .color_picker', roleColor, (hexColor) => {
-        // Executing the save
-        if(role.color === hexColor) {
-            deleteSettingsChangeSS({
-                setting: 'role_color',
-                uniqueId: roleTag,
-                nsEndPoint: nsEndPoint,
-            });
-        } else {
-            updateSettingsChangeSS({
-                setting: 'role_color',
-                uniqueId: roleTag,
-                nsEndPoint: nsEndPoint,
-                value: hexColor
-            });
-        }
-    });
 }
 
 

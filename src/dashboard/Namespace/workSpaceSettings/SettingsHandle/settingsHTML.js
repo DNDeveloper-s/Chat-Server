@@ -1,4 +1,4 @@
-
+window.settingsChangeLabel = 'Setting Changed! Save it';
 
 module.exports.settingHTML = (settingName = String, options = Object) => {
     try {
@@ -19,33 +19,6 @@ module.exports.settingHTML = (settingName = String, options = Object) => {
                             <div class="role_list_item" data-count="1">
                                 <div class="place_holder">Administrator</div>
                             </div>
-                            <div class="role_list_item" data-count="2">
-                                <div class="place_holder">Moderator</div>
-                            </div>
-                            <div class="role_list_item" data-count="3">
-                                <div class="place_holder">Owner</div>
-                            </div>
-                            <div class="role_list_item" data-count="4">
-                                <div class="place_holder">Founder</div>
-                            </div>
-                            <div class="role_list_item" data-count="5">
-                                <div class="place_holder">Recruits</div>
-                            </div>
-                            <div class="role_list_item" data-count="6">
-                                <div class="place_holder">Constable</div>
-                            </div>
-                            <div class="role_list_item" data-count="7">
-                                <div class="place_holder">Officer</div>
-                            </div>
-                            <div class="role_list_item" data-count="8">
-                                <div class="place_holder">Recruits</div>
-                            </div>
-                            <div class="role_list_item" data-count="9">
-                                <div class="place_holder">Constable</div>
-                            </div>
-                            <div class="role_list_item" data-count="10">
-                                <div class="place_holder">Officer</div>
-                            </div>
                         </div>
                     </div>
                     <div class="actions">
@@ -63,11 +36,11 @@ module.exports.settingHTML = (settingName = String, options = Object) => {
             <div class="role_details">
                 <div class="role_name" data-roleTag="${options.roleTag}">
                     <div class="head">Edit Role Name</div>
-                    <input type="text" placeholder="Enter role name!" value="${options.name}">
+                    <div class="settingContainer" aria-label="${settingsChangeLabel}" ><input type="text" name="role_name_${options.roleTag}" placeholder="Enter role name!" value="${options.name}"></div>
                 </div>
                 <div class="role_color">
                     <div class="head">Edit Role Color</div>
-                    <div class="color_picker"></div>
+                    <div class="settingContainer" aria-label="${settingsChangeLabel}"><div class="color_picker"></div></div>
                     <div class="notice">
                         <p><span class="note">Note</span> :- Click to choose the color for your role!
                         </p>

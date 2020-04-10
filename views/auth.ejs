@@ -1,6 +1,7 @@
 <%- include('includes/head.ejs') %>
-<link rel="stylesheet" href="/assets/css/fonts.css">
-<link rel="stylesheet" href="/assets/css/main.css">
+    <meta name="google-signin-client_id" content="814287729162-rjg8h8galehs3ocmvn5qd69k7org5ob4.apps.googleusercontent.com">
+    <link rel="stylesheet" href="/assets/css/fonts.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
 </head>
 <body>
 
@@ -33,6 +34,9 @@
         <% } %>
         <form id="loginForm" class="anim" data-removeanim="false" action="">
             <h3>Login</h3>
+            <div class="input-control">
+                <div class="google-btn g-signin2" data-onsuccess="onGoogleSignIn"></div>
+            </div>
             <div class="input-control">
                 <label for="email">Email</label>
                 <input type="email" name="email">
@@ -83,6 +87,7 @@
 
 
 
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="/assets/js/main.bundle.js"></script>
 </body>
 </html>

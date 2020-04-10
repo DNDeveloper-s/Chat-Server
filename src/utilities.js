@@ -771,14 +771,6 @@ function initPickr(el, defaultColor, cb) {
         cb(hexColor);
     });
 
-    pickr.on('change', color => {
-        pickr.setColorRepresentation('HEX');
-        const hexColor = color.toHEXA().toString(0);
-        pickr.applyColor();
-        pickr.show();
-        cb(hexColor);
-    });
-
     return pickr;
 }
 
@@ -1005,6 +997,24 @@ function dragNdrop(containerEl) {
     }
 }
 
+function fetchAllWorkSpacesSS () {
+    const jsonData = sessionStorage.getItem('all_workspaces');
+    if(!jsonData) {
+        return 'Doesn\'t exist';
+    }
+    return JSON.parse(jsonData);
+}
+
+function fetchSingleWorkSpaceSS (nsEndPoint) {
+    const jsonData = sessionStorage.getItem('all_workspaces');
+    if(!jsonData) {
+        return 'Doesn\'t exist';
+    }
+    const data = JSON.parse(jsonData);
+    return data[nsEndPoint];
+}
+
+
 module.exports = { 
     bgAnim, 
     toggleAuthFormUI ,
@@ -1024,5 +1034,7 @@ module.exports = {
     permissionDescription,
     outOfTarget,
     initPickr,
-    dragNdrop
+    dragNdrop,
+    fetchAllWorkSpacesSS,
+    fetchSingleWorkSpaceSS
 }

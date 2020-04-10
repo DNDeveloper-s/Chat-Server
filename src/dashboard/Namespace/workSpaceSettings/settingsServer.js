@@ -1,51 +1,97 @@
+const { fetchSingleWorkSpaceSS } = require('../../../utilities');
+
 function updateSettingsChangeSS(options) {
-    // Fethced Temproray Changes Setting Array 
-    const settingArr = fetchChangedSettings();
+    // Fetched Temproray Changes Setting Array 
+    try {
 
-    // Filtering Array if the setting already persists in array
-    let curSetting = settingArr.filter(cur => cur.setting === options.setting && cur.uniqueId === options.uniqueId && cur.nsEndPoint === options.nsEndPoint)[0];
+        let settingObj = fetchChangedSettings();
 
-    // Pushing if settings doesn't exists in the array
-    if(!curSetting) {
-        // Pushing to array new setting
-        settingArr.push({
-            setting: options.setting,
-            value: options.value,
-            uniqueId: options.uniqueId,
-            nsEndPoint: options.nsEndPoint
-        });
-    } else if(curSetting.value !== options.value) {
-        curSetting.value = options.value;
-    }
+        const nsDetails = fetchSingleWorkSpaceSS(options.nsEndPoint);
 
-    // Filtering Array if the setting already persists in array
-    settingArr.map(cur => {
-        if(cur.setting === options.setting && cur.uniqueId === options.uniqueId && cur.nsEndPoint === options.nsEndPoint) {
-            if(cur.value !== options.value) {
-                cur.value = options.value;
+        
+        // Initializing the custom roles array to the settingObj [allRoles]
+        const allRoles = nsDetails.roles.custom.map(role => {
+            return role.roleTag
+        })
+
+        // Array to Object Function [Special]
+        function arrToObj(arr) {
+            let obj = {};
+
+            for(let i = 0; i < arr.length; i++) {
+                // Converting to array, which having empty array {members: []}
+                obj[arr[i]] = {members: []};
+            }
+
+            return obj;
+        }
+
+        if(!settingObj) {
+            // Setting Count
+            window.settingCount = 0;
+
+            settingObj = {
+                nsEndPoint: options.nsEndPoint,
+                title: options.title || undefined,
+                image: options.image || undefined,
+                roles: {
+                    custom: arrToObj(allRoles)
+                }
             }
         }
-    });
 
-    // Saving changed data to SessionStorage
-    sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingArr));
+        // Counting Changes
+        if(options.method === 'adding') {
+            settingCount++;
+        } else if(options.method === 'removing') {
+            settingCount--;
+        }
 
-    const { settingChanged } = require('./SettingsHandle/settings');
-    settingChanged();
-}
+        // This is utility function for ....
+        // if the property is manually passed 'undefined' for deleting the property
+        function roleDetails(prop) {
+            let res = undefined;
+            if(options[prop]) {
+                res = options[prop]
 
-function deleteSettingsChangeSS (options) {
-    // Fethced Temproray Changes Setting Array 
-    const settingArr = fetchChangedSettings();
+                if(options[prop] === 'undefined') {
+                    res = undefined;
+                }
+            } else if(settingObj.roles.custom[options.roleTag][prop]) {
+                res = settingObj.roles.custom[options.roleTag][prop];
+            }
 
-    // Filtering Array if the setting already persists in array
-    const newSettingArr = settingArr.filter(cur => cur.setting !== options.setting || cur.uniqueId !== options.uniqueId);
+            return res;
+        }
 
-    // Saving changed data to SessionStorage
-    sessionStorage.setItem('settingsToBeSaved', JSON.stringify(newSettingArr));
+        settingObj.roles.custom[options.roleTag] = {
+            name: roleDetails('name'),
+            priority: roleDetails('priority'),
+            color: roleDetails('color'),
+            members: settingObj.roles.custom[options.roleTag].members
+            // permissions: allPermissions
+        }
 
-    const { settingChanged } = require('./SettingsHandle/settings');
-    settingChanged();
+        if(options.category && options.category === 'role_member') {
+            settingObj.roles.custom[options.roleTag].members.push({
+                action: options.action || undefined,
+                userId: options.userId || undefined
+            })
+        }
+
+        // Saving changed data to SessionStorage
+        sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingObj));
+
+        window.saveModal = document.querySelector('.save_modal');
+        if(settingCount > 0) {
+            saveModal.classList.add('savePopup');
+        } else {
+            saveModal.classList.remove('savePopup');
+        }
+
+    } catch (e) {
+        console.log(e.message);
+    }
 }
 
 /**
@@ -57,9 +103,7 @@ function fetchChangedSettings() {
     // Checking If SessionStorage is already initialized
     let jsonData = sessionStorage.getItem('settingsToBeSaved');
     if(!jsonData) {
-        // If not, Initializing SessionStorage
-        sessionStorage.setItem('settingsToBeSaved', JSON.stringify([]));
-        jsonData = sessionStorage.getItem('settingsToBeSaved');
+        return false;
     }
 
     // JSON Data is actually an Array
@@ -67,8 +111,25 @@ function fetchChangedSettings() {
     return JSON.parse(jsonData);
 }
 
+async function postSaveSettings() {
+    const settingObj = fetchChangedSettings();
+
+    const res = await fetch(`${window.location.origin}/workspace/settings?save=true`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            settingObj: settingObj
+        })
+    })
+
+    return await res.json();
+}
+
+
 module.exports = {
     fetchChangedSettings,
-    deleteSettingsChangeSS,
-    updateSettingsChangeSS
+    updateSettingsChangeSS,
+    postSaveSettings
 }

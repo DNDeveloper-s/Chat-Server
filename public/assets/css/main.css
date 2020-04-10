@@ -2960,6 +2960,13 @@ body {
   z-index: auto;
   overflow: hidden;
   color: white;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list_item:active {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
 }
 
 #root > .modal[data-id="workspace_settings"] .role_list_item:hover {
@@ -2977,7 +2984,7 @@ body {
 }
 
 #root > .modal[data-id="workspace_settings"] .role_list_item.active {
-  background: #0a1014;
+  background: #0000004a;
 }
 
 #root > .modal[data-id="workspace_settings"] .place_holder {
@@ -6392,5 +6399,46 @@ button:hover {
 .save_modal > .btn:active {
   -webkit-transform: scale(0.91);
           transform: scale(0.91);
+}
+
+.settingContainer {
+  position: relative;
+  border: 2px solid transparent;
+  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+.settingContainer.toBeSaved {
+  border: 2px solid #f14d48;
+  border-radius: 6px;
+}
+
+.settingContainer.toBeSaved:before {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transform: translateY(0px);
+          transform: translateY(0px);
+}
+
+.settingContainer:before {
+  content: attr(aria-label);
+  position: absolute;
+  top: 126%;
+  right: 0;
+  width: auto;
+  padding: 3px 15px;
+  font-size: 13px;
+  font-family: 'Microsoft_taile';
+  color: #bfbfbfb8;
+  border-radius: 4px;
+  background: #5b5c5d;
+  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
 }
 /*# sourceMappingURL=main.css.map */
