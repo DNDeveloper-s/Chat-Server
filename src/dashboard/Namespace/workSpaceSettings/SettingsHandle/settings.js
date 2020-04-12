@@ -7,7 +7,7 @@ module.exports.loadSettingHTML = (settingName = String, modalEl = Element) => {
 
     // Removing previous Setting before showing next Setting
     settingContainer.innerHTML = '';
-
+    
     // Inserting New Setting to HTML
     settingContainer.insertAdjacentHTML('beforeend', htmlToAdd);
 

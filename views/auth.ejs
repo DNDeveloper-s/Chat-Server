@@ -35,7 +35,7 @@
         <form id="loginForm" class="anim" data-removeanim="false" action="">
             <h3>Login</h3>
             <div class="input-control">
-                <div class="google-btn g-signin2" data-onsuccess="onGoogleSignIn"></div>
+                <div class="google-btn-signin g-signin2" data-onsuccess="onGoogleSignIn"></div>
             </div>
             <div class="input-control">
                 <label for="email">Email</label>
@@ -88,6 +88,18 @@
 
 
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        function onGoogleSignIn(googleUser) {
+            const token = googleUser.getAuthResponse().id_token;
+            const profile = googleUser.getBasicProfile();
+            window.userByGoogle = {
+                name: profile.getName(),
+                image: profile.getImageUrl,
+                email: profile.getEmail,
+            }
+            console.log(token);
+        }
+    </script>
     <script src="/assets/js/main.bundle.js"></script>
 </body>
 </html>

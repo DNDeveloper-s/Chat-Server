@@ -1,7 +1,4 @@
-const socket = require('socket.io-client');
-
 const { Moveit } = require('./moveIt');
-const { connectToNs } = require('./dashboard/Namespace/nsFunctionaily');
 
 const regHandle = async () => {
     const name = document.getElementsByName('fullName')[0].value;
@@ -129,7 +126,6 @@ const loader = () => {
         animateLoader();
     })
 };
-
 
 
 module.exports = { regHandle, loginHandle, loader };

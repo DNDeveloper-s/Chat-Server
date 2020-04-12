@@ -3,7 +3,7 @@ const { updateStatus } = require('../User/friend');
 const { updateNotificationCount } = require('../User/notification'); 
 const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
 const { addMessageToRoom } = require('../Room/roomUI'); 
-const { loader } = require('../../utilities');
+const { loader, fetchSingleWorkSpaceSS, fetchAllWorkSpacesSS } = require('../../utilities');
 
 const { showRooms, loadRoom, addNewRoom, addRooms, deleteRooom, updateClients } = require('../Room/roomUI'); 
 // const { joinRoom } = require('../Room/addRoom');
@@ -311,6 +311,38 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
             datae[nsEndPoint] = undefined;
 
             sessionStorage.setItem(`all_workspaces`, JSON.stringify(datae));
+        } else if(data.type === 'setting_updated') {
+            const workSpaces = fetchAllWorkSpacesSS();
+
+            const workSpace = workSpaces[data.nsEndPoint];
+
+            // Changed Setting OBJ Got from the server
+            const settingObj = data.settingObj;
+
+            console.log(workSpace);
+
+            // Updating the workSpace Object | (SessionStorage Obj Model)
+            workSpace.title = settingObj.title || workSpace.title;
+            workSpace.image = settingObj.image || workSpace.image;
+
+            workSpace.roles.custom.forEach(role => {
+                // RoleTag ['/everyone'] is not editable
+                if(role.roleTag !== '/everyone') {
+                    role.name = settingObj.roles.custom[role.roleTag].name || role.name;
+                    role.color = settingObj.roles.custom[role.roleTag].color || role.color;
+                    role.priority = settingObj.roles.custom[role.roleTag].priority || role.priority;
+                    
+                    // Permissions 
+                    if(settingObj.roles.custom[role.roleTag].permissions) {
+                        const keys = Object.keys(settingObj.roles.custom[role.roleTag].permissions);
+                        keys.forEach(key => {
+                            role.permissions[key] = settingObj.roles.custom[role.roleTag].permissions[key];
+                        });
+                    }
+                }
+            });
+
+            sessionStorage.setItem('all_workspaces', JSON.stringify(workSpaces));
         }
     });
 

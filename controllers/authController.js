@@ -169,7 +169,7 @@ exports.postUpdateProfile = async (req, res, next) => {
         const name = req.body.user_name;
         const userId = req.query.userId;
 
-        console.log(userId);
+        console.log(image);
 
         if(!req.session.isLoggedIn) {
             return next('You are not logged in!');

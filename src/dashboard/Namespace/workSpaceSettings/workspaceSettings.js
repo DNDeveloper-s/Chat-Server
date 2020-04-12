@@ -2,7 +2,7 @@ const { addResponseModal, updateWorkSpaceImage, loader, toggleSwitch, permission
 
 const { fetchRoles } = require('./SettingsHandle/Roles/Server/fetchRoles');
 
-const { postSaveSettings } = require('./settingsServer');
+const { postSaveSettings, resetSettingsChanges } = require('./settingsServer');
 
 // Local Settings Import
 const { navItemHandler } = require('./settings_nav');
@@ -22,6 +22,14 @@ module.exports.workSpaceSettings = (data) => {
 
             saveModal.classList.remove('savePopup');
         }
+    });
+
+    // Reset Settings Handler
+    const resetBtn = document.querySelector('.save_modal > button.red');
+    resetBtn.addEventListener('click', function(e) {
+        resetSettingsChanges();
+
+        saveModal.classList.remove('savePopup');
     })
 
     // const htmlToAdd = `

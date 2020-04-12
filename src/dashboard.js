@@ -12,6 +12,8 @@ const { remove_sidebar, sendImageData, initPickr, loader, dragNdrop, fetchWorkSp
 //     pickerPosition: "top"
 // });
 
+sessionStorage.removeItem('settingsToBeSaved');
+
 window.addEventListener('load', function(e) {
     tagImplementation('#editable');
     // dragNdrop('.roles_container');

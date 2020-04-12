@@ -35,11 +35,11 @@ module.exports.settingHTML = (settingName = String, options = Object) => {
         const loadRoleDetails = `
             <div class="role_details">
                 <div class="role_name" data-roleTag="${options.roleTag}">
-                    <div class="head">Edit Role Name</div>
+                    <div class="head"><h4>Edit Role Name</h4></div>
                     <div class="settingContainer" aria-label="${settingsChangeLabel}" ><input type="text" name="role_name_${options.roleTag}" placeholder="Enter role name!" value="${options.name}"></div>
                 </div>
                 <div class="role_color">
-                    <div class="head">Edit Role Color</div>
+                    <div class="head"><h4>Edit Role Color</h4></div>
                     <div class="settingContainer" aria-label="${settingsChangeLabel}"><div class="color_picker"></div></div>
                     <div class="notice">
                         <p><span class="note">Note</span> :- Click to choose the color for your role!
@@ -49,9 +49,111 @@ module.exports.settingHTML = (settingName = String, options = Object) => {
             </div>
         `;
 
+        let loadPermissionsHTML = 'Nothing Found';
+        if(options.permissions) {
+            loadPermissionsHTML = `
+                <div class="role_permissions">
+                    <div class="heading">
+                        <h4>Permissions</h4>
+                    </div>
+                    <div class="permissions">
+                        <div class="permission fullAccess">
+                            <div class="permission_description">
+                                Access to everything, Gives Administration. Be Careful!
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn everything" data-checked="${options.permissions.fullAccess}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission privateRooms">
+                            <div class="permission_description">
+                                User can be part of private room.
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn" data-checked="${options.permissions.privateRooms}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission editRoles">
+                            <div class="permission_description">
+                                User can edit the roles which is lower than his role to the workspace.
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn" data-checked="${options.permissions.editRoles}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission deletedMessages">
+                            <div class="permission_description">
+                                User can interact/delete with messages in rooms.
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn" data-checked="${options.permissions.deletedMessages}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission pinMessages">
+                            <div class="permission_description">
+                                User can pin message to the workspace.
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn" data-checked="${options.permissions.pinMessages}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission roomHandler">
+                            <div class="permission_description">
+                                User can interact/create/edit with rooms.
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn" data-checked="${options.permissions.roomHandler}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission workSpaceSettings">
+                            <div class="permission_description">
+                                User can access the basic wokspace settings.
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn" data-checked="${options.permissions.workSpaceSettings}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="permission invitations">
+                            <div class="permission_description">
+                                User can invite anyone.
+                            </div>
+                            <div class="permission_switch">
+                                <div class="input_control checkBox-myOwn" data-checked="${options.permissions.invitations}">
+                                    <input type="checkbox">
+                                    <div class="dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         // Returning the HTML regarding to the SettingName
         return eval(settingName);
     } catch (e) {
+        console.log(e.message);
         return 'Nothing Found';
     }
 }

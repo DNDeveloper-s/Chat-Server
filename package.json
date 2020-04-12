@@ -23,6 +23,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "gm": "^1.23.1",
+    "google-auth-library": "^6.0.0",
     "jquery": "^3.4.1",
     "minimist": "^1.2.5",
     "mongoose": "^5.9.2",

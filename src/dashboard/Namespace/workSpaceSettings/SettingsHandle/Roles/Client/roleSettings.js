@@ -1,5 +1,46 @@
-const { initPickr } = require('../../../../../../utilities');
-const { updateSettingsChangeSS, deleteSettingsChangeSS } = require('../../../settingsServer');
+const { initPickr, toggleSwitch, fetchSingleWorkSpaceSS, dragNdrop } = require('../../../../../../utilities');
+const { updateSettingsChangeSS, fetchChangedSettings } = require('../../../settingsServer');
+
+function initPriorityForRoles(modalEl) {
+    
+    // Special Utility Function for DragNDrop in Roles
+    dragNdrop('.roles_container', function() {
+        // # Callback fired once something dragged and dropped somewhere
+
+        // nsEndPoint
+        const nsEndPoint = modalEl.dataset.ns;
+
+        // Creating Changed Priority Object
+        const priorities = document.querySelectorAll('.role_list > .role_list_item');
+        priorityObj = {};
+        priorities.forEach(cur => {
+            priorityObj[cur.dataset.roletag] = +cur.dataset.count;
+        });
+
+
+        // Creating according what is different with old value in DB (Session Storage)
+        const workSpace = fetchSingleWorkSpaceSS(nsEndPoint);
+        const changedPriority = {};
+        workSpace.roles.custom.forEach(role => {
+            if(role.priority !== priorityObj[role.roleTag]) {
+                updateSettingsChangeSS({
+                    nsEndPoint: nsEndPoint,
+                    roleTag: role.roleTag,
+                    priority: priorityObj[role.roleTag],
+                    method: 'adding'
+                });
+            } else {
+                updateSettingsChangeSS({
+                    nsEndPoint: nsEndPoint,
+                    roleTag: role.roleTag,
+                    priority: 'undefined',
+                    method: 'removing'
+                });
+            }
+        });
+        
+    });
+}
 
 /**
  * 
@@ -60,7 +101,13 @@ function initColorPickrForRole(role = String, nsEndPoint = String) {
     });
 }
 
-function initRoleName(role, nsEndPoint) {
+/**
+ * 
+ * @param {String} role 
+ * @param {String} nsEndPoint 
+ */
+
+function initRoleName(role = String, nsEndPoint = String) {
     // Grabbing Element using DOM
     const roleNameInput = document.querySelector(`[name="role_name_${role.roleTag}"]`);
 
@@ -117,7 +164,52 @@ function initRoleName(role, nsEndPoint) {
     });
 }
 
+/**
+ * 
+ * @param {String} role 
+ * @param {String} nsEndPoint 
+ */
+
+function initPermissions(role = String, nsEndPoint = String) {
+    // Fetching Temp Settings
+    const settings = fetchChangedSettings();
+
+
+    // Toggling Switch
+    toggleSwitch(function(permission, value) {
+
+        // Checking if the value is resetted to its old value to database
+        const curWorkspace = fetchSingleWorkSpaceSS(nsEndPoint);
+        const dbRole = curWorkspace.roles.custom.filter(cur => cur.roleTag === role.roleTag)[0];
+        const dbValue = dbRole.permissions[permission];
+
+        console.log(permission, dbValue, value);
+        if(dbValue == value) {
+            updateSettingsChangeSS({
+                nsEndPoint: nsEndPoint,
+                roleTag: role.roleTag,
+                category: 'permission_toggle',
+                permission: permission,
+                value: 'undefined',
+                method: 'removing'
+            });
+        } else {
+            updateSettingsChangeSS({
+                nsEndPoint: nsEndPoint,
+                roleTag: role.roleTag,
+                category: 'permission_toggle',
+                permission: permission,
+                value: value,
+                method: 'adding'
+            });
+        }
+    });
+
+}
+
 module.exports = {
     initColorPickrForRole,
     initRoleName,
+    initPermissions,
+    initPriorityForRoles
 }

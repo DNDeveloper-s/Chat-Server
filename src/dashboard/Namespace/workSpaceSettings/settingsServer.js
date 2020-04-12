@@ -1,8 +1,14 @@
 const { fetchSingleWorkSpaceSS } = require('../../../utilities');
 
+
+/**
+ * 
+ * @param {Object} options 
+ */
+
 function updateSettingsChangeSS(options) {
     // Fetched Temproray Changes Setting Array 
-    try {
+    // try {
 
         let settingObj = fetchChangedSettings();
 
@@ -49,29 +55,41 @@ function updateSettingsChangeSS(options) {
 
         // This is utility function for ....
         // if the property is manually passed 'undefined' for deleting the property
-        function roleDetails(prop) {
+        function saveDetails(prop) {
             let res = undefined;
-            if(options[prop]) {
-                res = options[prop]
+            let condition = !prop.permission === true ? options[prop.key] !== undefined : options[prop.key] === true || options[prop.key] === false || options[prop.key] == 'undefined' ;
+            console.log(condition);
+            if(condition) {
+                res = options[prop.key]
 
-                if(options[prop] === 'undefined') {
+                if(options[prop.key] == 'undefined') {
                     res = undefined;
                 }
-            } else if(settingObj.roles.custom[options.roleTag][prop]) {
-                res = settingObj.roles.custom[options.roleTag][prop];
+            } else if(prop.obj) {
+                res = prop.obj;
             }
 
             return res;
         }
 
         settingObj.roles.custom[options.roleTag] = {
-            name: roleDetails('name'),
-            priority: roleDetails('priority'),
-            color: roleDetails('color'),
-            members: settingObj.roles.custom[options.roleTag].members
-            // permissions: allPermissions
+            name: saveDetails({
+                key: 'name',
+                obj: settingObj.roles.custom[options.roleTag].name
+            }),
+            priority: saveDetails({
+                key: 'priority',
+                obj: settingObj.roles.custom[options.roleTag].priority
+            }),
+            color: saveDetails({
+                key: 'color',
+                obj: settingObj.roles.custom[options.roleTag].color
+            }),
+            members: settingObj.roles.custom[options.roleTag].members,
+            permissions: settingObj.roles.custom[options.roleTag].permissions || {}
         }
 
+        // Adding Member to role
         if(options.category && options.category === 'role_member') {
             settingObj.roles.custom[options.roleTag].members.push({
                 action: options.action || undefined,
@@ -79,8 +97,19 @@ function updateSettingsChangeSS(options) {
             })
         }
 
+        // Toggling Permissions
+        if(options.category && options.category === 'permission_toggle') {
+            settingObj.roles.custom[options.roleTag].permissions[options.permission] = saveDetails({
+                key: 'value',
+                obj: settingObj.roles.custom[options.roleTag].permissions[options.permission],
+                permission: true
+            });
+        }
+
         // Saving changed data to SessionStorage
         sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingObj));
+        
+        console.log(settingCount);
 
         window.saveModal = document.querySelector('.save_modal');
         if(settingCount > 0) {
@@ -89,9 +118,9 @@ function updateSettingsChangeSS(options) {
             saveModal.classList.remove('savePopup');
         }
 
-    } catch (e) {
-        console.log(e.message);
-    }
+    // } catch (e) {
+    //     console.log(e.message);
+    // }
 }
 
 /**
@@ -111,6 +140,36 @@ function fetchChangedSettings() {
     return JSON.parse(jsonData);
 }
 
+// Resetting Changes withouting being saved to the database
+function resetSettingsChanges() {
+    // Fetching settings before its being removed
+    const settings = fetchChangedSettings();
+    console.log(settings);
+
+    // Removing temp settings
+    sessionStorage.removeItem('settingsToBeSaved');
+
+    // Checking which setting is open
+    const activeNavItem = document.querySelector('.overview_section > .list > .settings_nav_item.active');
+    const curSettingUI = activeNavItem.dataset.navsetting;
+    
+    if(curSettingUI === 'roles') {
+        // Getting current loaded role
+        const { getCurrentLoadedRole, show_role_settings } = require('./SettingsHandle/Roles/Client/roleUI');
+        const activeRoleTag = getCurrentLoadedRole();
+
+        // Loading role with resetted settings
+        show_role_settings(activeRoleTag, settings.nsEndPoint);
+    }
+}
+
+
+/**
+ * 
+ * @returns {async Object}
+ */
+
+// Saving Settings to workspace
 async function postSaveSettings() {
     const settingObj = fetchChangedSettings();
 
@@ -131,5 +190,6 @@ async function postSaveSettings() {
 module.exports = {
     fetchChangedSettings,
     updateSettingsChangeSS,
-    postSaveSettings
+    postSaveSettings,
+    resetSettingsChanges
 }

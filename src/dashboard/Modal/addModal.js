@@ -222,6 +222,12 @@ const addModal = (el, options) => {
                 updateUrl: true
             });
         });
+    } else if(el === 'WORKSPACESETTINGS') {
+        backDropEl.addEventListener('click', () => {
+            sessionStorage.removeItem('settingsToBeSaved');
+            saveModal.classList.remove('savePopup');
+            removeModal();
+        });
     } else if(el === 'NOTIFICATIONS') {
         loader();
         loadNotifications(options.userId);

@@ -418,10 +418,12 @@ module.exports.postSettings = async(req, res, next) => {
     try {
         const save = req.query.save;
         const settingObj = req.body.settingObj;
+        const io = req.app.get('socketio');
 
         if(save) {
             // Fetching Workspace from Database
-            const workSpace = await WorkSpace.findOne({endPoint: settingObj.nsEndPoint});
+            const workSpace = await WorkSpace.findOne({endPoint: settingObj.nsEndPoint})
+                            .populate('roles.members');
 
             // Handling If Something went wrong with workSpace
             if(!workSpace) {
@@ -438,11 +440,30 @@ module.exports.postSettings = async(req, res, next) => {
                     role.name = settingObj.roles.custom[role.roleTag].name || role.name;
                     role.color = settingObj.roles.custom[role.roleTag].color || role.color;
                     role.priority = settingObj.roles.custom[role.roleTag].priority || role.priority;
+                    
+                    // Permissions 
+                    if(settingObj.roles.custom[role.roleTag].permissions) {
+                        const keys = Object.keys(settingObj.roles.custom[role.roleTag].permissions);
+                        keys.forEach(key => {
+                            role.permissions[key] = settingObj.roles.custom[role.roleTag].permissions[key];
+                        });
+                    }
                 }
             });
 
             // Posting Save to Database
             await workSpace.save();
+
+            // Emitting Event to all the connected 'online' sockets to the workspace 
+            workSpace.roles.members.forEach(member => {
+                if(member.status === 'online') {
+                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('workSpace', {
+                        type: 'setting_updated',
+                        nsEndPoint: settingObj.nsEndPoint,
+                        settingObj: settingObj
+                    });
+                }
+            })
 
             // Sending Response to the Client
             return res.json({

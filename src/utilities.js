@@ -230,13 +230,13 @@ function focusMessageById(id) {
 }
 
 async function sendImageData(el, userId) {
-
     const formData = new FormData(el);
 
     const res = await fetch(`${window.location.origin}/auth/update_profile?userId=${userId}`, {
-      method: 'POST',
-      body: formData
+        method: 'POST',
+        body: formData
     });
+
     return res.json();
 }
 
@@ -595,17 +595,27 @@ function addResponseModal(options) {
 
 }
 
-function toggleSwitch() {
+function toggleSwitch(callback) {
     
-    const toggles = document.querySelectorAll('.c-toggle');
+    const toggles = document.querySelectorAll('.input_control.checkBox-myOwn');
 
     toggles.forEach(toggle => {
         toggle.addEventListener('click', () => {
-            let toggleState = toggle.classList.contains('c-toggle--active');
+            let toggleState = toggle.dataset.checked;
+            if(toggleState === 'true') {
+                toggleState = true;
+            } else {
+                toggleState = false;
+            }
             if(toggle.classList.contains('everything')) {
                 if(!toggleState) {
                     toggles.forEach(toggle =>{
-                        let toggleState = toggle.classList.contains('c-toggle--active');
+                        let toggleState = toggle.dataset.checked;
+                        if(toggleState === 'true') {
+                            toggleState = true;
+                        } else {
+                            toggleState = false;
+                        }
                         if(!toggleState) {
                             toggleBtn(toggle, false);
                         }
@@ -614,16 +624,20 @@ function toggleSwitch() {
             } else {
 
                 toggleBtn(toggle, toggleState);
-    
-                console.log(checkIfAllOn());
                 if(checkIfAllOn()) {
-                    toggleBtn(document.querySelector('.c-toggle.everything'), false);
+                    toggleBtn(document.querySelector('.input_control.checkBox-myOwn.everything'), false);
                 }
             }
 
             if(toggleState) {
-                if(document.querySelector('.c-toggle.everything').classList.contains('c-toggle--active')) {
-                    toggleBtn(document.querySelector('.c-toggle.everything'), true);
+                let toggleStartOfEverything = document.querySelector('.input_control.checkBox-myOwn.everything').dataset.checked;
+                if(toggleStartOfEverything === 'true') {
+                    toggleStartOfEverything = true;
+                } else {
+                    toggleStartOfEverything = false;
+                }
+                if(toggleStartOfEverything) {
+                    toggleBtn(document.querySelector('.input_control.checkBox-myOwn.everything'), true);
                 }
             }
         });
@@ -631,9 +645,14 @@ function toggleSwitch() {
 
     function checkIfAllOn() {
         let all = true;
-        const toggles = document.querySelectorAll('.c-toggle:not(.everything)');
+        const toggles = document.querySelectorAll('.input_control.checkBox-myOwn:not(.everything)');
         toggles.forEach(toggle => {
-            let toggleState = toggle.classList.contains('c-toggle--active');
+            let toggleState = toggle.dataset.checked;
+            if(toggleState === 'true') {
+                toggleState = true;
+            } else {
+                toggleState = false;
+            }
             if(!toggleState) {
                 all = false;
             }
@@ -642,53 +661,37 @@ function toggleSwitch() {
     }
 
     async function toggleBtn(toggle, toggleState) {
-
-        const toggleLabel = toggle.querySelector('.c-toggle__label');
-        const toggleHandle = toggle.querySelector('.c-toggle__handle');
-
-        const labelTransition = () => {
-        toggleLabel.style.opacity = 0;
-            setTimeout(() => {
-                toggleLabel.style.opacity = 1;
-            }, 250);
-        };
+        // Cur Permission 
+        const permission = toggle.closest('.permission').classList[1];
 
         const activeToggle = () => {
-            toggle.classList.add('c-toggle--active');
-            toggleLabel.innerHTML = 'Yes';
-            labelTransition();
-            if (toggle.parentNode.querySelector('.c-toggle__text')) {
-                toggle.parentNode.querySelector('.c-toggle__text').classList.remove('u-text--secondary');
-            }
+            toggle.dataset.checked = true;
+            callback(permission, true);
         };
 
         const inactiveToggle = () => {
-            toggle.classList.remove('c-toggle--active');
-            toggleLabel.innerHTML = 'No';
-            labelTransition();
-            if (toggle.parentNode.querySelector('.c-toggle__text')) {
-                toggle.parentNode.querySelector('.c-toggle__text').classList.add('u-text--secondary');
-            }
+            toggle.dataset.checked = false;
+            callback(permission, false);
         };
 
         toggleState ? inactiveToggle() : activeToggle();
     
-        const res = await fetch(`${window.location.origin}/workspace/roles/permissions`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                permission: toggle.closest('li').dataset.permission,
-                value: !toggleState,
-                roleTag: toggle.closest('.attached-modal').dataset.activeroletag,
-                nsEndPoint: toggle.closest('.attached-modal').dataset.ns,
-            })
-        });
+        // const res = await fetch(`${window.location.origin}/workspace/roles/permissions`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         permission: toggle.closest('li').dataset.permission,
+        //         value: !toggleState,
+        //         roleTag: toggle.closest('.attached-modal').dataset.activeroletag,
+        //         nsEndPoint: toggle.closest('.attached-modal').dataset.ns,
+        //     })
+        // });
 
-        const data = await res.json();
+        // const data = await res.json();
         
-        console.log(data);
+        // console.log(data);
     }
 }
 
@@ -720,9 +723,17 @@ function outOfTarget(target, callback) {
 }
 
 function initPickr(el, defaultColor, cb) {
+    const theme = 'classic';
+    
+    // Before init remove old pickr-element
+    const elToRemove = document.querySelector(`.pcr-app[data-theme="${theme}"]`);
+    if(elToRemove) {
+        elToRemove.remove();
+    }
+
     const pickr = Pickr.create({
         el: el,
-        theme: 'classic', // or 'monolith', or 'nano'
+        theme: theme, // or 'monolith', or 'nano'
         position: 'bottom-middle',
         default: defaultColor,
 
@@ -774,7 +785,7 @@ function initPickr(el, defaultColor, cb) {
     return pickr;
 }
 
-function dragNdrop(containerEl) {
+function dragNdrop(containerEl, callback) {
     let x = null, y = null;
 
     const config = {
@@ -829,34 +840,6 @@ function dragNdrop(containerEl) {
         roleListContainer.style.height = `${(roleListItems.length * (config.ui.itemMarginTop + config.ui.itemHeight))}px`
         return roleListItems;
     }
-    // function arrangeItems() {
-    //     let prevHeight = 0;
-    //     const roleListContainer = container.querySelector('.role_list');
-    //     const roleListItems = container.querySelectorAll('.role_list_item');
-    //     roleListItems.forEach((item, ind) => {
-    //         const calcTop = prevHeight;
-            
-    //         // Setting style "top"
-    //         item.style.top = `${calcTop}px`;
-            
-    //         config.positions.push({
-    //             top: calcTop,
-    //             bottom: calcTop + config.ui.itemHeight,
-    //             item: item,
-    //             itemNo: item.dataset.count
-    //         })
-
-    //         prevHeight = calcTop + config.ui.itemHeight + config.ui.itemMarginTop;
-    //     })
-    //     roleListContainer.insertAdjacentHTML('afterend', '<div class="drop_places"></div>');
-
-    //     for(let i = 0; i < roleListItems.length; i++) {
-    //         container.querySelector('.drop_places').insertAdjacentHTML('beforeend', `<div class="drop_place" data-count="${i+1}"></div>`);
-    //     }
-
-    //     roleListContainer.style.height = `${(roleListItems.length * (config.ui.itemMarginTop + config.ui.itemHeight))}px`
-    //     return roleListItems;
-    // }
 
     arrangeItems();
 
@@ -888,6 +871,8 @@ function dragNdrop(containerEl) {
         
                 const pos = getPosition(config.interactions.curUpItemNo);
                 config.interactions.curDownTarget.style.top = `${pos}px`;
+
+                callback();
                 
             } else {
                 const pos = getPosition(config.interactions.curDownItemNo);
@@ -924,6 +909,8 @@ function dragNdrop(containerEl) {
                 curUpTarget: null,
                 curUpItemNo: null,
             }
+
+            callback();
         }
     });
 
@@ -974,7 +961,6 @@ function dragNdrop(containerEl) {
                 item.dataset.count = start+1;
             }
             prevHeight = calcTop + config.ui.itemMarginTop + config.ui.itemHeight;
-
         } else if(start > end) {
             let prevHeight = getPosition(start - 1);
 
