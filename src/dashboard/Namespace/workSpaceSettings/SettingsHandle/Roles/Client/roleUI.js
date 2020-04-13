@@ -1,5 +1,6 @@
 const roleSettings = require('./roleSettings');
 const html = require('../../settingsHTML');
+const { fetchChangedSettings } = require('../../../settingsServer');
 
 /**
  * New UI
@@ -34,14 +35,51 @@ function loadRoleList(roles = Array, modalEl = Element) {
 
 function addRoleToList(role = Object, modalEl = Element) {
     const listContainer = modalEl.querySelector('.roles_container > .role_list');
-    
-    const htmlToAdd = `
-        <div class="role_list_item" data-count="${role.priority}" data-roletag="${role.roleTag}">
-            <div class="place_holder" style="color: ${role.color}" >${role.name}</div>
-        </div>
-    `;
 
-    listContainer.insertAdjacentHTML('beforeend', htmlToAdd);
+    let rolePriority = role.priority;
+
+    // Checking Temp Settings for role Priority 
+    const settings = fetchChangedSettings();
+
+    if(settings && settings.roles.custom[role.roleTag].priority) {
+        rolePriority = settings.roles.custom[role.roleTag].priority;
+    
+        const htmlToAdd = `
+            <div class="role_list_item" data-count="${rolePriority}" data-roletag="${role.roleTag}">
+                <div class="place_holder" style="color: ${role.color}" >${role.name}</div>
+            </div>
+        `;
+    
+        listContainer.insertAdjacentHTML('beforeend', htmlToAdd);
+
+        // Adding Arrow to UI
+        const roleListItemEl = document.querySelector(`.role_list > .role_list_item[data-roletag="${role.roleTag}"]`);
+        console.log(role.roleTag);
+        if(roleListItemEl) {
+            // Removing ArrowEl if its already present to prevent clashing
+            const arrowEl = roleListItemEl.querySelector('.arrow');
+            if(arrowEl) {
+                arrowEl.remove();
+            }
+
+            if(role.priority > rolePriority) {
+                // Injecting Arrow El 
+                roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/up-chevron.svg"></div>`);
+            } else if(role.priority < rolePriority) {
+                // Injecting Arrow El 
+                roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/down-chevron.svg"></div>`);
+            }
+        }
+    } else {
+    
+        const htmlToAdd = `
+            <div class="role_list_item" data-count="${rolePriority}" data-roletag="${role.roleTag}">
+                <div class="place_holder" style="color: ${role.color}" >${role.name}</div>
+            </div>
+        `;
+    
+        listContainer.insertAdjacentHTML('beforeend', htmlToAdd);
+    }
 }
 
 /**
@@ -87,6 +125,7 @@ function show_role_settings(roleTag = String, nsEndPoint = String) {
     
     // Container to be filled
     const container = document.querySelector('.modal .roles_overview');
+    container.dataset.roletag = roleTag;
 
     /**
      * Loading and Injecting Roles Details
@@ -132,10 +171,36 @@ function getCurrentLoadedRole() {
     return listItem.dataset.roletag;
 }
 
+/**
+ * 
+ * @param {Object} settingObj 
+ */
+
+function updateRoleListUI(settingObj = Object) {
+    const roleTags = Object.keys(settingObj.roles.custom);
+
+    roleTags.forEach(roleTag => {
+        const role = settingObj.roles.custom[roleTag];
+
+        // List Item Dom
+        const roleItem = document.querySelector(`.role_list > .role_list_item[data-roletag="${roleTag}"] > .place_holder`);
+
+        // Updating with condition if they exists
+        if(role.color) {
+            roleItem.style.color = role.color;
+        }
+        if(role.name) {
+            roleItem.innerHTML = role.name;
+        }
+        
+    })
+}
+
 
 module.exports = {
     show_role_settings,
     loadRoleList,
     roleListClickHandler,
-    getCurrentLoadedRole
+    getCurrentLoadedRole,
+    updateRoleListUI
 }

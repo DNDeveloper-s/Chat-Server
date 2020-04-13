@@ -12,6 +12,8 @@ const { remove_sidebar, sendImageData, initPickr, loader, dragNdrop, fetchWorkSp
 //     pickerPosition: "top"
 // });
 
+
+window.saveModal = document.querySelector('.save_modal');
 sessionStorage.removeItem('settingsToBeSaved');
 
 window.addEventListener('load', function(e) {

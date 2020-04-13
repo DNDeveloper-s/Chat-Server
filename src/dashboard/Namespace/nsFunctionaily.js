@@ -342,6 +342,10 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
                 }
             });
 
+            // Updating Role list items in UI [Drag Drop Menu]
+            const { updateRoleListUI } = require('./workSpaceSettings/SettingsHandle/Roles/Client/roleUI');
+            updateRoleListUI(settingObj);
+
             sessionStorage.setItem('all_workspaces', JSON.stringify(workSpaces));
         }
     });

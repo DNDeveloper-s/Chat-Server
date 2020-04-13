@@ -2474,6 +2474,7 @@ $purple: #693089;
                 }
     
                 > .side_nav_section {
+                    position: relative;
                     width: 200px;
                     margin: 0 auto;
                     z-index: 2;
@@ -2494,9 +2495,11 @@ $purple: #693089;
                     }
     
                     .list {
+                        position: relative;
                         list-style: none;
     
                         &_item {
+                            position: relative;
                             margin: 2px 0;
                             padding: 4px 10px;
                             transition: .15s ease;
@@ -2692,11 +2695,14 @@ $purple: #693089;
                                 }
 
                                 .permission {
+                                    position: relative;
                                     display: flex;
                                     justify-content: space-between;
                                     align-items: center;
                                     // margin: 15px 0;
                                     padding: 15px 30px;
+                                    transition: .15s $fashioned_bezier;
+                                    background: rgba(255, 255, 255, 0);
                                     border-bottom: 1px solid #d3d3d314;
 
                                     &.fullAccess {
@@ -2705,6 +2711,29 @@ $purple: #693089;
 
                                         > .permission_description {
                                             color: #f65058;
+                                        }
+                                    }
+
+                                    &::before {
+                                        content: '';
+                                        position: absolute;
+                                        top: 50%;
+                                        transform: translateY(-50%);
+                                        left: 0;
+                                        width: 9px;
+                                        height: 10px;
+                                        border-radius: 0 20px 20px 0;
+                                        background: white;
+                                        opacity: 0;
+                                        pointer-events: none;
+                                        transition: .15s $fashioned_bezier;
+                                    }
+
+                                    &.toBeSaved {
+                                        background: rgba(255, 255, 255, 0.171);
+
+                                        &::before {
+                                            opacity: 1;
                                         }
                                     }
 
@@ -2812,6 +2841,22 @@ $purple: #693089;
                 overflow: hidden;
                 color: white;
                 cursor: grab;
+                
+                > .arrow {
+                    /* width: 20px; */
+                    position: absolute;
+                    top: 50%;
+                    right: 15px;
+                    transform: translateY(-50%);
+                    display: flex;
+                    align-items: center;
+                    pointer-events: none;
+
+                    > img {
+                        width: 15px;
+                        height: 20px;
+                    }
+                }
                 
                 &:active {
                     cursor: grabbing;

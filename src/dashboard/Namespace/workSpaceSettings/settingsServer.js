@@ -26,7 +26,7 @@ function updateSettingsChangeSS(options) {
 
             for(let i = 0; i < arr.length; i++) {
                 // Converting to array, which having empty array {members: []}
-                obj[arr[i]] = {members: []};
+                obj[arr[i]] = {members: [], permissions: {}};
             }
 
             return obj;
@@ -57,8 +57,8 @@ function updateSettingsChangeSS(options) {
         // if the property is manually passed 'undefined' for deleting the property
         function saveDetails(prop) {
             let res = undefined;
+            // Condition for checking if options[prop.key] is not undefined or etc
             let condition = !prop.permission === true ? options[prop.key] !== undefined : options[prop.key] === true || options[prop.key] === false || options[prop.key] == 'undefined' ;
-            console.log(condition);
             if(condition) {
                 res = options[prop.key]
 
@@ -108,14 +108,47 @@ function updateSettingsChangeSS(options) {
 
         // Saving changed data to SessionStorage
         sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingObj));
-        
-        console.log(settingCount);
 
-        window.saveModal = document.querySelector('.save_modal');
-        if(settingCount > 0) {
-            saveModal.classList.add('savePopup');
-        } else {
+        // Checking if setting has been resetted
+        function isSettingObjResetted() {
+            let conditions = [
+                settingObj.name === undefined,
+                settingObj.title === undefined,
+            ];
+            const roles = Object.keys(settingObj.roles.custom);
+            roles.forEach(role => {
+                conditions.push(settingObj.roles.custom[role].name === undefined);
+                conditions.push(settingObj.roles.custom[role].priority === undefined);
+                conditions.push(settingObj.roles.custom[role].color === undefined);
+                conditions.push(settingObj.roles.custom[role].members.length === 0);
+
+                // Permissions
+                const valuesArr = Object.values(settingObj.roles.custom[role].permissions);
+                const permissionArr = [];
+                for(let i = 0; i< valuesArr.length; i++) {
+                    if(valuesArr[i] !== undefined && valuesArr !== 'undefined') {
+                        permissionArr.push(true);
+                    }
+                }
+
+                // Permission Condition
+                conditions.push(permissionArr.length === 0);
+            });
+            for(let i = 0; i < conditions.length; i++) {
+                if(!conditions[i]) {
+                    // Something is yet to be resetted or saved
+                    return false;
+                }
+            }
+
+            // All are resetted
+            return true;
+        }
+
+        if(isSettingObjResetted()) {
             saveModal.classList.remove('savePopup');
+        } else {
+            saveModal.classList.add('savePopup');
         }
 
     // } catch (e) {

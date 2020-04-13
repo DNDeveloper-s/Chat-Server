@@ -7,6 +7,9 @@ function initPriorityForRoles(modalEl) {
     dragNdrop('.roles_container', function() {
         // # Callback fired once something dragged and dropped somewhere
 
+        // Fetching SettingsObj
+        const settings = fetchChangedSettings();
+
         // nsEndPoint
         const nsEndPoint = modalEl.dataset.ns;
 
@@ -20,9 +23,31 @@ function initPriorityForRoles(modalEl) {
 
         // Creating according what is different with old value in DB (Session Storage)
         const workSpace = fetchSingleWorkSpaceSS(nsEndPoint);
-        const changedPriority = {};
         workSpace.roles.custom.forEach(role => {
+            // Role List Item Element in Drag and Drop Menu
+            const roleListItemEl = document.querySelector(`.role_list > .role_list_item[data-roletag="${role.roleTag}"]`);
+            
             if(role.priority !== priorityObj[role.roleTag]) {
+
+                // Taking Count to UI
+                if(priorityObj[role.roleTag] > role.priority) {
+                    // Removing ArrowEl if its already present to prevent clashing
+                    const arrowEl = roleListItemEl.querySelector('.arrow');
+                    if(arrowEl) {
+                        arrowEl.remove();
+                    }
+                    // Injecting Arrow El 
+                    roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/down-chevron.svg"></div>`);
+                } else if(priorityObj[role.roleTag] < role.priority) {
+                    // Removing ArrowEl if its already present to prevent clashing
+                    const arrowEl = roleListItemEl.querySelector('.arrow');
+                    if(arrowEl) {
+                        arrowEl.remove();
+                    }
+                    // Injecting Arrow El 
+                    roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/up-chevron.svg"></div>`);
+                }
+
                 updateSettingsChangeSS({
                     nsEndPoint: nsEndPoint,
                     roleTag: role.roleTag,
@@ -30,12 +55,21 @@ function initPriorityForRoles(modalEl) {
                     method: 'adding'
                 });
             } else {
-                updateSettingsChangeSS({
-                    nsEndPoint: nsEndPoint,
-                    roleTag: role.roleTag,
-                    priority: 'undefined',
-                    method: 'removing'
-                });
+                if(settings && settings.roles.custom[role.roleTag] && settings.roles.custom[role.roleTag].priority) {
+                    updateSettingsChangeSS({
+                        nsEndPoint: nsEndPoint,
+                        roleTag: role.roleTag,
+                        priority: 'undefined',
+                        method: 'removing'
+                    });
+                }
+
+                // Taking Count to UI
+                // Removing ArrowEl once priority is same as old
+                const arrowEl = roleListItemEl.querySelector('.arrow');
+                if(arrowEl) {
+                    arrowEl.remove();
+                }
             }
         });
         
@@ -174,6 +208,25 @@ function initPermissions(role = String, nsEndPoint = String) {
     // Fetching Temp Settings
     const settings = fetchChangedSettings();
 
+    if(settings) {
+        const roles = Object.keys(settings.roles.custom);
+
+        // Loading temp permission settings to UI with message 'Yet to be saved' 
+        for(let i = 0; i < roles.length; i++) {
+            const permissions = Object.keys(settings.roles.custom[roles[i]].permissions);
+            
+            const container = document.querySelector(`.modal .roles_overview[data-roletag="${roles[i]}"]`);
+
+            if(container) {
+                for(let j = 0; j < permissions.length; j++) {
+                    const permissionEl = container.querySelector(`.permission.${permissions[j]}`);
+                    permissionEl.classList.add('toBeSaved');
+                    const inputEl = permissionEl.querySelector('.input_control.checkBox-myOwn');
+                    inputEl.dataset.checked = settings.roles.custom[roles[i]].permissions[permissions[j]];
+                }
+            }
+        }
+    }
 
     // Toggling Switch
     toggleSwitch(function(permission, value) {
@@ -183,8 +236,12 @@ function initPermissions(role = String, nsEndPoint = String) {
         const dbRole = curWorkspace.roles.custom.filter(cur => cur.roleTag === role.roleTag)[0];
         const dbValue = dbRole.permissions[permission];
 
+        // Permission Element in UI 
+        const permissionEl = document.querySelector(`.permission.${permission}`);
+
         console.log(permission, dbValue, value);
         if(dbValue == value) {
+            permissionEl.classList.remove('toBeSaved');
             updateSettingsChangeSS({
                 nsEndPoint: nsEndPoint,
                 roleTag: role.roleTag,
@@ -194,6 +251,7 @@ function initPermissions(role = String, nsEndPoint = String) {
                 method: 'removing'
             });
         } else {
+            permissionEl.classList.add('toBeSaved');
             updateSettingsChangeSS({
                 nsEndPoint: nsEndPoint,
                 roleTag: role.roleTag,

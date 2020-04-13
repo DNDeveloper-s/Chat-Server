@@ -2652,6 +2652,7 @@ body {
 }
 
 #root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section {
+  position: relative;
   width: 200px;
   margin: 0 auto;
   z-index: 2;
@@ -2676,10 +2677,12 @@ body {
 }
 
 #root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section .list {
+  position: relative;
   list-style: none;
 }
 
 #root > .modal[data-id="workspace_settings"] > .side_bar > .side_nav_section .list_item {
+  position: relative;
   margin: 2px 0;
   padding: 4px 10px;
   -webkit-transition: .15s ease;
@@ -2889,6 +2892,7 @@ body {
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_permissions .permission {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2899,6 +2903,9 @@ body {
       -ms-flex-align: center;
           align-items: center;
   padding: 15px 30px;
+  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  background: rgba(255, 255, 255, 0);
   border-bottom: 1px solid #d3d3d314;
 }
 
@@ -2909,6 +2916,31 @@ body {
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_permissions .permission.fullAccess > .permission_description {
   color: #f65058;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_permissions .permission::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  left: 0;
+  width: 9px;
+  height: 10px;
+  border-radius: 0 20px 20px 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_permissions .permission.toBeSaved {
+  background: rgba(255, 255, 255, 0.171);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_permissions .permission.toBeSaved::before {
+  opacity: 1;
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_permissions .permission > .permission_description {
@@ -3024,6 +3056,27 @@ body {
   color: white;
   cursor: -webkit-grab;
   cursor: grab;
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list_item > .arrow {
+  /* width: 20px; */
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  pointer-events: none;
+}
+
+#root > .modal[data-id="workspace_settings"] .role_list_item > .arrow > img {
+  width: 15px;
+  height: 20px;
 }
 
 #root > .modal[data-id="workspace_settings"] .role_list_item:active {

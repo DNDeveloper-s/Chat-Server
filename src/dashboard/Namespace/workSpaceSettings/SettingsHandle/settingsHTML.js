@@ -154,6 +154,10 @@ module.exports.settingHTML = (settingName = String, options = Object) => {
         return eval(settingName);
     } catch (e) {
         console.log(e.message);
-        return 'Nothing Found';
+        return `
+            <div class="settings" data-setting="${settingName}">
+                Nothing Found
+            </div>
+        `;
     }
 }

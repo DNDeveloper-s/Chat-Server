@@ -434,22 +434,28 @@ module.exports.postSettings = async(req, res, next) => {
             workSpace.title = settingObj.title || workSpace.title;
             workSpace.image = settingObj.image || workSpace.image;
 
-            workSpace.roles.custom.forEach(role => {
+            for(let i = 0; i < workSpace.roles.custom.length; i++) {
+                // Current Iterated Role
+                const role = workSpace.roles.custom[i];
+
                 // RoleTag ['/everyone'] is not editable
                 if(role.roleTag !== '/everyone') {
-                    role.name = settingObj.roles.custom[role.roleTag].name || role.name;
-                    role.color = settingObj.roles.custom[role.roleTag].color || role.color;
-                    role.priority = settingObj.roles.custom[role.roleTag].priority || role.priority;
+                    const curSettingRole = settingObj.roles.custom[role.roleTag];
+
+                    // Editting Properties
+                    role.name = curSettingRole.name || role.name;
+                    role.color = curSettingRole.color || role.color;
+                    role.priority = curSettingRole.priority || role.priority;
                     
                     // Permissions 
-                    if(settingObj.roles.custom[role.roleTag].permissions) {
-                        const keys = Object.keys(settingObj.roles.custom[role.roleTag].permissions);
+                    if(curSettingRole.permissions) {
+                        const keys = Object.keys(curSettingRole.permissions);
                         keys.forEach(key => {
-                            role.permissions[key] = settingObj.roles.custom[role.roleTag].permissions[key];
+                            role.permissions[key] = curSettingRole.permissions[key];
                         });
                     }
                 }
-            });
+            }
 
             // Posting Save to Database
             await workSpace.save();

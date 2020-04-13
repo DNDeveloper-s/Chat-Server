@@ -5,6 +5,19 @@ module.exports.loadSettingHTML = (settingName = String, modalEl = Element) => {
     const htmlToAdd = settingHTML(settingName);
     const settingContainer = modalEl.querySelector('.main_nav');
 
+    // Adding Active Class to role List items
+    const item = modalEl.querySelector(`.list_item.settings_nav_item[data-navsetting="${settingName}"]`);
+    let toBeRemoveEl = null;
+    item.parentElement.children.forEach(node => {
+        if(node.classList.contains('active')) {
+            toBeRemoveEl = node;
+        }
+    })
+    if(toBeRemoveEl) {
+        toBeRemoveEl.classList.remove('active');
+    }
+    item.classList.add('active');
+
     // Removing previous Setting before showing next Setting
     settingContainer.innerHTML = '';
     

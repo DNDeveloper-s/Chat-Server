@@ -18,6 +18,12 @@ module.exports.roles = (modalEl = Element) => {
 
     // Adding EventHandlers to all role list items 
     roleListClickHandler(modalEl, function(roleTag) {
+        // Checking if roleTag is alread opened
+        const openedRole = modalEl.querySelector('.roles_overview').dataset.roletag;
+        if(openedRole === roleTag) {
+            return false;
+        }
+
         // Callback is recieving which one role to be loaded on big screen
         show_role_settings(roleTag, nsEndPoint);
     });
