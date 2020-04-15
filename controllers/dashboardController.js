@@ -110,6 +110,7 @@ exports.postWorkspace = async (req, res, next) => {
                         roleTag: '/everyone',
                         members: [],
                         color: 'rgb(116, 113, 110)',
+                        priority: 0,
                         permissions: {
                             fullAccess: false,
                             privateRooms: false,

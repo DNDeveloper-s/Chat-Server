@@ -13,6 +13,8 @@
      -moz-user-select: text;
       -ms-user-select: text;
           user-select: text;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
 }
 
 input:focus,
@@ -21,14 +23,14 @@ textarea:focus {
 }
 
 ::-webkit-scrollbar {
-  width: 1px;
-  height: 1px;
+  width: 4px;
+  height: 4px;
   background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  width: 1px;
-  background: #1c1c1c;
+  width: 4px;
+  background: #90ced6;
   border-radius: 10px;
 }
 
@@ -284,6 +286,7 @@ body {
 }
 
 .auth-modal > form > .input-control {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -294,11 +297,58 @@ body {
   margin: 20px 0;
 }
 
+.auth-modal > form > .input-control.checkbox {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.auth-modal > form > .input-control.checkbox > .dot {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  border-radius: 300px;
+  border: 3px solid white;
+  background: lightgrey;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+.auth-modal > form > .input-control.checkbox > .dot > .yes {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: #2DA8D8FF;
+  border-radius: 20px;
+  -webkit-transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+  opacity: 0;
+}
+
 .auth-modal > form > .input-control > label {
   text-align: left;
   font-weight: 900;
   margin-bottom: 7px;
   color: #0b252f;
+  -webkit-transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+.auth-modal > form > .input-control > label.checkbox {
+  margin-bottom: 2px;
+  margin-left: 6px;
+  color: #00000087;
+  font-size: 14px;
 }
 
 .auth-modal > form > .input-control > input {
@@ -314,16 +364,48 @@ body {
           box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
 }
 
+.auth-modal > form > .input-control > input[type="checkbox"] {
+  position: absolute;
+  width: 100%;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  top: 0;
+  left: 0;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.auth-modal > form > .input-control > input[type="checkbox"]:focus ~ label::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px dashed #106080;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.auth-modal > form > .input-control > input[type="checkbox"]:checked + .dot > .yes {
+  opacity: 1;
+}
+
+.auth-modal > form > .input-control > input[type="checkbox"]:checked ~ label {
+  color: #106080;
+}
+
 .auth-modal > form > .reset-password {
   text-align: left;
   font-size: 14px;
-  font-weight: 500;
   margin-top: 20px;
-  color: #0b252f;
+  color: #0b4007;
+  font-weight: 800;
 }
 
 .auth-modal > form > .reset-password a {
-  color: #d9fb72;
+  color: #c7230f;
   text-decoration: none;
 }
 
@@ -1295,6 +1377,23 @@ body {
       -ms-flex-direction: column-reverse;
           flex-direction: column-reverse;
   overflow: auto;
+}
+
+#root > .main_bar > .message-display__container > .messages > h2 {
+  position: relative;
+  margin: 50px 0 30px;
+  line-height: 78px;
+  text-align: center;
+  height: 40px;
+  color: #7e7eb361;
+  pointer-events: none;
+  font-size: 18px;
+  border-bottom: 1px solid #ffffff08;
+  padding-bottom: 80px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 #root > .main_bar > .message-display__container > .messages > .message-loader {
@@ -2737,9 +2836,9 @@ body {
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav {
   width: 300px;
-  border-right: 1px solid rgba(214, 210, 210, 0.5);
+  border-right: 1px solid rgba(214, 210, 210, 0.13);
   height: 100%;
-  padding: 40px 0;
+  padding: 70px 0;
   -ms-flex-negative: 0;
       flex-shrink: 0;
 }
@@ -2755,7 +2854,8 @@ body {
   letter-spacing: 1px;
 }
 
-#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container {
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container,
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container_priorityLess {
   position: relative;
   top: 0;
   left: 0;
@@ -2765,10 +2865,43 @@ body {
           transform: translate(0px);
 }
 
-#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container .place_holder {
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container .place_holder,
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container_priorityLess .place_holder {
   font-family: 'Microsoft_taile';
   font-weight: 400;
   color: #8091a2;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container_priorityLess {
+  border-top: 1px solid #ffffff38;
+  background: #1c272e;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container_priorityLess .role_list_item {
+  position: relative;
+  height: 40px;
+  width: 100%;
+  cursor: pointer;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container_priorityLess .role_list_item:hover {
+  background: #0a1014;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container_priorityLess .role_list_item.active {
+  background: #0000004a;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .roles_container_priorityLess .place_holder {
+  line-height: 40px;
+  padding: 5px 10px;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions {
@@ -2805,36 +2938,36 @@ body {
           transform: scale(0.98);
 }
 
-#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions:hover > input {
-  -webkit-transform: scaleY(1);
-          transform: scaleY(1);
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions > input {
+  width: 100%;
+  margin-bottom: 5px;
+  -webkit-transform: translateY(-10px);
+          transform: translateY(-10px);
+  -webkit-transform-origin: bottom;
+          transform-origin: bottom;
+  -webkit-transition: .15s ease;
+  transition: .15s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions > input.active {
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
 }
 
-#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_nav > .actions > input {
-  width: 100%;
-  margin-bottom: 5px;
-  -webkit-transform: scaleY(0);
-          transform: scaleY(0);
-  -webkit-transform-origin: bottom;
-          transform-origin: bottom;
-  -webkit-transition: .25s ease;
-  transition: .25s ease;
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-}
-
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview {
   position: relative;
-  padding: 40px 0;
+  padding: 40px 0 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   width: calc(100% - 300px);
   -ms-flex-negative: 0;
       flex-shrink: 0;
+  overflow: auto;
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_details {
@@ -2958,6 +3091,32 @@ body {
   margin: 0;
 }
 
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_actions {
+  width: 100%;
+  padding: 45px;
+  margin: 50px 0 0;
+  background: #16202b;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_actions > .action > .action_description {
+  color: #5f6a75;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_actions > .action > .action_btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_actions > .action > .action_btn > button {
+  margin: 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_actions .notice {
+  margin: 20px 0;
+  width: 100%;
+}
+
 #root > .modal[data-id="workspace_settings"] .cursor {
   position: absolute;
   top: 40%;
@@ -3036,12 +3195,12 @@ body {
   overflow: hidden;
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list {
   position: relative;
   width: 100%;
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list_item {
   position: absolute;
   margin: 0;
   left: 50%;
@@ -3058,7 +3217,7 @@ body {
   cursor: grab;
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item > .arrow {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list_item > .arrow {
   /* width: 20px; */
   position: absolute;
   top: 50%;
@@ -3074,35 +3233,36 @@ body {
   pointer-events: none;
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item > .arrow > img {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list_item > .arrow > img {
   width: 15px;
   height: 20px;
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item:active {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list_item:active {
   cursor: -webkit-grabbing;
   cursor: grabbing;
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item:hover {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list_item:hover {
   background: #0a1014;
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item.itsDown {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list_item.itsDown {
   z-index: 23;
   -webkit-transition: width .15s, border .2s;
   transition: width .15s, border .2s;
+  background: #0a1014 !important;
   width: 90%;
   border-radius: 6px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
-#root > .modal[data-id="workspace_settings"] .role_list_item.active {
+#root > .modal[data-id="workspace_settings"] .roles_container .role_list_item.active {
   background: #0000004a;
 }
 
-#root > .modal[data-id="workspace_settings"] .place_holder {
+#root > .modal[data-id="workspace_settings"] .roles_container .place_holder {
   position: relative;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -3123,7 +3283,7 @@ body {
           user-select: none;
 }
 
-#root > .modal[data-id="workspace_settings"] .drop_places {
+#root > .modal[data-id="workspace_settings"] .roles_container .drop_places {
   position: absolute;
   top: 0;
   left: 0;
@@ -3134,7 +3294,7 @@ body {
   background: #1c272e;
 }
 
-#root > .modal[data-id="workspace_settings"] .drop_places > .drop_place {
+#root > .modal[data-id="workspace_settings"] .roles_container .drop_places > .drop_place {
   margin: 0 auto;
   width: 90%;
   height: 40px;
@@ -3142,7 +3302,7 @@ body {
   transition: .3s ease-out;
 }
 
-#root > .modal[data-id="workspace_settings"] .drop_places > .drop_place.active {
+#root > .modal[data-id="workspace_settings"] .roles_container .drop_places > .drop_place.active {
   background: rgba(169, 169, 169, 0.192);
   border-radius: 4px;
   border: 1.3px dashed black;

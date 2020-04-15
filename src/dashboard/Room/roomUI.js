@@ -137,9 +137,9 @@ function deleteRooom(roomDetails) {
 function loadRoom(roomDetails, msgId) {
     console.log(roomDetails);
     const curRoomName = document.querySelector('.current-room-name > span');
+    curRoomName.innerHTML = `# ${roomDetails.name.toLowerCase()}`;
 
     loadMessageToRoom(roomDetails.messages, msgId);
-    curRoomName.innerHTML = `# ${roomDetails.name.toLowerCase()}`;
 
     // Removing Notifications
     const room = document.querySelector(`.room[data-id="${roomDetails._id}"]`);
@@ -163,7 +163,14 @@ function loadRoom(roomDetails, msgId) {
 
 function loadMessageToRoom(messages, msgId) {
     const messageContainer = document.querySelector('.message-display__container > .messages');
+    const messageContainers = messageContainer.querySelectorAll('.message');
+    console.log(messageContainers);
     messageContainer.innerHTML = "";
+
+    // Current Room Name
+    const curRoomName = document.querySelector('.current-room-name').innerText;
+    messageContainer.insertAdjacentHTML('afterbegin', `<h2>Welcome to ${curRoomName}</h2>`);
+
     const userId = document.querySelector('.user_dp.image_holder.remove_sidebar').dataset.userid;
     let className = '';
     messages.forEach(message => {
@@ -171,7 +178,7 @@ function loadMessageToRoom(messages, msgId) {
         if(userId.toString() === message.user.id.toString()) {
             className = 'user_dp';
         }
-        if(messageContainer.childElementCount > 0 && messageContainer.firstElementChild.dataset.userid.toString() === message.user.id.toString()) {
+        if(messageContainer.childElementCount > 1 && messageContainer.firstElementChild.dataset.userid.toString() === message.user.id.toString()) {
             if(message.body !== '<span class="text"></span>') {
                 messageContainer.firstElementChild.querySelector('.message-inner > .message-data').insertAdjacentHTML('beforeend', `
                     <p data-messageid="${message._id}">${message.body}

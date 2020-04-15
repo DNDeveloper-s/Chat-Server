@@ -10,6 +10,12 @@ module.exports = async (userId, nsEndPoint) => {
 
     if(!workSpace) {
         ifNotMessage = 'Invalid Workspace! Line 1402';
+        
+        return {
+            allowed: false, 
+            workSpace: 'invalid',
+            ifNotMessage: ifNotMessage
+        };
     }
 
     if(workSpace.roles.owner.toString() !== userId.toString()) {

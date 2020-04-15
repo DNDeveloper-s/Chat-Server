@@ -52,6 +52,7 @@ const userSchema = new Schema({
         ]
     },
     status: String,
+    sessionId: String,
     notifications: {
         count: {
             type: Number,

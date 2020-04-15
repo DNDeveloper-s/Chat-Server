@@ -31,8 +31,57 @@ const toggleAuthFormUI = () => {
     const regBtn = document.querySelector('.reg.authBtnShow');
     const loginBtn = document.querySelector('.login.authBtnShow');
 
-    const regFormHtml = `<form id="regForm" class="anim" action="" data-removeanim="false"> <h3>Register</h3> <div class="input-control"> <label for="fullName">Full Name</label> <input type="text" name="fullName"> </div><div class="input-control"> <label for="email">Email</label> <input type="email" name="email"> </div><div class="input-control"> <label for="password">Password</label> <input type="password" name="password"> </div><div class="input-control"> <label for="conPassword">Confirm Password</label> <input type="password" name="conPassword"> </div><button class="pointer" type="submit">Register</button> </form>`;
-    const loginFormHtml = `<form id="loginForm" class="anim" data-removeanim="false" action=""> <h3>Login</h3> <div class="input-control"> <label for="email">Email</label> <input type="email" name="email"> </div><div class="input-control"> <label for="password">Password</label> <input type="password" name="password"> </div><button class="pointer mainAuthBtn btn" type="submit">Login <div class="loader-container"> <svg width="40" height="40"> <circle class="loader" cx="20" cy="20" r="17"></circle> </svg> </div></button> <div class="reset-password"> <p>Don't remember your password? You can request to reset your password <a href="">here</a>!</p></div></form>`;
+    const regFormHtml = `
+        <form id="regForm" class="anim" action="" data-removeanim="false">
+            <h3>Register</h3>
+            <div class="input-control">
+                <label for="fullName">Full Name</label>
+                <input type="text" name="fullName"> 
+            </div>
+            <div class="input-control">
+                <label for="email">Email</label>
+                <input type="email" name="email"> 
+            </div>
+            <div class="input-control">
+                <label for="password">Password</label>
+                <input type="password" name="password"> 
+            </div>
+            <div class="input-control">
+                <label for="conPassword">Confirm Password</label>
+                <input type="password" name="conPassword"> </div>
+            <button class="pointer" type="submit">Register</button>
+        </form>
+    `;
+    const loginFormHtml = `
+        <form id="loginForm" class="anim" data-removeanim="false" action="">
+            <h3>Login</h3>
+            <div class="input-control">
+                <label for="email">Email</label>
+                <input type="email" name="email"> 
+            </div>
+            <div class="input-control">
+                <label for="password">Password</label>
+                <input type="password" name="password"> 
+            </div>
+            <div class="input-control checkbox">
+                <input type="checkbox" name="remember_me">
+                <div class="dot">
+                    <div class="yes"></div>
+                </div>
+                <label for="remember_me" class="checkbox">Remember me</label>
+            </div>
+            <button class="pointer mainAuthBtn btn" type="submit">Login
+                <div class="loader-container">
+                    <svg width="40" height="40">
+                        <circle class="loader" cx="20" cy="20" r="17"></circle>
+                    </svg>
+                </div>
+            </button>
+            <div class="reset-password">
+                <p>Don't remember your password? You can request to reset your password <a href="">here</a>!</p>
+            </div>
+        </form>
+    `;
 
                 
     const form = document.getElementById(`loginForm`);
@@ -210,6 +259,8 @@ async function fetchWorkSpaces() {
     }
 
     const obj = toObject(workspaces);
+
+    console.log(obj);
     // Storing to Session Storage
     sessionStorage.setItem(`all_workspaces`, JSON.stringify(obj));
 }
@@ -845,78 +896,101 @@ function dragNdrop(containerEl, callback) {
 
     const containerCoords = container.getBoundingClientRect();
 
-    container.addEventListener('mousedown', function(e) {
-        // let spread = cursor.querySelector('.spread');
-        // if(spread) {
-        //     spread.remove();
-        // }
-        // cursor.insertAdjacentHTML('beforeend', `<div class="spread"></div>`);
+    if(!container.dataset.mouseDownEvent || container.dataset.mouseDownEvent !== 'true') {
+        container.addEventListener('mousedown', function mouseDown(e) {
+            container.dataset.mouseDownEvent = true;
+            // let spread = cursor.querySelector('.spread');
+            // if(spread) {
+            //     spread.remove();
+            // }
+            // cursor.insertAdjacentHTML('beforeend', `<div class="spread"></div>`);
+    
+            if(e.srcElement.classList.contains('place_holder')) {
+                const roleItem = e.srcElement.closest('.role_list_item');
+                config.interactions.itsDown = true;
+                config.interactions.curDownTarget = e.target.closest('.role_list_item');
+                config.interactions.curDownItemNo = +e.target.closest('.role_list_item').dataset.count;
+                config.interactions.curDownTarget.classList.add('itsDown');
+            }
+        })
+    }
 
-        if(e.srcElement.classList.contains('place_holder')) {
-            const roleItem = e.srcElement.closest('.role_list_item');
-            config.interactions.itsDown = true;
-            config.interactions.curDownTarget = e.target.closest('.role_list_item');
-            config.interactions.curDownItemNo = +e.target.closest('.role_list_item').dataset.count;
-            config.interactions.curDownTarget.classList.add('itsDown');
-        }
-    })
 
-    container.addEventListener('mouseup', function(e) {
-        if(e.srcElement.classList.contains('place_holder')) {
-            config.interactions.itsDown = false;
-            config.interactions.curDownTarget.classList.remove('itsDown');
-            removeClassToDropPlace(config.interactions.curDownItemNo);
-            if(config.interactions.curUpItemNo) {
-                config.interactions.curUpTarget = this.querySelector(`.role_list_item[data-count="${config.interactions.curUpItemNo}"]`);
-        
+    if(!container.dataset.mouseUpEvent || container.dataset.mouseUpEvent !== 'true') {
+        container.addEventListener('mouseup', function mouseUp(e) {
+            container.dataset.mouseUpEvent = true;
+
+            if(e.srcElement.classList.contains('place_holder')) {
+                config.interactions.itsDown = false;
+                config.interactions.curDownTarget.classList.remove('itsDown');
+                removeClassToDropPlace(config.interactions.curDownItemNo);
+                if(config.interactions.curUpItemNo) {
+                    config.interactions.curUpTarget = this.querySelector(`.role_list_item[data-count="${config.interactions.curUpItemNo}"]`);
+            
+                    const pos = getPosition(config.interactions.curUpItemNo);
+                    config.interactions.curDownTarget.style.top = `${pos}px`;
+    
+                    callback();
+                    
+                } else {
+                    const pos = getPosition(config.interactions.curDownItemNo);
+                    config.interactions.curDownTarget.style.top = `${pos}px`;
+                }
+            }
+        })
+    }
+
+
+    if(!container.dataset.mouseMoveEvent || container.dataset.mouseMoveEvent !== 'true') {
+        container.addEventListener('mousemove', function mouseMove(e) {
+            container.dataset.mouseMoveEvent = true;
+
+            if(config.interactions.itsEnter) {
+                x = e.pageX - containerCoords.left; // Updated +14 for this particularly
+                y = e.pageY - containerCoords.top; // Updated +14 for this particularly
+            }
+            // if(e.srcElement.classList.contains('place_holder')) {
+            //     cursor.classList.remove('hide');
+            //     cursor.style.top = `${y - 10}px`;
+            //     cursor.style.left = `${x - 10}px`;
+            // }
+        });
+    }
+
+
+    if(!container.dataset.mouseLeaveEvent || container.dataset.mouseLeaveEvent !== 'true') {
+        container.addEventListener('mouseleave', function mouseLeave(e) {
+            container.dataset.mouseLeaveEvent = true;
+
+            // cursor.classList.add('hide');
+            config.interactions.itsEnter = false;
+            if(config.interactions.itsDown) {
                 const pos = getPosition(config.interactions.curUpItemNo);
                 config.interactions.curDownTarget.style.top = `${pos}px`;
-
+                config.interactions.curDownTarget.classList.remove('itsDown');
+                removeClassToDropPlace(config.interactions.curDownItemNo);
+                config.interactions = {
+                    itsEnter: false,
+                    itsDown: false,
+                    curDownTarget: null,
+                    curDownItemNo: null,
+                    curUpTarget: null,
+                    curUpItemNo: null,
+                }
+    
                 callback();
-                
-            } else {
-                const pos = getPosition(config.interactions.curDownItemNo);
-                config.interactions.curDownTarget.style.top = `${pos}px`;
             }
-        }
-    })
+        });
+    }
 
-    container.addEventListener('mousemove', function(e) {
-        if(config.interactions.itsEnter) {
-            x = e.pageX - containerCoords.left; // Updated +14 for this particularly
-            y = e.pageY - containerCoords.top; // Updated +14 for this particularly
-        }
-        // if(e.srcElement.classList.contains('place_holder')) {
-        //     cursor.classList.remove('hide');
-        //     cursor.style.top = `${y - 10}px`;
-        //     cursor.style.left = `${x - 10}px`;
-        // }
-    });
 
-    container.addEventListener('mouseleave', function(e) {
-        // cursor.classList.add('hide');
-        config.interactions.itsEnter = false;
-        if(config.interactions.itsDown) {
-            const pos = getPosition(config.interactions.curUpItemNo);
-            config.interactions.curDownTarget.style.top = `${pos}px`;
-            config.interactions.curDownTarget.classList.remove('itsDown');
-            removeClassToDropPlace(config.interactions.curDownItemNo);
-            config.interactions = {
-                itsEnter: false,
-                itsDown: false,
-                curDownTarget: null,
-                curDownItemNo: null,
-                curUpTarget: null,
-                curUpItemNo: null,
-            }
+    if(!container.dataset.mouseEnterEvent || container.dataset.mouseEnterEvent !== 'true') {
+        container.addEventListener('mouseenter', function mouseEnter(e) {
+            container.dataset.mouseEnterEvent = true;
 
-            callback();
-        }
-    });
-
-    container.addEventListener('mouseenter', function(e) {
-        config.interactions.itsEnter = true;
-    });
+            config.interactions.itsEnter = true;
+        });
+    }
 
     window.requestAnimationFrame(function animate() {
         if(config.interactions.itsDown) {
@@ -1000,6 +1074,12 @@ function fetchSingleWorkSpaceSS (nsEndPoint) {
     return data[nsEndPoint];
 }
 
+function playSound(options) {
+    const audio = new Audio(`/assets/sounds/${options.name}.mp3`);
+    audio.volume = options.volume || 0.5;
+    audio.play();
+}
+
 
 module.exports = { 
     bgAnim, 
@@ -1022,5 +1102,6 @@ module.exports = {
     initPickr,
     dragNdrop,
     fetchAllWorkSpacesSS,
-    fetchSingleWorkSpaceSS
+    fetchSingleWorkSpaceSS,
+    playSound
 }

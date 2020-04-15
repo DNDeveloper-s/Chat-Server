@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDbStore = require('connect-mongodb-session')(session);
 const multer = require('multer');
+const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
@@ -45,13 +46,14 @@ app.use(multer({ storage: fileStorageProduct }).single('image'));
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/node_modules/material-design-icons'));
 app.use(express.static(__dirname + '/productImages'));
+app.use(cookieParser());
 app.use(session({
     secret: 'You dont know the secret of this project and can never know 8860119880',
     resave: false,
     saveUninitialized: false,
     store: store,
     cookie: {
-        maxAge: 10 * 60 * 60 * 1000
+        maxAge: 2 * 60 * 60 * 1000
     }
 }));
 

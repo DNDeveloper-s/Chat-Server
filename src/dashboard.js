@@ -17,6 +17,7 @@ window.saveModal = document.querySelector('.save_modal');
 sessionStorage.removeItem('settingsToBeSaved');
 
 window.addEventListener('load', function(e) {
+
     tagImplementation('#editable');
     // dragNdrop('.roles_container');
 });
@@ -42,22 +43,6 @@ nsListeners();
 
 toggleSwitch();
 
-const searchBtn = document.querySelector('#search-btn');
-
-searchBtn.addEventListener('click', async function(e) {
-
-    
-    
-    // const res = await fetch(`${window.location.origin}/message/download`, {
-    //     method: "GET"
-    // });
-    // const data = await res.json();
-    // console.log(data);
-
-    // window.open('/download?foo=bar&xxx=yyy');
-})
-
-console.log('dashboard');
 
 Array.prototype.deleteItem = function(item) {
     return this.filter(cur => cur.toString() !== item.toString())
@@ -232,6 +217,7 @@ if(window.innerWidth < 768) {
 
 defaultModal();
 
+console.log('its coming');
 fetchWorkSpaces();
 
 const { fetchRooms, fetchMentions } = require('./utilities');

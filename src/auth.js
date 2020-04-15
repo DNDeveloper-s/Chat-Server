@@ -6,11 +6,7 @@ const regHandle = async () => {
     const password = document.getElementsByName('password')[0].value;
     const conPassword = document.getElementsByName('conPassword')[0].value;
 
-    
-
     const location = window.location.origin;
-    console.log(location);
-    
 
     const res = await fetch(`${location}/auth/register`, {
         method: "POST",
@@ -20,7 +16,7 @@ const regHandle = async () => {
         body: JSON.stringify({
             name: name,
             email: email,
-            password: password
+            password: password,
         })
     })
 
@@ -40,6 +36,7 @@ const regHandle = async () => {
 const loginHandle = async () => {
     const email = document.getElementsByName('email')[0].value;
     const password = document.getElementsByName('password')[0].value;
+    const rememberMe = document.getElementsByName('remember_me')[0].checked;
 
     const loader = document.querySelector('.mainAuthBtn.btn[type="submit"]');
 
@@ -55,11 +52,14 @@ const loginHandle = async () => {
         },
         body: JSON.stringify({
             email: email,
-            password: password
+            password: password,
+            rememberMe: rememberMe
         })
     })
 
     const data = await res.json();
+
+    console.log(data);
 
     loader.classList.remove('loading');
         

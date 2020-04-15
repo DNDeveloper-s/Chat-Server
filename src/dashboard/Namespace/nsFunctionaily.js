@@ -3,9 +3,11 @@ const { updateStatus } = require('../User/friend');
 const { updateNotificationCount } = require('../User/notification'); 
 const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
 const { addMessageToRoom } = require('../Room/roomUI'); 
-const { loader, fetchSingleWorkSpaceSS, fetchAllWorkSpacesSS } = require('../../utilities');
+const { loader, dragNdrop, fetchSingleWorkSpaceSS, fetchAllWorkSpacesSS } = require('../../utilities');
 
-const { showRooms, loadRoom, addNewRoom, addRooms, deleteRooom, updateClients } = require('../Room/roomUI'); 
+const { showRooms, loadRoom, addRooms, deleteRooom } = require('../Room/roomUI'); 
+const { reloadActiveSetting } = require('./workSpaceSettings/settings_nav');
+const { fetchChangedSettings } = require('./workSpaceSettings/settingsServer');
 // const { joinRoom } = require('../Room/addRoom');
 
 let nsSocket;
@@ -355,6 +357,17 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
         const workspaces = JSON.parse(jsonData);
         if(data.type === 'role_added') {
             workspaces[data.nsEndPoint].roles.custom.push(data.roleObj);
+            sessionStorage.setItem('all_workspaces', JSON.stringify(workspaces));
+
+            // Adding role to UI
+            reloadActiveSetting();
+
+            // Putting to setting Obj if exists
+            const settingObj = fetchChangedSettings();
+            if(settingObj) {
+                settingObj.roles.custom[data.roleObj.roleTag] = {members: [], permissions: {}};
+            }
+            sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingObj));
 
         } else if(data.type === 'user_added') {
             workspaces[data.nsEndPoint].roles.custom.filter(role => {
@@ -377,7 +390,44 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
                 }
             });
         } else if(data.type === 'role_deleted') {
+            let itsPriority = null;
+            workspaces[data.nsEndPoint].roles.custom.forEach(cur => {
+                if(cur.roleTag === data.roleTag) {
+                    itsPriority = cur.priority;
+                }
+            })
+            // Working with priority
+            workspaces[data.nsEndPoint].roles.custom.filter(cur => {
+                if(cur.priority > itsPriority && cur.priority > 1) {
+                    cur.priority--;
+                }
+            })
             workspaces[data.nsEndPoint].roles.custom = workspaces[data.nsEndPoint].roles.custom.filter(role => role.roleTag !== data.roleTag);
+            sessionStorage.setItem('all_workspaces', JSON.stringify(workspaces));
+    
+            // Fetching Roles for the Session Storage
+            const curNsData = fetchSingleWorkSpaceSS(data.nsEndPoint);
+            const roles = curNsData.roles.custom;
+        
+            // Loading Default Role #First
+            const firstRole = roles.filter(cur => cur.priority === 1)[0];
+            let defRoleTag = '/everyone';
+            if(firstRole) {
+                defRoleTag = firstRole.roleTag;
+            }
+
+            reloadActiveSetting({
+                defaultRole: defRoleTag
+            });
+
+            // Putting to setting Obj if exists
+            const settingObj = fetchChangedSettings();
+            if(settingObj) {
+                settingObj.roles.custom[data.roleTag] = undefined;
+            }
+            sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingObj));
+
+
         } else if(data.type === 'color_updated') {
             workspaces[data.nsEndPoint].roles.custom.filter(cur => {
                 if(cur.roleTag === data.roleTag) {
@@ -397,7 +447,7 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
             }
         }
 
-        sessionStorage.setItem('all_workspaces', JSON.stringify(workspaces));
+        // sessionStorage.setItem('all_workspaces', JSON.stringify(workspaces));
     });
 
     let connected;

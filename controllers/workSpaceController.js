@@ -5,19 +5,6 @@ const Room = require('../models/Room');
 const User = require('../models/User');
 const checkPermissions = require('../middleware/checkPermissions');
 
-let colors = [
-    '#121218',
-    '#3EB650',
-    '#FCC133',
-    '#E12B38',
-    '#3CBCC3',
-    '#2742bd',
-    '#bd27a9',
-    '#2763bd',
-    '#90bd27',
-    '#5c4107',
-];
-
 module.exports.fetchRoles = async (req, res, next) => {
     const nsEndPoint = req.query.nsEndPoint;
 
@@ -77,23 +64,16 @@ module.exports.postRoles = async (req, res, next) => {
                 } 
                 break;
             }
-            let color;
-            let i = 0;
-            while(i < colors.length) {
-                color = colors[i];
-                const workSpaceColor = workSpace.roles.custom.filter(cur => cur.color == color);
-                if(workSpaceColor.length > 0) {
-                    i++
-                    continue;
-                }
-                break;
-            }
+            let color = '#74716e';
+            const priorityLength = workSpace.roles.custom.filter(cur => cur.priority != 0).length;
+            let priority = priorityLength + 1;
 
             const roleObj = {
                 name: name,
                 roleTag: roleTag,
                 members: [],
                 color: color,
+                priority: priority,
                 permissions: {
                     fullAccess: false,
                     privateRooms: false,
@@ -311,7 +291,7 @@ module.exports.postPermissionsToRole = async(req, res, next) => {
 
 module.exports.deleteRoles = async (req, res, next) => {
     try {
-        const nsEndPoint = req.query.nsEndPoint;
+        const nsEndPoint = req.body.endPoint;
         const roleTag = req.body.roleTag;
         const io = req.app.get('socketio');
 
@@ -319,8 +299,23 @@ module.exports.deleteRoles = async (req, res, next) => {
             const {workSpace, allowed, ifNotMessage} = await require('../middleware/isAdminOfWorkspace')(req.session.user._id, nsEndPoint);
 
             if(allowed) {
+                let itsPriority = null;
+                workSpace.roles.custom.forEach(cur => {
+                    if(cur.roleTag === roleTag) {
+                        itsPriority = cur.priority;
+                    }
+                })
 
+                // Working with priority
+                workSpace.roles.custom.filter(cur => {
+                    if(cur.priority > itsPriority && cur.priority > 1) {
+                        cur.priority--;
+                    }
+                })
+
+                // Filtering Custom roles with the roleTag
                 workSpace.roles.custom = workSpace.roles.custom.filter(cur => cur.roleTag !== roleTag);
+
 
                 await workSpace.save();
 

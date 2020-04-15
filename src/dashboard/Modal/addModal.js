@@ -1,6 +1,6 @@
 const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
 const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
-const { copyToClipboard, loader, tagImplementation, dragNdrop } = require('../../utilities');
+const { copyToClipboard, loader, tagImplementation, playSound } = require('../../utilities');
 const { addFriend, removeFriend } = require('../User/friend');
 const { loadNotifications } = require('../User/notification');
 const { addMessageModal } = require('../User/message');
@@ -9,6 +9,13 @@ const { imageMessageToRoomHandler } = require('../User/message');
 const { addMessageToRoom } = require('../Room/roomUI');
 
 const addModal = (el, options) => {
+
+    // Playing Sound
+    playSound({
+        name: 'doorSound2',
+        volume: 0.2
+    })
+
     const rootEl = document.getElementById('root');
     let backDropHTML = `<div class="back-drop"></div>`;
     let addModalHTML;
@@ -281,6 +288,13 @@ const addModal = (el, options) => {
     }
 
     function removeModal(options) {
+
+        // Playing Sound
+        playSound({
+            name: 'trashSound',
+            volume: 0.03
+        })
+
         if(options !== undefined && options.updateUrl) {
             const nsEndPoint = window.location.search.split('&')[1].split('=')[1];
             if (window.history.replaceState) {

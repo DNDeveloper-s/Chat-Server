@@ -34,7 +34,7 @@ module.exports = () => {
 
         if(data.acknowledgment.type === "success") {
             console.log('Done!');
-            
+            document.cookie = "sessionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             window.location = `${window.location.origin}/auth/ui`;
         }
     });
@@ -232,14 +232,21 @@ module.exports = () => {
         const jumpBtns = mentionsContainer.querySelectorAll('.action_btn');
         jumpBtns.forEach(jumpBtn => {
             jumpBtn.addEventListener('click', function(e) {
+
                 const { joinRoom } = require('./dashboard/Room/addRoom');
 
                 const { connectToNs, loadNamespace } = require('./dashboard/Namespace/nsFunctionaily');
 
                 const messageId = jumpBtn.closest('.message').getAttribute('id');
 
-                loadNamespace(this.closest('.channel-details').dataset.endpoint, true);
-                connectToNs(this.closest('.channel-details').dataset.endpoint, true);
+                // Getting which is active Workspace
+                const curWorkSpace = document.querySelector('.nameSpaceDetails-Room_container').dataset.nsendpoint;
+                console.log(curWorkSpace, this.closest('.channel-details').dataset.endpoint);
+                if(curWorkSpace != this.closest('.channel-details').dataset.endpoint) {
+                    loadNamespace(this.closest('.channel-details').dataset.endpoint, true);
+                    connectToNs(this.closest('.channel-details').dataset.endpoint, true);
+                }   
+
                 joinRoom({
                     roomId: this.closest('.room-id').dataset.roomid,
                     nsEndPoint: this.closest('.channel-details').dataset.endpoint

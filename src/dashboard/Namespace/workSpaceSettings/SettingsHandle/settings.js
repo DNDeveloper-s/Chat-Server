@@ -1,7 +1,7 @@
 const { settingHTML } = require('./settingsHTML');
 const { fetchChangedSettings } = require('../settingsServer');
 
-module.exports.loadSettingHTML = (settingName = String, modalEl = Element) => {
+module.exports.loadSettingHTML = (settingName = String, modalEl = Element, options = Object) => {
     const htmlToAdd = settingHTML(settingName);
     const settingContainer = modalEl.querySelector('.main_nav');
 
@@ -28,7 +28,10 @@ module.exports.loadSettingHTML = (settingName = String, modalEl = Element) => {
     // Making String to first letter UpperCase
     const ModuleFolder = `${settingName.slice(0, 1).toUpperCase()}${settingName.slice(1)}`;
     const fn = require(`./${ModuleFolder}/${settingName}`);
-    fn[settingName](modalEl);
+    const response = fn[settingName](modalEl, options);
+    if(response) {
+        console.log(response);
+    }
 
 }
 

@@ -1,11 +1,18 @@
-const { initPickr, toggleSwitch, fetchSingleWorkSpaceSS, dragNdrop } = require('../../../../../../utilities');
+const { initPickr, toggleSwitch, fetchSingleWorkSpaceSS, dragNdrop, playSound } = require('../../../../../../utilities');
 const { updateSettingsChangeSS, fetchChangedSettings } = require('../../../settingsServer');
+const { postDeleteRole } = require('../Server/deleteRole');
 
 function initPriorityForRoles(modalEl) {
     
     // Special Utility Function for DragNDrop in Roles
     dragNdrop('.roles_container', function() {
         // # Callback fired once something dragged and dropped somewhere
+
+        // Playing Sound
+        playSound({
+            name: 'lockSound',
+            volume: 0.04
+        });
 
         // Fetching SettingsObj
         const settings = fetchChangedSettings();
@@ -97,7 +104,7 @@ function initColorPickrForRole(role = String, nsEndPoint = String) {
     
     // Checking even if temp changed settings exist
     // Means even if user has changed value yet or any changes yet to being saved
-    if(settings) {
+    if(settings && settings.roles.custom[role.roleTag]) {
         // tempColor is that // User has changed but not saved yet
         let tempColor = settings.roles.custom[role.roleTag].color;
         if(tempColor) {
@@ -156,7 +163,7 @@ function initRoleName(role = String, nsEndPoint = String) {
     
     // Checking even if temp changed settings exist
     // Means even if user has changed value yet or any changes yet to being saved
-    if(settings) {
+    if(settings && settings.roles.custom[role.roleTag]) {
         // tempName is that // User has changed but not saved yet
         let tempName = settings.roles.custom[role.roleTag].name;
         if(tempName) {
@@ -231,6 +238,12 @@ function initPermissions(role = String, nsEndPoint = String) {
     // Toggling Switch
     toggleSwitch(function(permission, value) {
 
+        // Playing Sound
+        playSound({
+            name: 'switchSound',
+            volume: 0.1
+        })
+
         // Checking if the value is resetted to its old value to database
         const curWorkspace = fetchSingleWorkSpaceSS(nsEndPoint);
         const dbRole = curWorkspace.roles.custom.filter(cur => cur.roleTag === role.roleTag)[0];
@@ -265,9 +278,32 @@ function initPermissions(role = String, nsEndPoint = String) {
 
 }
 
+/**
+ * 
+ * @param {String} role 
+ * @param {String} nsEndPoint 
+ */
+
+function initActions(role = String, nsEndPoint = String) {
+    // Initializing Delete Role Button
+    const delete_btn = modalEl.querySelector(`.action_btn > .delete_role_btn`);
+
+    // Checking if btn has already event listener attached
+    if(!delete_btn.dataset.clickEvent || !delete_btn.dataset.clickEvent == 'true') {
+        delete_btn.addEventListener('click', async function(e) {
+            delete_btn.dataset.clickEvent = true;
+
+            // Posting Delete Role
+            const data = await postDeleteRole(this.dataset.roletag, nsEndPoint);
+            console.log(data);
+        })
+    }
+}
+
 module.exports = {
     initColorPickrForRole,
     initRoleName,
     initPermissions,
-    initPriorityForRoles
+    initPriorityForRoles,
+    initActions
 }

@@ -117,6 +117,7 @@ exports.postLoginAuth = async (req, res, next) => {
 
     const email = req.body.email;
     const password = req.body.password;
+    const rememberMe = req.body.rememberMe;
     try{
         const user = await User.findOne({email: email});
         if(!user) {
@@ -136,13 +137,22 @@ exports.postLoginAuth = async (req, res, next) => {
                 }
             })
         }
+        user.sessionId = randomize('Aa0!', 345);
+        if(rememberMe) {
+            res.cookie('sessionId', user.sessionId);
+        } else {
+            user.sessionId = undefined;
+        }
         req.session.user = user;
         req.session.isLoggedIn = true;
         req.session.save();
+        await user.save();
         return res.json({
             acknowledgment: {
                 type: 'success',
-                message: 'Succesfully Logged In!'
+                message: 'Succesfully Logged In!',
+                rememberMe: rememberMe,
+                sessionId: user.sessionId
             }
         })
     } catch (e) {
@@ -152,6 +162,9 @@ exports.postLoginAuth = async (req, res, next) => {
 
 
 exports.postLogoutAuth = async (req, res, next) => {
+    const user = await User.findById(req.session.user._id);
+    user.sessionId = undefined;
+    await user.save();
     req.session.destroy(err => {
         console.log(err);
         return res.json({

@@ -4,8 +4,10 @@ const { fetchRoles } = require('./SettingsHandle/Roles/Server/fetchRoles');
 
 const { postSaveSettings, resetSettingsChanges } = require('./settingsServer');
 
+const { loadSettingHTML } = require('./SettingsHandle/settings')
+
 // Local Settings Import
-const { navItemHandler } = require('./settings_nav');
+const { navItemHandler, reloadActiveSetting } = require('./settings_nav');
 
 module.exports.workSpaceSettings = (data) => {
 
@@ -21,6 +23,8 @@ module.exports.workSpaceSettings = (data) => {
             sessionStorage.removeItem('settingsToBeSaved');
 
             saveModal.classList.remove('savePopup');
+    
+            reloadActiveSetting();
         }
     });
 
@@ -28,6 +32,8 @@ module.exports.workSpaceSettings = (data) => {
     const resetBtn = document.querySelector('.save_modal > button.red');
     resetBtn.addEventListener('click', function(e) {
         resetSettingsChanges();
+
+        reloadActiveSetting();
 
         saveModal.classList.remove('savePopup');
     })

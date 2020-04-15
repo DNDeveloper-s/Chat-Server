@@ -34,51 +34,63 @@ function loadRoleList(roles = Array, modalEl = Element) {
  */
 
 function addRoleToList(role = Object, modalEl = Element) {
-    const listContainer = modalEl.querySelector('.roles_container > .role_list');
+    if(role.priority != 0) {
+        const listContainer = modalEl.querySelector('.roles_container > .role_list');
 
-    let rolePriority = role.priority;
+        let rolePriority = role.priority;
 
-    // Checking Temp Settings for role Priority 
-    const settings = fetchChangedSettings();
+        // Checking Temp Settings for role Priority 
+        const settings = fetchChangedSettings();
 
-    if(settings && settings.roles.custom[role.roleTag].priority) {
-        rolePriority = settings.roles.custom[role.roleTag].priority;
-    
-        const htmlToAdd = `
-            <div class="role_list_item" data-count="${rolePriority}" data-roletag="${role.roleTag}">
-                <div class="place_holder" style="color: ${role.color}" >${role.name}</div>
-            </div>
-        `;
-    
-        listContainer.insertAdjacentHTML('beforeend', htmlToAdd);
+        if(settings && settings.roles.custom[role.roleTag] && settings.roles.custom[role.roleTag].priority) {
+            rolePriority = settings.roles.custom[role.roleTag].priority;
+        
+            const htmlToAdd = html.settingHTML('roleListItem', {
+                priority: rolePriority,
+                name: role.name,
+                color: role.color,
+                roleTag: role.roleTag
+            });
+        
+            listContainer.insertAdjacentHTML('beforeend', htmlToAdd);
 
-        // Adding Arrow to UI
-        const roleListItemEl = document.querySelector(`.role_list > .role_list_item[data-roletag="${role.roleTag}"]`);
-        console.log(role.roleTag);
-        if(roleListItemEl) {
-            // Removing ArrowEl if its already present to prevent clashing
-            const arrowEl = roleListItemEl.querySelector('.arrow');
-            if(arrowEl) {
-                arrowEl.remove();
+            // Adding Arrow to UI
+            const roleListItemEl = document.querySelector(`.role_list > .role_list_item[data-roletag="${role.roleTag}"]`);
+            console.log(role.roleTag);
+            if(roleListItemEl) {
+                // Removing ArrowEl if its already present to prevent clashing
+                const arrowEl = roleListItemEl.querySelector('.arrow');
+                if(arrowEl) {
+                    arrowEl.remove();
+                }
+
+                if(role.priority > rolePriority) {
+                    // Injecting Arrow El 
+                    roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/up-chevron.svg"></div>`);
+                } else if(role.priority < rolePriority) {
+                    // Injecting Arrow El 
+                    roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/down-chevron.svg"></div>`);
+                }
             }
-
-            if(role.priority > rolePriority) {
-                // Injecting Arrow El 
-                roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/up-chevron.svg"></div>`);
-            } else if(role.priority < rolePriority) {
-                // Injecting Arrow El 
-                roleListItemEl.insertAdjacentHTML('beforeend', `<div class="arrow"><img src="/assets/images/down-chevron.svg"></div>`);
-            }
+        } else {
+        
+            const htmlToAdd = `
+                <div class="role_list_item" data-count="${rolePriority}" data-roletag="${role.roleTag}">
+                    <div class="place_holder" style="color: ${role.color}" >${role.name}</div>
+                </div>
+            `;
+        
+            listContainer.insertAdjacentHTML('beforeend', htmlToAdd);
         }
     } else {
-    
-        const htmlToAdd = `
-            <div class="role_list_item" data-count="${rolePriority}" data-roletag="${role.roleTag}">
-                <div class="place_holder" style="color: ${role.color}" >${role.name}</div>
-            </div>
-        `;
-    
-        listContainer.insertAdjacentHTML('beforeend', htmlToAdd);
+        const priorityLessContainer = modalEl.querySelector('.roles_container_priorityLess > .role_list_priorityLess');
+        const htmlToAdd = html.settingHTML('roleListItem', {
+            priority: 0,
+            name: role.name,
+            color: role.color,
+            roleTag: role.roleTag
+        });
+        priorityLessContainer.insertAdjacentHTML('beforeend', htmlToAdd);
     }
 }
 
@@ -89,7 +101,7 @@ function addRoleToList(role = Object, modalEl = Element) {
  */
 
 function roleListClickHandler(modalEl = Element, callback = Function) {
-    const items = modalEl.querySelectorAll('.roles_container > .role_list > .role_list_item');
+    const items = modalEl.querySelectorAll('.roles_nav .role_list_item');
 
     items.forEach(item => {
         item.addEventListener('click', function(e) {
@@ -106,12 +118,14 @@ function roleListClickHandler(modalEl = Element, callback = Function) {
  */
 
 function show_role_settings(roleTag = String, nsEndPoint = String) {
+    console.log(roleTag);
     // Adding Active Class to role List items
-    const item = document.querySelector(`.roles_container > .role_list > .role_list_item[data-roletag="${roleTag}"]`);
+    const item = document.querySelector(`.roles_nav .role_list_item[data-roletag="${roleTag}"]`);
+    const allItems = document.querySelectorAll(`.roles_nav .role_list_item`);
     let toBeRemoveEl = null;
-    item.parentElement.children.forEach(node => {
-        if(node.classList.contains('active')) {
-            toBeRemoveEl = node;
+    allItems.forEach(item => {
+        if(item.classList.contains('active')) {
+            toBeRemoveEl = item;
         }
     })
     if(toBeRemoveEl) {
@@ -159,6 +173,19 @@ function show_role_settings(roleTag = String, nsEndPoint = String) {
     //Initializing Permissions Handler
     roleSettings.initPermissions(role, nsEndPoint);
 
+    /**
+     * Actions for Role
+     */
+
+     // Gettings Desired HTML for Role Actions
+    const actionsHTML = html.settingHTML('loadRoleActionsHTML', role);
+
+    // Injecting HTML
+    container.insertAdjacentHTML('beforeend', actionsHTML);
+
+    //Initializing Actions Handler
+    roleSettings.initActions(role, nsEndPoint);
+
 }
 
 /**
@@ -197,10 +224,58 @@ function updateRoleListUI(settingObj = Object) {
 }
 
 
+function initCreateRoleBtn() {
+    // Grabbing Button from DOM
+    const btnContainer = modalEl.querySelector('.actions');
+    const addRoleBtn = btnContainer.querySelector('.add_role_btn');
+    const addRoleInput = btnContainer.querySelector('.add_role_txt');
+
+    // Initializing Event Listener to Button
+    addRoleBtn.addEventListener('click', function(e) {
+        // addRoleInput.style.pointerEvents = 'auto';
+        addRoleInput.classList.add('active');
+        addRoleInput.focus();
+
+        // Adding Event for Non-Target remove
+        window.addEventListener('click', clickedOnTarget);
+    });
+
+    // Checking for if clicked outside or inside the element
+    function clickedOnTarget(e) {
+        if(!e.path.includes(btnContainer)) {
+            removeInputEl();
+        }
+    }
+
+    // Remove InputElement
+    function removeInputEl() {
+        addRoleInput.classList.remove('active');
+        window.removeEventListener('click', clickedOnTarget);
+    }
+}
+
+function roleInputHandler(callback) {
+    // Grabbing Button from DOM
+    const btnContainer = modalEl.querySelector('.actions');
+    const addRoleBtn = btnContainer.querySelector('.add_role_btn');
+    const addRoleInput = btnContainer.querySelector('.add_role_txt');
+
+    // Adding Event Listener to input element
+    addRoleInput.addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') {
+            callback(this.value);
+        }
+    })
+}
+
+
 module.exports = {
     show_role_settings,
     loadRoleList,
     roleListClickHandler,
     getCurrentLoadedRole,
-    updateRoleListUI
+    updateRoleListUI,
+    initCreateRoleBtn,
+    roleInputHandler,
+    addRoleToList
 }

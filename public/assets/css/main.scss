@@ -13,6 +13,7 @@ $left-margin-roomContainer: 10%;
     box-sizing: border-box;
     font-family: 'Montserrat_Regular', sans-serif;
     user-select: text;
+    backface-visibility: hidden;
 }
 
 input:focus,
@@ -21,14 +22,14 @@ textarea:focus {
 }
 
 ::-webkit-scrollbar {
-    width: 1px;
-    height: 1px;
+    width: 4px;
+    height: 4px;
     background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    width: 1px;
-    background: #1c1c1c;
+    width: 4px;
+    background: #90ced6;
     border-radius: 10px;
 }
 
@@ -335,15 +336,53 @@ $purple: #693089;
         }
 
         > .input-control {
+            position: relative;
             display: flex;
             flex-direction: column;
             margin: 20px 0;
+
+            &.checkbox {
+                flex-direction: row;
+                align-items: center;
+
+                > .dot {
+                    position: relative;
+                    width: 15px;
+                    height: 15px;
+                    border-radius: 300px;
+                    border: 3px solid white;
+                    background: lightgrey;
+                    box-sizing: border-box;
+                    transition: .25s $fashioned_bezier;
+
+                    > .yes{
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 10px;
+                        height: 10px;
+                        background: #2DA8D8FF;
+                        border-radius: 20px;
+                        transition: .25s $fashioned_bezier;
+                        opacity: 0;
+                    }
+                }
+            }
 
             > label {
                 text-align: left;
                 font-weight: 900;
                 margin-bottom: 7px;
                 color: #0b252f;
+                transition: .25s $fashioned_bezier;
+
+                &.checkbox {
+                    margin-bottom: 2px;
+                    margin-left: 6px;
+                    color: #00000087;
+                    font-size: 14px;
+                }
             }
 
             > input {
@@ -355,18 +394,62 @@ $purple: #693089;
                 width: 300px;
                 padding: 9px 12px;
                 box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+
+                &[type="checkbox"] {
+                    position: absolute;
+                    width: 100%;
+                    box-shadow: none;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    opacity: 0;
+                    cursor: pointer;
+
+                    &:focus {
+                        ~ label {
+
+                            &::before {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                border: 1px dashed #106080;
+                                pointer-events: none;
+                                opacity: 0.3;
+                            }
+                        }
+                    }
+
+                    &:checked {
+
+                        + .dot {
+                            // border-color: #669DB3FF;
+
+                            > .yes {
+                                opacity: 1;
+                            }
+                        }
+
+                        ~ label {
+                            color: #106080;
+                        }
+                    }
+                }
             }
         }
 
         > .reset-password {
             text-align: left;
             font-size: 14px;
-            font-weight: 500;
             margin-top: 20px;
-            color: #0b252f;
-             a {
-                color: #d9fb72;
-                 text-decoration: none;
+            color: #0b4007;
+            font-weight: 800;
+        
+            a {
+                color: #c7230f;
+                text-decoration: none;
             }
         }
     }
@@ -1210,6 +1293,20 @@ $purple: #693089;
                 flex-direction: column-reverse;
                 overflow: auto;
 
+                > h2 {
+                    position: relative;
+                    margin: 50px 0 30px;
+                    line-height: 78px;
+                    text-align: center;
+                    height: 40px;
+                    color: #7e7eb361;
+                    pointer-events: none;
+                    font-size: 18px;
+                    border-bottom: 1px solid #ffffff08;
+                    padding-bottom: 80px;
+                    user-select: none;
+                }
+
                 > .message-loader {
                     position: absolute;
                     top: 80px;
@@ -1223,7 +1320,6 @@ $purple: #693089;
                     position: relative;
                     display: block;
                     padding: 0;
-
                     &.focus {
                         // background: #313148;
                         // box-shadow: 0 4px 8px rgba(0,0, 0,0.3);
@@ -2552,9 +2648,9 @@ $purple: #693089;
     
                         > .roles_nav {
                             width: 300px;
-                            border-right: 1px solid rgba(214, 210, 210, 0.5);
+                            border-right: 1px solid rgba(214, 210, 210, 0.13);
                             height: 100%;
-                            padding: 40px 0;
+                            padding: 70px 0;
                             flex-shrink: 0;
     
                             > .header {
@@ -2569,7 +2665,8 @@ $purple: #693089;
                                 letter-spacing: 1px;
                             }
     
-                            > .roles_container {
+                            > .roles_container,
+                            > .roles_container_priorityLess {
                                 position: relative;
                                 top: 0;
                                 left: 0;
@@ -2581,6 +2678,34 @@ $purple: #693089;
                                     font-family: 'Microsoft_taile';
                                     font-weight: 400;
                                     color: #8091a2;
+                                }
+                            }
+
+                            > .roles_container_priorityLess {
+                                border-top: 1px solid #ffffff38;
+                                background: #1c272e;
+
+                                .role_list_item {
+                                    position: relative;
+                                    height: 40px;
+                                    width: 100%;
+                                    cursor: pointer;
+                    
+                                    &:hover {
+                                        background: rgb(10, 16, 20);
+                                    }
+                    
+                                    &.active {
+                                        background: #0000004a;
+                                    }
+                                }
+    
+                                .place_holder {
+                                    line-height: 40px;
+                                    padding: 5px 10px;
+                                    height: 100%;
+                                    display: flex;
+                                    align-items: center;
                                 }
                             }
     
@@ -2613,35 +2738,33 @@ $purple: #693089;
                                     }
                                 }
     
-                                &:hover {
-    
-                                    > input {
-                                        transform: scaleY(1);
+                                > input {
+                                    width: 100%;
+                                    margin-bottom: 5px;
+                                    transform: translateY(-10px);
+                                    transform-origin: bottom;
+                                    transition: .15s ease;
+                                    opacity: 0;
+                                    pointer-events: none;
+                                    // visibility: hidden;
+
+                                    &.active {
+                                        transform: translateY(0);
                                         opacity: 1;
                                         pointer-events: auto;
                                         visibility: visible;
                                     }
-                                }
-    
-                                > input {
-                                    width: 100%;
-                                    margin-bottom: 5px;
-                                    transform: scaleY(0);
-                                    transform-origin: bottom;
-                                    transition: .25s ease;
-                                    opacity: 0;
-                                    pointer-events: none;
-                                    visibility: hidden;
                                 }
                             }
                         }
 
                         > .roles_overview {
                             position: relative;
-                            padding: 40px 0;
+                            padding: 40px 0 0;
                             box-sizing: border-box;
                             width: calc(100% - 300px);
                             flex-shrink: 0;
+                            overflow: auto;
 
                             > .role_details {
                                 width: 100%;
@@ -2757,6 +2880,34 @@ $purple: #693089;
                                     }
                                 }
                             }
+
+                            > .role_actions {
+                                width: 100%;
+                                padding: 45px;
+                                margin: 50px 0 0;
+                                background: #16202b;
+
+                                > .action {
+
+
+                                    > .action_description {
+                                        color: #5f6a75;
+                                    }
+
+                                    > .action_btn {
+                                        display: flex;
+
+                                        > button {
+                                            margin: 0;
+                                        }
+                                    }
+                                }
+
+                                .notice {
+                                    margin: 20px 0;
+                                    width: 100%;
+                                }
+                            }
                         }
                     }
                 }
@@ -2822,97 +2973,98 @@ $purple: #693089;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 overflow: hidden;
-            }
             
-            .role_list {
-                position: relative;
-                width: 100%;
-            }
-            
-            .role_list_item {
-                position: absolute;
-                margin: 0;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 100%;
-                height: 40px;
-                transition: all .15s ease;
-                z-index: auto;
-                overflow: hidden;
-                color: white;
-                cursor: grab;
+                .role_list {
+                    position: relative;
+                    width: 100%;
+                }
                 
-                > .arrow {
-                    /* width: 20px; */
+                .role_list_item {
                     position: absolute;
-                    top: 50%;
-                    right: 15px;
-                    transform: translateY(-50%);
-                    display: flex;
-                    align-items: center;
-                    pointer-events: none;
-
-                    > img {
-                        width: 15px;
-                        height: 20px;
+                    margin: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 100%;
+                    height: 40px;
+                    transition: all .15s ease;
+                    z-index: auto;
+                    overflow: hidden;
+                    color: white;
+                    cursor: grab;
+                    
+                    > .arrow {
+                        /* width: 20px; */
+                        position: absolute;
+                        top: 50%;
+                        right: 15px;
+                        transform: translateY(-50%);
+                        display: flex;
+                        align-items: center;
+                        pointer-events: none;
+    
+                        > img {
+                            width: 15px;
+                            height: 20px;
+                        }
+                    }
+                    
+                    &:active {
+                        cursor: grabbing;
+                    }
+    
+                    &:hover {
+                        background: rgb(10, 16, 20);
+                    }
+    
+                    &.itsDown {
+                        z-index: 23;
+                        transition: width .15s, border .2s;
+                        background: rgb(10, 16, 20) !important;
+                        width: 90%;
+                        border-radius: 6px;
+                        box-shadow: 0 5px 10px rgba(0,0,0,.3);
+                    }
+    
+                    &.active {
+                        background: #0000004a;
                     }
                 }
                 
-                &:active {
-                    cursor: grabbing;
+                .place_holder {
+                    position: relative;
+                    box-sizing: border-box;
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    transition: .15s ease;
+                    padding: 5px 10px;
+                    user-select: none;
                 }
-
-                &:hover {
-                    background: rgb(10, 16, 20);
+                
+                .drop_places {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: -1;
+                    background: rgb(28, 39, 46);
                 }
-
-                &.itsDown {
-                    z-index: 23;
-                    transition: width .15s, border .2s;
+                
+                .drop_places > .drop_place {
+                    margin: 0 auto;
                     width: 90%;
-                    border-radius: 6px;
-                    box-shadow: 0 5px 10px rgba(0,0,0,.3);
+                    height: 40px;
+                    transition: .3s ease-out;
                 }
-
-                &.active {
-                    background: #0000004a;
+                
+                .drop_places > .drop_place.active {
+                    background: rgba(169, 169, 169, 0.192);
+                    border-radius: 4px;
+                    border: 1.3px dashed rgba(0,0,0,1);
                 }
-            }
-            
-            .place_holder {
-                position: relative;
-                box-sizing: border-box;
-                display: flex;
-                align-items: center;
-                width: 100%;
-                height: 100%;
-                transition: .15s ease;
-                padding: 5px 10px;
-                user-select: none;
-            }
-            
-            .drop_places {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: -1;
-                background: rgb(28, 39, 46);
-            }
-            
-            .drop_places > .drop_place {
-                margin: 0 auto;
-                width: 90%;
-                height: 40px;
-                transition: .3s ease-out;
-            }
-            
-            .drop_places > .drop_place.active {
-                background: rgba(169, 169, 169, 0.192);
-                border-radius: 4px;
-                border: 1.3px dashed rgba(0,0,0,1);
             }
             
         }
