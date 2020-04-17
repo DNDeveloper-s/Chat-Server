@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const randomize = require('randomatic');
 const User = require('../models/User');
-const compression = require('../compress-image');
+const compression = require('../middleware/compress-image');
 
 exports.fetchUser = async (req, res, next) => {
     const userId = req.query.userId;

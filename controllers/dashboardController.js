@@ -1,7 +1,7 @@
 const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
-const compression = require('../compress-image');
+const compression = require('../middleware/compress-image');
 
 // Utils
 const utils = require('../middleware/utils');
@@ -1177,10 +1177,19 @@ exports.fetchDetails = async (req, res, next) => {
         if(!user) {
             return next('Invalid User');
         }
+        const mentions = [];
+        for(let i = 0; i < user.mentions.length; i++) {
+            const cur = user.mentions[i];
 
-        const mentions = user.mentions.map(cur => {
-            return {
-                nsDetails: cur.nsDetails,
+            const nsDetails = await WorkSpace.findOne({endPoint: cur.nsDetails.endPoint});
+            
+            mentions.push({
+                nsDetails: {
+                    _id: nsDetails._id,
+                    title: nsDetails.title,
+                    image: nsDetails.image,
+                    endPoint: nsDetails.endPoint 
+                },
                 roomDetails: cur.roomDetails,
                 messageObj: {
                     _id: cur.messageObj._id,
@@ -1192,8 +1201,8 @@ exports.fetchDetails = async (req, res, next) => {
                     body: cur.messageObj.body,
                     time: cur.messageObj.time
                 }
-            }
-        })
+            });
+        }
         
         console.log(mentions);
 
@@ -1339,6 +1348,7 @@ exports.fetchDetails = async (req, res, next) => {
                         title: workSpace.title,
                         _id: workSpace._id,
                         endPoint: workSpace.endPoint,
+                        image: workSpace.image,
                         roles: {
                             owner: owner,
                             admins: admins,

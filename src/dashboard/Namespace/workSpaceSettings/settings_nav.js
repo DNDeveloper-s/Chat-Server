@@ -68,6 +68,8 @@ module.exports.reloadActiveSetting = (options) => {
         roles_overview2.scrollTo(0, scrollTop);
         const scrollTop2 = roles_overview.scrollTop;
         console.log(scrollTop2);
+    } else if(activeSetting === 'overview') {
+        loadSettingHTML('overview', modalEl);
     }
 
 }

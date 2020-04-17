@@ -2,10 +2,10 @@ const io = require('socket.io-client');
 const { updateStatus } = require('../User/friend'); 
 const { updateNotificationCount } = require('../User/notification'); 
 const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
-const { addMessageToRoom } = require('../Room/roomUI'); 
+const { addMessageToRoom } = require('../Room/Client/roomUI'); 
 const { loader, dragNdrop, fetchSingleWorkSpaceSS, fetchAllWorkSpacesSS } = require('../../utilities');
 
-const { showRooms, loadRoom, addRooms, deleteRooom } = require('../Room/roomUI'); 
+const { showRooms, loadRoom, addRooms, deleteRooom } = require('../Room/Client/roomUI'); 
 const { reloadActiveSetting } = require('./workSpaceSettings/settings_nav');
 const { fetchChangedSettings } = require('./workSpaceSettings/settingsServer');
 // const { joinRoom } = require('../Room/addRoom');
@@ -449,6 +449,77 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
 
         // sessionStorage.setItem('all_workspaces', JSON.stringify(workspaces));
     });
+
+    nsSocket.on('room', async (data) => {
+        if(data.type === 'deleteMessage') {
+            const messageId = data.messageId;
+            const roomId = data.roomId;
+
+            console.log(data);
+
+            // messageContainer Element
+            const messageContainer = document.querySelector(`.message-display__container > .messages[data-roomid="${roomId}"]`);
+            const messageEl = messageContainer.querySelector(`.message-data > p[data-messageid="${messageId}"]`);
+
+            // If its header Element
+            const isHeader = messageEl.closest('.header');
+
+            // Message is in header element
+            if(isHeader) {
+                const thisMessageContainer = messageEl.closest('.message');
+                const firstMessageFromList = thisMessageContainer.querySelector('.message-inner > .message-data > p');
+
+                // If there are another messages are from the same user in the list
+                // Then Replace
+                if(firstMessageFromList) {
+                    // Getting HTML of first message in list
+                    const HTML = firstMessageFromList.innerHTML;
+                    console.log(HTML);
+
+                    // Replacing with first message in list
+                    messageEl.innerHTML = HTML;
+
+                    // Inserting TimeStamp of new Message in header element
+                    const timeStamp = thisMessageContainer.querySelector('.message-inner > .header > .message-time_stamp');
+                    timeStamp.innerHTML = messageEl.querySelector('.message-time_stamp').innerHTML;
+
+                    // Removing Extra HTML ELement
+                    messageEl.querySelector('.react_container').remove();
+                    messageEl.querySelector('.message-time_stamp').remove();
+
+                    // Removing First Message in List Cause its transferred to header element
+                    firstMessageFromList.remove();
+                } else {
+                    thisMessageContainer.style.height = `${thisMessageContainer.clientHeight}px`;
+                    thisMessageContainer.classList.add('remove');
+                    setTimeout(() => {
+                        thisMessageContainer.remove();
+                    }, 300);
+                }
+
+            } else if(messageContainer && messageEl) {
+
+                // Message is not in header element
+                messageEl.style.height = `${messageEl.clientHeight}px`;
+                messageEl.classList.add('remove');
+                setTimeout(() => {
+                    messageEl.remove();
+                }, 300);
+            }
+
+            // Its time to update Session Storage
+            const jsonData = sessionStorage.getItem(`nsRooms-${data.nsEndPoint}`);
+            const rooms = JSON.parse(jsonData);
+
+            const room = rooms.filter(cur => cur._id.toString() === data.roomId.toString())[0];
+
+            room.messages = room.messages.filter(cur => cur._id.toString() !== messageId.toString());
+
+            sessionStorage.setItem(`nsRooms-${data.nsEndPoint}`, JSON.stringify(rooms));
+
+
+        }
+    })
 
     let connected;
     const disconnectedModal = document.querySelector('.disconnected-modal');

@@ -1,7 +1,7 @@
 const { loader } = require('../../utilities');
 const { addUserModal } = require('../User/userUI');
 const { updateUserDetails } = require('./friend');
-const { addMessageToRoom } = require('../Room/roomUI');
+const { addMessageToRoom } = require('../Room/Client/roomUI');
 
 async function addReplyModal(friendId) {
     const modalEl = document.querySelector('.modal[data-id="notifications"]');

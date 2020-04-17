@@ -233,7 +233,7 @@ module.exports = () => {
         jumpBtns.forEach(jumpBtn => {
             jumpBtn.addEventListener('click', function(e) {
 
-                const { joinRoom } = require('./dashboard/Room/addRoom');
+                const { joinRoom } = require('./dashboard/Room/Client/addRoom');
 
                 const { connectToNs, loadNamespace } = require('./dashboard/Namespace/nsFunctionaily');
 

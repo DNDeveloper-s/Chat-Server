@@ -12,7 +12,7 @@ const { remove_sidebar, sendImageData, initPickr, loader, dragNdrop, fetchWorkSp
 //     pickerPosition: "top"
 // });
 
-
+window.nsImageToUpdate = undefined;
 window.saveModal = document.querySelector('.save_modal');
 sessionStorage.removeItem('settingsToBeSaved');
 

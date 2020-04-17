@@ -1,4 +1,4 @@
-const { remove_sidebar, focusMessageById, loader } = require('../../utilities');
+const { remove_sidebar, focusMessageById, loader } = require('../../../utilities');
 
 function showRooms(rooms) {
     const roomContainer = document.querySelector('.roomContainer');
@@ -36,7 +36,7 @@ function addRooms(roomDetails) {
     const rooms = roomContainer.querySelectorAll('.room.anim');
     const lastRoom = rooms[rooms.length-1];
 
-    const { addModal } = require('../Modal/addModal');
+    const { addModal } = require('../../Modal/addModal');
 
     const { joinRoom } = require('./addRoom');
     
@@ -96,7 +96,7 @@ function addNewRoom(roomDetails, workSpace) {
     const rooms = roomContainer.querySelectorAll('.room.anim');
     const lastRoom = rooms[rooms.length-1];
 
-    const { addModal } = require('../Modal/addModal');
+    const { addModal } = require('../../Modal/addModal');
 
     const { joinRoom } = require('./addRoom');
     
@@ -138,6 +138,10 @@ function loadRoom(roomDetails, msgId) {
     console.log(roomDetails);
     const curRoomName = document.querySelector('.current-room-name > span');
     curRoomName.innerHTML = `# ${roomDetails.name.toLowerCase()}`;
+
+    // Injecting Room Id to DOM
+    const roomDetailsEl = document.querySelector('.room-details');
+    roomDetailsEl.dataset.roomid = roomDetails._id;
 
     loadMessageToRoom(roomDetails.messages, msgId);
 
@@ -261,7 +265,7 @@ function loadMessageToRoom(messages, msgId) {
             userLink.dataset.eventactive = 'true';
             userLink.addEventListener('click', function(e) {
                 const userId = userLink.dataset.userid;
-                const { addModal } = require('../Modal/addModal');
+                const { addModal } = require('../../Modal/addModal');
                 addModal('USER_PROFILE' ,{
                     user: {
                         _id: userId
@@ -270,6 +274,11 @@ function loadMessageToRoom(messages, msgId) {
             })
         }
     });
+
+    // Initializing MessageSettings
+    const { roomFunctionality } = require('../room');
+    roomFunctionality();
+
 }
 
 function addMessageToRoom(messageObj, roomId, nsEndPoint, options) {
@@ -280,7 +289,7 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, options) {
         if(userId.toString() === messageObj.user.id.toString()) {
             className = 'user_dp';
         }
-        if(messageContainer.firstElementChild && messageContainer.firstElementChild.dataset.userid.toString() === messageObj.user.id.toString()) {
+        if(messageContainer.firstElementChild.dataset.userid && messageContainer.firstElementChild.dataset.userid.toString() === messageObj.user.id.toString()) {
             console.log(messageContainer.lastElementChild.querySelector('.message-data'));
             if(messageObj.body !== '<span class="text"></span>') {
                 messageContainer.firstElementChild.querySelector('.message-inner > .message-data').insertAdjacentHTML('beforeend', `
@@ -364,7 +373,7 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, options) {
                     userLink.dataset.eventactive = 'true';
                     userLink.addEventListener('click', function(e) {
                         const userId = userLink.dataset.userid;
-                        const { addModal } = require('../Modal/addModal');
+                        const { addModal } = require('../../Modal/addModal');
                         addModal('USER_PROFILE' ,{
                             user: {
                                 _id: userId

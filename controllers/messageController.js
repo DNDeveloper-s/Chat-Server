@@ -3,7 +3,7 @@ const DOMParser = require('dom-parser');
 const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
-const compression = require('../compress-image');
+const compression = require('../middleware/compress-image');
 const path = require('path');
 
 
@@ -266,6 +266,7 @@ exports.postMessages = async(req, res, next) => {
                         const idUser = await User.findById(cur.value);
                         const mentionObj = {
                             nsDetails: {
+                                _id: workSpace._id,
                                 title: workSpace.title,
                                 image: workSpace.image,
                                 endPoint: nsEndPoint

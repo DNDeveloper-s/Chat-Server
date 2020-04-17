@@ -4,6 +4,7 @@ const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
 const checkPermissions = require('../middleware/checkPermissions');
+const compression = require('../middleware/compress-image');
 
 module.exports.fetchRoles = async (req, res, next) => {
     const nsEndPoint = req.query.nsEndPoint;
@@ -412,9 +413,10 @@ module.exports.updateColorToRole = async (req, res, next) => {
 module.exports.postSettings = async(req, res, next) => {
     try {
         const save = req.query.save;
-        const settingObj = req.body.settingObj;
+        const settingObj = JSON.parse(req.body.settingObj);
         const io = req.app.get('socketio');
-
+        const image = req.file;
+        console.log(settingObj);
         if(save) {
             // Fetching Workspace from Database
             const workSpace = await WorkSpace.findOne({endPoint: settingObj.nsEndPoint})
@@ -427,53 +429,74 @@ module.exports.postSettings = async(req, res, next) => {
 
             // Updating the workSpace Object | Instance (Mongoose Obj Model)
             workSpace.title = settingObj.title || workSpace.title;
-            workSpace.image = settingObj.image || workSpace.image;
+            
+            // If there is image to be upload
+            if(image) {
+                let input = `productImages/user_images/${req.file.filename}`;
+                let output = 'productImages/workspace_images/resized/';
+                
+                return compression(input, output, async (error, completed, statistic) => {
+                    // Getting image path of compressed image
+                    let image_path = statistic.path_out_new.slice(13);
+                    workSpace.image = image_path || workSpace.image;
+                    settingObj.image = image_path || workSpace.image;
 
-            for(let i = 0; i < workSpace.roles.custom.length; i++) {
-                // Current Iterated Role
-                const role = workSpace.roles.custom[i];
-
-                // RoleTag ['/everyone'] is not editable
-                if(role.roleTag !== '/everyone') {
-                    const curSettingRole = settingObj.roles.custom[role.roleTag];
-
-                    // Editting Properties
-                    role.name = curSettingRole.name || role.name;
-                    role.color = curSettingRole.color || role.color;
-                    role.priority = curSettingRole.priority || role.priority;
-                    
-                    // Permissions 
-                    if(curSettingRole.permissions) {
-                        const keys = Object.keys(curSettingRole.permissions);
-                        keys.forEach(key => {
-                            role.permissions[key] = curSettingRole.permissions[key];
-                        });
-                    }
+                    return doNext();
+                });
+            } else {
+                if(settingObj.image === '/assets/images/default.jpg') {
+                    workSpace.image = settingObj.image;
                 }
+                return doNext();
             }
 
-            // Posting Save to Database
-            await workSpace.save();
-
-            // Emitting Event to all the connected 'online' sockets to the workspace 
-            workSpace.roles.members.forEach(member => {
-                if(member.status === 'online') {
-                    io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('workSpace', {
-                        type: 'setting_updated',
-                        nsEndPoint: settingObj.nsEndPoint,
-                        settingObj: settingObj
-                    });
+            async function doNext() {
+                for(let i = 0; i < workSpace.roles.custom.length; i++) {
+                    // Current Iterated Role
+                    const role = workSpace.roles.custom[i];
+    
+                    // RoleTag ['/everyone'] is not editable
+                    if(role.roleTag !== '/everyone') {
+                        const curSettingRole = settingObj.roles.custom[role.roleTag];
+    
+                        // Editting Properties
+                        role.name = curSettingRole.name || role.name;
+                        role.color = curSettingRole.color || role.color;
+                        role.priority = curSettingRole.priority || role.priority;
+                        
+                        // Permissions 
+                        if(curSettingRole.permissions) {
+                            const keys = Object.keys(curSettingRole.permissions);
+                            keys.forEach(key => {
+                                role.permissions[key] = curSettingRole.permissions[key];
+                            });
+                        }
+                    }
                 }
-            })
-
-            // Sending Response to the Client
-            return res.json({
-                acknowledgment: {
-                    type: 'success',
-                    mesage: 'Settings posted successfully!',
-                    nsEndPoint: settingObj.nsEndPoint
-                }
-            });
+    
+                // Posting Save to Database
+                await workSpace.save();
+    
+                // Emitting Event to all the connected 'online' sockets to the workspace 
+                workSpace.roles.members.forEach(member => {
+                    if(member.status === 'online') {
+                        io.of(member.connectedDetails.endPoint).to(member.connectedDetails.socketId).emit('workSpace', {
+                            type: 'setting_updated',
+                            nsEndPoint: settingObj.nsEndPoint,
+                            settingObj: settingObj
+                        });
+                    }
+                })
+    
+                // Sending Response to the Client
+                return res.json({
+                    acknowledgment: {
+                        type: 'success',
+                        mesage: 'Settings posted successfully!',
+                        nsEndPoint: settingObj.nsEndPoint
+                    }
+                });
+            }
         }
     } catch (e) {
         return next(e);

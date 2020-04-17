@@ -1410,6 +1410,13 @@ body {
   padding: 0;
 }
 
+#root > .main_bar > .message-display__container > .messages > .message.remove {
+  -webkit-animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
+          animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
+  overflow: hidden;
+  margin: 0;
+}
+
 #root > .main_bar > .message-display__container > .messages > .message.focus {
   border-top: 1px solid #e03600;
   padding-top: 10px;
@@ -1679,8 +1686,8 @@ body {
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p {
   position: relative;
   margin: 7px 0;
-  -webkit-transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
   cursor: default;
   padding-left: 10px;
   width: 100%;
@@ -1693,6 +1700,11 @@ body {
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p.boom {
   -webkit-animation: boom .5s ease-in-out;
           animation: boom .5s ease-in-out;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p.remove {
+  height: 0;
+  overflow: hidden;
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p.focus {
@@ -1902,8 +1914,6 @@ body {
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p {
   position: relative;
   margin: 7px 0;
-  -webkit-transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
   cursor: default;
   padding-left: 72px;
   width: 100%;
@@ -1915,6 +1925,13 @@ body {
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p:empty {
   display: none;
+}
+
+#root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p.remove {
+  -webkit-animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
+          animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
+  overflow: hidden;
+  margin: 0;
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p:hover {
@@ -2697,6 +2714,8 @@ body {
 }
 
 #root > .modal[data-id="confirmation"] {
+  -webkit-animation: addPopupModalWithoutYTransform .19s ease-in-out forwards;
+          animation: addPopupModalWithoutYTransform .19s ease-in-out forwards;
   top: -15%;
   -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
   transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
@@ -2704,7 +2723,214 @@ body {
 }
 
 #root > .modal[data-id="confirmation"].comeDown {
-  top: 10%;
+  top: 4%;
+}
+
+#root > .modal[data-id="confirmation"] .message-data {
+  font-size: 14px;
+  font-weight: 600;
+  color: #F7F4E9;
+  background: #1d1d2c;
+  padding: 1px;
+  width: 100%;
+  margin: 10px 0 0;
+}
+
+@media (max-width: 768px) {
+  #root > .modal[data-id="confirmation"] .message-data {
+    margin: 3px 30px 0 0;
+    max-width: 100%;
+    overflow: auto;
+    font-size: 12px;
+  }
+}
+
+#root > .modal[data-id="confirmation"] .message-data > .new-line {
+  margin-top: 4px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p {
+  position: relative;
+  margin: 7px 0;
+  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  cursor: default;
+  padding-left: 10px;
+  width: 100%;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p:empty {
+  display: none;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p.boom {
+  -webkit-animation: boom .5s ease-in-out;
+          animation: boom .5s ease-in-out;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p.remove {
+  height: 0;
+  overflow: hidden;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p.focus {
+  border-top: 1px solid #e03600;
+  margin: 10px 0 0;
+  padding: 10px 0 0;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p.focus::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p.focus::after {
+  content: 'Message';
+  position: absolute;
+  top: -1px;
+  padding: 0 15px;
+  color: #e03600;
+  background: #1d1d2c;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .image-input {
+  display: block;
+  height: auto;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .image-input > img {
+  border: 2px solid #c2c2c2;
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .image-input + span {
+  margin-left: 0 !important;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .image-loader {
+  width: 300px;
+  height: 270px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border: 2px solid #c2c2c2;
+  border-radius: 6px;
+  background: #151521;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .text:empty {
+  display: none;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .text:first-child:empty {
+  margin: 0;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > span {
+  height: 26px;
+  line-height: 26px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .text {
+  padding: 4px 0;
+  margin: 0 10px 0 0;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .tag-details {
+  position: relative;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0 10px 0 0;
+  color: #984f2c;
+  background: #292940;
+  padding: 4px 8px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-transition: .15s;
+  transition: .15s;
+  padding-left: 27px;
+  white-space: nowrap;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .tag-details.role {
+  padding-left: 8px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .tag-details:hover {
+  background: #161623;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .tag-details > img {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  width: 17px;
+  height: 17px;
+  border-radius: 200px;
+  margin-right: 4px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .react_container {
+  position: absolute;
+  top: -20px;
+  opacity: 0;
+  pointer-events: none;
+  right: 0;
+  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .react_container > .icon {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .react_container > .pin-icon {
+  width: 30px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .react_container > .pin-icon > img {
+  width: 20px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .react_container > .delete-icon > i {
+  color: #d0cbbc;
+  font-size: 19px;
+}
+
+#root > .modal[data-id="confirmation"] .message-data > p > .message-time_stamp {
+  font-size: 10px;
+  position: absolute;
+  right: 10px;
+  bottom: -20px;
+  color: #d0cbbc82;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
 }
 
 #root > .modal[data-id="workspace_settings"] {
@@ -2826,6 +3052,197 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 50px 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details {
+  width: 90%;
+  height: 300px;
+  border: 1px solid rgba(211, 211, 211, 0.1);
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section {
+  width: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  padding: 50px 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row {
+  width: 50%;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row > .workspace_image_holder {
+  width: 100px;
+  height: 100px;
+  border-radius: 200px;
+  overflow: hidden;
+  border: 2px solid #c2bfbfc7;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row > .workspace_image_holder.changed {
+  border: 2px solid #b72c4f;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row > .workspace_image_holder > img {
+  width: 100%;
+  height: 100%;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row > .workspace_remove_btn_holder {
+  margin-top: 44px;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row > .workspace_remove_btn_holder > button {
+  cursor: pointer;
+  width: 80%;
+  outline: none;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 4px 20px;
+  background: #363b40;
+  color: #93a9b5;
+  border-radius: 4px;
+  border: 2px solid #3b4c5f;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  -webkit-transition: .25s ease;
+  transition: .25s ease;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row > .workspace_remove_btn_holder > button:hover {
+  background: #2c3033;
+  -webkit-transform: scale(1.01);
+          transform: scale(1.01);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .left_row > .workspace_remove_btn_holder > button:active {
+  -webkit-transform: scale(0.98);
+          transform: scale(0.98);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .right_row > .workspace_add_image_btn_holder {
+  position: relative;
+  margin-top: 99px;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .right_row > .workspace_add_image_btn_holder > input[type="file"] {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  margin: 0;
+  left: 0;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .right_row > .workspace_add_image_btn_holder > input[type="file"]:hover ~ button {
+  background: #2c30338e;
+  -webkit-transform: scale(1.01);
+          transform: scale(1.01);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .right_row > .workspace_add_image_btn_holder > input[type="file"]:active ~ button {
+  -webkit-transform: scale(0.98);
+          transform: scale(0.98);
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_image_section > .right_row > .workspace_add_image_btn_holder > button {
+  width: 80%;
+  outline: none;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 4px 20px;
+  background: #2e3133;
+  color: #93a9b5;
+  border-radius: 4px;
+  border: 2px solid #3b4c5f;
+  -webkit-transform: scale(1);
+          transform: scale(1);
+  -webkit-transition: .25s ease;
+  transition: .25s ease;
+  pointer-events: none;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_text_section {
+  width: 50%;
+  padding: 50px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_text_section > * {
+  width: 80%;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_text_section > * > label {
+  color: rgba(255, 255, 255, 0.418);
+  font-family: 'Microsoft_taile';
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_text_section > * > input {
+  background: #363b40;
+  color: #88a2b1;
+  border: 2px solid #3b4c5f;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_text_section > * > input:focus {
+  border: 2px solid #4484cc;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_text_section > * > input.changed {
+  border: 2px solid #d34238;
+}
+
+#root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="overview"] > .overview_holder > .overview_details > .workspace_text_section > .workspace_endpoint {
+  margin-top: 40px;
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] {
@@ -4028,6 +4445,10 @@ body {
 #root > .modal .btns > button {
   width: 50%;
   margin: 0 15px 0 0;
+}
+
+#root > .modal .btns > button:last-child {
+  margin-right: 0;
 }
 
 #root > .modal input {
@@ -5826,6 +6247,32 @@ body {
   }
 }
 
+@-webkit-keyframes addPopupModalWithoutYTransform {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-50%) scale(0.95);
+            transform: translateX(-50%) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(-50%) scale(1);
+            transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes addPopupModalWithoutYTransform {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-50%) scale(0.95);
+            transform: translateX(-50%) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateX(-50%) scale(1);
+            transform: translateX(-50%) scale(1);
+  }
+}
+
 @-webkit-keyframes removePopupModal {
   0% {
     opacity: 1;
@@ -6239,34 +6686,34 @@ button:hover {
 @-webkit-keyframes color {
   100%,
   0% {
-    stroke: #d62d203d;
+    stroke: #d62c20;
   }
   40% {
-    stroke: #0057e73d;
+    stroke: #0059e7;
   }
   66% {
-    stroke: #0087433d;
+    stroke: #008743;
   }
   80%,
   90% {
-    stroke: #ffa7003d;
+    stroke: #ffa700;
   }
 }
 
 @keyframes color {
   100%,
   0% {
-    stroke: #d62d203d;
+    stroke: #d62c20;
   }
   40% {
-    stroke: #0057e73d;
+    stroke: #0059e7;
   }
   66% {
-    stroke: #0087433d;
+    stroke: #008743;
   }
   80%,
   90% {
-    stroke: #ffa7003d;
+    stroke: #ffa700;
   }
 }
 
@@ -6367,7 +6814,7 @@ button:hover {
 }
 
 .settingContainer.toBeSaved {
-  border: 2px solid #f14d48;
+  border: 2px solid #d34238;
   border-radius: 6px;
 }
 
@@ -6539,6 +6986,18 @@ button:hover {
     left: 5px;
     -webkit-transform: translateY(-50%) scaleX(1);
             transform: translateY(-50%) scaleX(1);
+  }
+}
+
+@-webkit-keyframes removeHeight {
+  100% {
+    height: 0px;
+  }
+}
+
+@keyframes removeHeight {
+  100% {
+    height: 0px;
   }
 }
 /*# sourceMappingURL=main.css.map */

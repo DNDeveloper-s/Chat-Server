@@ -1,5 +1,13 @@
 const WorkSpace = require('../models/WorkSpace');
 
+/** 
+ * options = {
+ *      endPoint
+ *      userId
+ *      permission
+ * }
+ */
+
 module.exports = async(options) => {
     let allowed = false;
     const workSpace = await WorkSpace.findOne({endPoint: options.endPoint})
@@ -20,6 +28,9 @@ module.exports = async(options) => {
             allowed = true;
         }
     });
+
+    console.log('Line 32', allowed);
+
     return {
         allowed: allowed,
         workSpace: workSpace

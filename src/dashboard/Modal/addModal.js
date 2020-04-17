@@ -1,20 +1,20 @@
 const { postNewNs, joinUsingLink } = require('../Namespace/addNamespace');
-const { postNewRoom, postDeleteRoom } = require('../Room/addRoom');
+const { postNewRoom, postDeleteRoom } = require('../Room/Client/addRoom');
 const { copyToClipboard, loader, tagImplementation, playSound } = require('../../utilities');
 const { addFriend, removeFriend } = require('../User/friend');
 const { loadNotifications } = require('../User/notification');
-const { addMessageModal } = require('../User/message');
 const { addUserModal } = require('../User/userUI');
 const { imageMessageToRoomHandler } = require('../User/message');
-const { addMessageToRoom } = require('../Room/roomUI');
 
 const addModal = (el, options) => {
 
     // Playing Sound
-    playSound({
-        name: 'doorSound2',
-        volume: 0.2
-    })
+    if(!options || !options.dontPlaySound) {
+        playSound({
+            name: 'doorSound2',
+            volume: 0.2
+        })
+    }
 
     const rootEl = document.getElementById('root');
     let backDropHTML = `<div class="back-drop"></div>`;
@@ -243,12 +243,19 @@ const addModal = (el, options) => {
         tagImplementation('#editeable');
         backDropEl.addEventListener('click', removeModal);
     } else if(el === 'CONFIRMATION_MODAL') {
+
         loader();
         const declineModalButtonEl = document.querySelector('.modal[data-id="confirmation"]').querySelector('button.no');
         const acceptModalButtonEl = document.querySelector('.modal[data-id="confirmation"]').querySelector('button.yes');
 
         const modalEl = document.querySelector('.modal[data-id="confirmation"]');
         modalEl.classList.add('comeDown');
+
+        // Remove React_container and extra HTML
+        if(modalEl.querySelector('.react_container') && modalEl.querySelector('.message-time_stamp')) {
+            modalEl.querySelector('.react_container').remove() || 1;
+            modalEl.querySelector('.message-time_stamp').remove() || 1;
+        }
 
         if(acceptModalButtonEl) {
             acceptModalButtonEl.addEventListener('click', async function () {

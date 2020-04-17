@@ -1,6 +1,6 @@
 const {acceptFriendRequest, declineFriendRequest } = require('./friend');
 const { addReplyModal } = require('./message');
-const { joinRoom } = require('../Room/addRoom');
+const { joinRoom } = require('../Room/Client/addRoom');
 const { focusMessageById } = require('../../utilities');
 
 function updateNotificationCount(notificationCount) {

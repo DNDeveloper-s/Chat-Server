@@ -1,6 +1,7 @@
 const { initPickr, toggleSwitch, fetchSingleWorkSpaceSS, dragNdrop, playSound } = require('../../../../../../utilities');
 const { updateSettingsChangeSS, fetchChangedSettings } = require('../../../settingsServer');
 const { postDeleteRole } = require('../Server/deleteRole');
+const { addModal } = require('../../../../../Modal/addModal');
 
 function initPriorityForRoles(modalEl) {
     
@@ -59,7 +60,6 @@ function initPriorityForRoles(modalEl) {
                     nsEndPoint: nsEndPoint,
                     roleTag: role.roleTag,
                     priority: priorityObj[role.roleTag],
-                    method: 'adding'
                 });
             } else {
                 if(settings && settings.roles.custom[role.roleTag] && settings.roles.custom[role.roleTag].priority) {
@@ -67,7 +67,6 @@ function initPriorityForRoles(modalEl) {
                         nsEndPoint: nsEndPoint,
                         roleTag: role.roleTag,
                         priority: 'undefined',
-                        method: 'removing'
                     });
                 }
 
@@ -182,7 +181,6 @@ function initRoleName(role = String, nsEndPoint = String) {
                 nsEndPoint: nsEndPoint,
                 roleTag: role.roleTag,
                 name: 'undefined',
-                method: 'removing'
             });
 
             // Reflecting Change to UI
@@ -192,7 +190,6 @@ function initRoleName(role = String, nsEndPoint = String) {
                 nsEndPoint: nsEndPoint,
                 roleTag: role.roleTag,
                 name: this.value,
-                method: 'adding'
             });
 
             // Reflecting Change to UI
@@ -261,7 +258,6 @@ function initPermissions(role = String, nsEndPoint = String) {
                 category: 'permission_toggle',
                 permission: permission,
                 value: 'undefined',
-                method: 'removing'
             });
         } else {
             permissionEl.classList.add('toBeSaved');
@@ -271,7 +267,6 @@ function initPermissions(role = String, nsEndPoint = String) {
                 category: 'permission_toggle',
                 permission: permission,
                 value: value,
-                method: 'adding'
             });
         }
     });
@@ -290,12 +285,32 @@ function initActions(role = String, nsEndPoint = String) {
 
     // Checking if btn has already event listener attached
     if(!delete_btn.dataset.clickEvent || !delete_btn.dataset.clickEvent == 'true') {
-        delete_btn.addEventListener('click', async function(e) {
+        delete_btn.addEventListener('click', function(e) {
+            let thisBtn = this;
             delete_btn.dataset.clickEvent = true;
 
-            // Posting Delete Role
-            const data = await postDeleteRole(this.dataset.roletag, nsEndPoint);
-            console.log(data);
+            playSound({
+                name: 'confirmSound',
+                volume: 0.1
+            })
+            
+            // Adding Confirmation Modal // User will get two options "Yes" or "No"
+            addModal('CONFIRMATION_MODAL', {
+                message: `Are you sure you want to delete role ${role.name}, This cannot be undone!`,
+                callback: async function(res) {
+
+                    // User clicked "No"
+                    if(!res) {
+                        return 'Nothing To Do!';
+                    }
+
+                    // User clicked "Yes"
+                    // Posting Delete Role
+                    const data = await postDeleteRole(thisBtn.dataset.roletag, nsEndPoint);
+                    console.log(data);
+                },
+                dontPlaySound: true     // default is false
+            })
         })
     }
 }

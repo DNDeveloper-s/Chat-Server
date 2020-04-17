@@ -178,6 +178,45 @@ module.exports.settingHTML = (settingName = String, options = Object) => {
             </div>
         `;
 
+        const overview = `
+            <div class="settings" data-setting="overview">
+                <div class="overview_holder">
+                    <div class="overview_details">
+                        <div class="workspace_image_section">
+                            <div class="left_row">
+                                <div class="workspace_image_holder">
+                                    <img src="/assets/images/Saurabh_DP_square.jpg" alt="">
+                                </div>
+                                <div class="workspace_remove_btn_holder">
+                                    <button class="workspace_remove_image_btn_holder btn">Remove</button>
+                                </div>
+                            </div>
+                            <div class="right_row">
+                                <div class="notice">
+                                    <p><span class="note">Note</span> :- We recommend an image of at least 512x512 for the server.
+                                    </p>
+                                </div>
+                                <div class="workspace_add_image_btn_holder">
+                                    <input type="file" >
+                                    <button class="workspace_add_image_btn_holder btn">Upload Image</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="workspace_text_section">
+                            <div class="workspace_name">
+                                <label for="workspace_name">Workspace Name</label>
+                                <input class="workspace_name_input" name="workspace_name" type="text" placeholder="Enter workspace name!" spellcheck="false">
+                            </div>
+                            <div class="workspace_endpoint">
+                                <label for="workspace_endpoint">Workspace Endpoint</label>
+                                <input class="workspace_endpoint_input" name="workspace_endpoint" type="text" placeholder="Enter workspace endpoint!" spellcheck="false">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;  
+
         // Returning the HTML regarding to the SettingName
         return eval(settingName);
     } catch (e) {

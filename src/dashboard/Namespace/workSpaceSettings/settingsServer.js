@@ -1,6 +1,5 @@
 const { fetchSingleWorkSpaceSS } = require('../../../utilities');
 
-
 /**
  * 
  * @param {Object} options 
@@ -10,68 +9,73 @@ function updateSettingsChangeSS(options) {
     // Fetched Temproray Changes Setting Array 
     // try {
 
-        let settingObj = fetchChangedSettings();
+    let settingObj = fetchChangedSettings();
 
-        const nsDetails = fetchSingleWorkSpaceSS(options.nsEndPoint);
+    const nsDetails = fetchSingleWorkSpaceSS(options.nsEndPoint);
 
-        
-        // Initializing the custom roles array to the settingObj [allRoles]
-        const allRoles = nsDetails.roles.custom.map(role => {
-            return role.roleTag
-        })
+    
+    // Initializing the custom roles array to the settingObj [allRoles]
+    const allRoles = nsDetails.roles.custom.map(role => {
+        return role.roleTag
+    })
 
-        // Array to Object Function [Special]
-        function arrToObj(arr) {
-            let obj = {};
+    // Array to Object Function [Special]
+    function arrToObj(arr) {
+        let obj = {};
 
-            for(let i = 0; i < arr.length; i++) {
-                // Converting to array, which having empty array {members: []}
-                obj[arr[i]] = {members: [], permissions: {}};
+        for(let i = 0; i < arr.length; i++) {
+            // Converting to array, which having empty array {members: []}
+            obj[arr[i]] = {members: [], permissions: {}};
+        }
+
+        return obj;
+    }
+
+    if(!settingObj) {
+        // Setting Count
+        window.settingCount = 0;
+
+        settingObj = {
+            nsEndPoint: options.nsEndPoint,
+            title: saveDetails({
+                key: 'title',
+                obj: settingObj.title
+            }),
+            image: options.image || undefined,
+            roles: {
+                custom: arrToObj(allRoles)
             }
-
-            return obj;
         }
 
-        if(!settingObj) {
-            // Setting Count
-            window.settingCount = 0;
 
-            settingObj = {
-                nsEndPoint: options.nsEndPoint,
-                title: options.title || undefined,
-                image: options.image || undefined,
-                roles: {
-                    custom: arrToObj(allRoles)
-                }
+        console.log(settingObj);
+    } else {
+        settingObj.title = saveDetails({
+            key: 'title',
+            obj: settingObj.title
+        });
+    }
+
+    // This is utility function for ....
+    // if the property is manually passed 'undefined' for deleting the property
+    function saveDetails(prop) {
+        let res = undefined;
+        // Condition for checking if options[prop.key] is not undefined or etc
+        let condition = !prop.permission === true ? options[prop.key] !== undefined : options[prop.key] === true || options[prop.key] === false || options[prop.key] == 'undefined' ;
+        if(condition) {
+            res = options[prop.key]
+
+            if(options[prop.key] == 'undefined') {
+                res = undefined;
             }
+        } else if(prop.obj) {
+            res = prop.obj;
         }
 
-        // Counting Changes
-        if(options.method === 'adding') {
-            settingCount++;
-        } else if(options.method === 'removing') {
-            settingCount--;
-        }
+        return res;
+    }
 
-        // This is utility function for ....
-        // if the property is manually passed 'undefined' for deleting the property
-        function saveDetails(prop) {
-            let res = undefined;
-            // Condition for checking if options[prop.key] is not undefined or etc
-            let condition = !prop.permission === true ? options[prop.key] !== undefined : options[prop.key] === true || options[prop.key] === false || options[prop.key] == 'undefined' ;
-            if(condition) {
-                res = options[prop.key]
-
-                if(options[prop.key] == 'undefined') {
-                    res = undefined;
-                }
-            } else if(prop.obj) {
-                res = prop.obj;
-            }
-
-            return res;
-        }
-
+    if(options.roleTag) {
         settingObj.roles.custom[options.roleTag] = {
             name: saveDetails({
                 key: 'name',
@@ -105,51 +109,52 @@ function updateSettingsChangeSS(options) {
                 permission: true
             });
         }
+    }
 
-        // Saving changed data to SessionStorage
-        sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingObj));
+    // Saving changed data to SessionStorage
+    sessionStorage.setItem('settingsToBeSaved', JSON.stringify(settingObj));
 
-        // Checking if setting has been resetted
-        function isSettingObjResetted() {
-            let conditions = [
-                settingObj.name === undefined,
-                settingObj.title === undefined,
-            ];
-            const roles = Object.keys(settingObj.roles.custom);
-            roles.forEach(role => {
-                conditions.push(settingObj.roles.custom[role].name === undefined);
-                conditions.push(settingObj.roles.custom[role].priority === undefined);
-                conditions.push(settingObj.roles.custom[role].color === undefined);
-                conditions.push(settingObj.roles.custom[role].members.length === 0);
+    // Checking if setting has been resetted
+    function isSettingObjResetted() {
+        let conditions = [
+            settingObj.title === undefined,
+            settingObj.image === undefined,
+        ];
+        const roles = Object.keys(settingObj.roles.custom);
+        roles.forEach(role => {
+            conditions.push(settingObj.roles.custom[role].name === undefined);
+            conditions.push(settingObj.roles.custom[role].priority === undefined);
+            conditions.push(settingObj.roles.custom[role].color === undefined);
+            conditions.push(settingObj.roles.custom[role].members.length === 0);
 
-                // Permissions
-                const valuesArr = Object.values(settingObj.roles.custom[role].permissions);
-                const permissionArr = [];
-                for(let i = 0; i< valuesArr.length; i++) {
-                    if(valuesArr[i] !== undefined && valuesArr !== 'undefined') {
-                        permissionArr.push(true);
-                    }
-                }
-
-                // Permission Condition
-                conditions.push(permissionArr.length === 0);
-            });
-            for(let i = 0; i < conditions.length; i++) {
-                if(!conditions[i]) {
-                    // Something is yet to be resetted or saved
-                    return false;
+            // Permissions
+            const valuesArr = Object.values(settingObj.roles.custom[role].permissions);
+            const permissionArr = [];
+            for(let i = 0; i< valuesArr.length; i++) {
+                if(valuesArr[i] !== undefined && valuesArr !== 'undefined') {
+                    permissionArr.push(true);
                 }
             }
 
-            // All are resetted
-            return true;
+            // Permission Condition
+            conditions.push(permissionArr.length === 0);
+        });
+        for(let i = 0; i < conditions.length; i++) {
+            if(!conditions[i]) {
+                // Something is yet to be resetted or saved
+                return false;
+            }
         }
 
-        if(isSettingObjResetted()) {
-            saveModal.classList.remove('savePopup');
-        } else {
-            saveModal.classList.add('savePopup');
-        }
+        // All are resetted
+        return true;
+    }
+
+    if(isSettingObjResetted()) {
+        saveModal.classList.remove('savePopup');
+    } else {
+        saveModal.classList.add('savePopup');
+    }
 
     // } catch (e) {
     //     console.log(e.message);
@@ -193,6 +198,9 @@ function resetSettingsChanges() {
 
         // Loading role with resetted settings
         show_role_settings(activeRoleTag, settings.nsEndPoint);
+    } else if(curSettingUI === 'overview') {
+        const { loadSettingHTML } = require('./SettingsHandle/settings');
+        loadSettingHTML('overview', modalEl);   
     }
 }
 
@@ -206,17 +214,28 @@ function resetSettingsChanges() {
 async function postSaveSettings() {
     const settingObj = fetchChangedSettings();
 
-    const res = await fetch(`${window.location.origin}/workspace/settings?save=true`, {
+    const formData = new FormData();
+
+    // Checking if image is coming to be uploaded
+    if(nsImageToUpdate) {
+        // Injecting image to formData
+        formData.append('image', nsImageToUpdate);
+    }
+
+    // Appending SettingObj to formData with stringify method will parsed on server
+    formData.append('settingObj', JSON.stringify(settingObj));
+
+    const re = await fetch(`${window.location.origin}/workspace/settings?save=true`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            settingObj: settingObj
-        })
+        body: formData
     })
 
-    return await res.json();
+    if(nsImageToUpdate) {
+        // image to be undefined if exists
+        nsImageToUpdate = undefined;
+    }
+
+    return await re.json();
 }
 
 
