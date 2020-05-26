@@ -12,6 +12,8 @@ module.exports = async(options) => {
     let allowed = false;
     const workSpace = await WorkSpace.findOne({endPoint: options.endPoint})
         .populate('roles.members');
+        
+    console.log(allowed, workSpace, 'Line 1003');
 
     if(workSpace.roles.owner.toString() === options.userId.toString()) {
         return {

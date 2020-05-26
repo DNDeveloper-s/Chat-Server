@@ -350,18 +350,7 @@ const addModal = (el, options) => {
                 privacy: privacy
             });
 
-        } else if(modalEl.dataset.id === 'deleteRoom') {
-            const roomId = modalEl.dataset.roomid;
-            const nsId = modalEl.dataset.nsid;
-            const nsEndPoint = modalEl.dataset.nsEndPoint;
-
-            postDeleteRoom({
-                roomId: roomId,
-                nsId: nsId,
-                nsEndPoint: nsEndPoint
-            })
-
-        } else if(modalEl.dataset.id === 'getInvCode') {
+        }else if(modalEl.dataset.id === 'getInvCode') {
             const strToCopy = modalEl.querySelector('.invite-code > p').innerText;
             copyToClipboard(strToCopy);
         } else if(modalEl.dataset.id === 'workspace_settings') {

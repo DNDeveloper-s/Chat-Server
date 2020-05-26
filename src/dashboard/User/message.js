@@ -107,8 +107,8 @@ async function addMessageModal(userId) {
             const messageInput = attachedModal.querySelector('.input_message').value;
             const curTime = new Date();
             const timeObj = {
-                hours: curTime.getHours(),
-                minutes: curTime.getMinutes()
+                hours: parseIntBase(curTime.getHours()),
+                minutes: parseIntBase(curTime.getMinutes())
             }
             const time = `${timeObj.hours}:${timeObj.minutes}`;
             const convertedTime = tConvert (time);
@@ -271,6 +271,14 @@ function showTypingStatus(type, userId) {
     }
 }
 
+function parseIntBase(num) {
+    if(num.toString().length === 1) {
+        d = `0${num.toString()}`;
+        return d;
+    }
+    return num;
+}
+
 function imageMessageToRoomHandler(nsEndPoint, roomId, data) {
     // data  = {
     //      image: image
@@ -279,8 +287,8 @@ function imageMessageToRoomHandler(nsEndPoint, roomId, data) {
     console.log(nsEndPoint);
     const curTime = new Date();
     const timeObj = {
-        hours: curTime.getHours(),
-        minutes: curTime.getMinutes()
+        hours: parseIntBase(curTime.getHours()),
+        minutes: parseIntBase(curTime.getMinutes())
     }
 
     const time = `${timeObj.hours}:${timeObj.minutes}`;
@@ -342,8 +350,8 @@ function messageToRoomHandler(roomId, nsEndPoint) {
     // Converting Time in a readable format
     const curTime = new Date();
     const timeObj = {
-        hours: curTime.getHours(),
-        minutes: curTime.getMinutes()
+        hours: parseIntBase(curTime.getHours()),
+        minutes: parseIntBase(curTime.getMinutes())
     }
     const time = `${timeObj.hours}:${timeObj.minutes}`;
     const convertedTime = tConvert (time);

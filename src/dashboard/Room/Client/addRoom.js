@@ -1,4 +1,5 @@
 const io = require('socket.io-client');
+const { createNotification, deleteNotification } = require('../../../global-notification');
 
 const { loadRoom } = require('./roomUI');
 // const { getNsSocket, fetchRooms } = require('../Namespace/nsFunctionaily');
@@ -52,29 +53,46 @@ async function joinRoom(roomDetails, msgId) {
     const nsSocket = getNsSocket();
     const leaveRoomId = document.querySelector('.room-details').dataset.roomid;
 
-    // nsSocket.emit('leaveRoom', {roomId: leaveRoomId}, (data) => {
-    //     if(data.type === "success") {
-    //         nsSocket.emit('joinRoom', {roomId: roomDetails.roomId}, (roomData) => {
-    //             loadRoom(roomData);
-    //         });
-    //     }
-    // });
     nsSocket.emit('leaveRoom', {roomId: leaveRoomId}, (data) => {
         if(data.type === "success") {
-            nsSocket.emit('joinRoom', {roomId: roomDetails.roomId}, async() => {
+            nsSocket.emit('joinRoom', {roomId: roomDetails.roomId}, async(allowed) => {
 
-                // Working with sessionStorage
-                let jsonRooms = sessionStorage.getItem(`nsRooms-${roomDetails.nsEndPoint}`);
-                if(!jsonRooms) {
-                    await fetchRooms();
-                    jsonRooms = sessionStorage.getItem(`nsRooms-${roomDetails.nsEndPoint}`);
+                if(allowed) {
+                    // Working with sessionStorage
+                    let jsonRooms = sessionStorage.getItem(`nsRooms-${roomDetails.nsEndPoint}`);
+                    if(!jsonRooms) {
+                        await fetchRooms();
+                        jsonRooms = sessionStorage.getItem(`nsRooms-${roomDetails.nsEndPoint}`);
+                    }
+                    // console.log(jsonRooms);
+                    const rooms = JSON.parse(jsonRooms);
+                    console.log(rooms);
+                    const room = rooms.filter(cur => cur._id.toString() === roomDetails.roomId.toString());
+
+                    loadRoom(room[0], msgId);
+                } else {
+                    if(window.notificationRemoving) {
+                        const interval = setInterval(() => {
+                            if(!window.notificationRemoving) {
+                                createNotification({
+                                    message: 'You are not allowed to join this room!',
+                                    color: 'greenBg',
+                                    timeout: true,
+                                    timeoutVal: 5000 // in ms
+                                });
+
+                                clearInterval(interval);
+                            }
+                        })
+                    } else {
+                        createNotification({
+                            message: 'You are not allowed to join this room!',
+                            color: 'redBg',
+                            timeout: true,
+                            timeoutVal: 5000 // in ms
+                        });
+                    }
                 }
-                // console.log(jsonRooms);
-                const rooms = JSON.parse(jsonRooms);
-                console.log(rooms);
-                const room = rooms.filter(cur => cur._id.toString() === roomDetails.roomId.toString());
-
-                loadRoom(room[0], msgId);
             });
         }
     });

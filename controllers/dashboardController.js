@@ -2,6 +2,8 @@ const WorkSpace = require('../models/WorkSpace');
 const Room = require('../models/Room');
 const User = require('../models/User');
 const compression = require('../middleware/compress-image');
+const checkPermission = require('../middleware/checkPermissions');
+const getPermissionsForUser = require('../middleware/getPermissionsForUser');
 
 // Utils
 const utils = require('../middleware/utils');
@@ -13,7 +15,7 @@ exports.getDashboard = async (req, res, next) => {
     .populate('workSpaces')
     .populate('config.defaultWorkSpace')
     .populate('friendsList')
-    .exec(function(err, user){
+    .exec(async function(err, user){
         // Preparing Friends Details
         const friendsDetails = user.friendsList.map((cur) => {
             const arr = user.notifications.list.filter(cur1 => {
@@ -56,8 +58,17 @@ exports.getDashboard = async (req, res, next) => {
             image: user.image,
             notificationCount: userNotificationCount
         };
+
+        const permissionObj = await getPermissionsForUser(
+            user.config.defaultWorkSpace.endPoint,   // nsEndPoint
+            req.session.user._id                // userId
+        );
+
+        console.log('Line 67', permissionObj);
+
         res.render('dashboardHome', {
             pageTitle: `Dashboard | ${req.session.user.name}`,
+            permissionObj: permissionObj,
             user: userDetails,
             loadOnDefault: false,
             workSpaces: workSpaceDetails,
@@ -689,7 +700,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
         .populate('workSpaces')
         .populate('config.defaultWorkSpace')
         .populate('friendsList') // <==
-        .exec(function(err, user){
+        .exec(async function(err, user){
             const isItFriend = user.friendsList.filter(cur => cur._id.toString() === gotUser._id.toString());
             let isFriend = false;
             if(isItFriend.length > 0) {
@@ -735,11 +746,22 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                 image: user.image,
                 notificationCount: userNotificationCount
             };
+
+            // Getting Permission Object
+            const permissionObj = await getPermissionsForUser(
+                user.config.defaultWorkSpace.endPoint,   // nsEndPoint
+                req.session.user._id                // userId
+            );
+
+            console.log('Line 67', permissionObj);
+
+
             // console.log('Line 429, isFriend', user.friendsList, gotUser._id);
             return res.render('dashboardHome', {
                 pageTitle: `Dashboard | ${req.session.user.name}`,
                 gotUser: gotUser,
                 user: userDetails,
+                permissionObj: permissionObj,
                 workSpaces: workSpaceDetails,
                 loadOnDefault: true,
                 friends: friendsDetails,
@@ -989,23 +1011,45 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
 
                 // Updated for session Store
                 nsSocket.on('joinRoom', async(data, callback) => {
-                    nsSocket.join(data.roomId, async () => {
-                        User.findOne({email: req.session.user.email})
-                            .then((user) => {
-                                user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== data.roomId.toString());
-                                user.notifications.count = user.notifications.list.length;
-                                user.joinedRoom = data.roomId;
-                                return user.save();
-                            })
-                            .catch(e => {
-                                return next(e);
-                            })
-                        nsp.in(data.roomId).clients((err, clients) => {
-                            // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
-                            nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
-                        });
-                        callback();
-                    })
+
+                    const room = await Room.findById(data.roomId);
+                    if(room.privacy === 'Private') {
+
+                        const { allowed, workSpace } = await checkPermission({
+                            userId: req.session.user._id,
+                            endPoint: nsEndPoint,
+                            permission: 'privateRooms'
+                        })
+                        
+
+                        if(allowed) {
+                            return joinRoom();
+                        } else {
+                            return callback(false);
+                        }
+                    } else {
+                        return joinRoom();
+                    }    
+
+                    function joinRoom() {
+                        nsSocket.join(data.roomId, async () => {
+                            User.findOne({email: req.session.user.email})
+                                .then((user) => {
+                                    user.notifications.list = user.notifications.list.filter(cur => cur.notificationType !== 'msgToRoom' || cur.roomId.toString() !== data.roomId.toString());
+                                    user.notifications.count = user.notifications.list.length;
+                                    user.joinedRoom = data.roomId;
+                                    return user.save();
+                                })
+                                .catch(e => {
+                                    return next(e);
+                                })
+                            nsp.in(data.roomId).clients((err, clients) => {
+                                // nsSocket.broadcast.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                                nsp.to(data.roomId).emit('roomJoined', {clients: clients, data: 'a new user has joined the room'}); // broadcast to everyone in the room 
+                            });
+                            return callback(true);
+                        })
+                    }
                 })
 
                 // nsSocket.on('joinRoom', async(data, callback) => {
@@ -1108,7 +1152,7 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
             .populate('workSpaces')
             .populate('config.defaultWorkSpace')
             .populate('friendsList') // <==
-            .exec(function(err, user){
+            .exec(async function(err, user){
                 const friendsDetails = user.friendsList.map((cur) => {
                     const arr = user.notifications.list.filter(cur1 => {
                         return (cur1.notificationType === 'rcvd_msg' && cur1.userDetails.userId.toString() === cur._id.toString());
@@ -1149,9 +1193,19 @@ exports.getWorkSpaceFunctions = async (req, res, next) => {
                     image: user.image,
                     notificationCount: userNotificationCount
                 };
+
+                // Getting permission Object
+                const {permissionObj} = await getPermissionsForUser(
+                    user.config.defaultWorkSpace.endPoint,   // nsEndPoint
+                    req.session.user._id                // userId
+                );
+
+                console.log('Line 67', permissionObj);
+
                 return res.render('dashboardHome', {
                     pageTitle: `Dashboard | ${req.session.user.name}`,
                     user: userDetails,
+                    permissionObj: permissionObj,
                     loadOnDefault: false,
                     workSpaces: workSpaceDetails,
                     friends: friendsDetails,
@@ -1182,6 +1236,14 @@ exports.fetchDetails = async (req, res, next) => {
             const cur = user.mentions[i];
 
             const nsDetails = await WorkSpace.findOne({endPoint: cur.nsDetails.endPoint});
+
+            const room = await Room.findById(cur.roomDetails._id);
+
+            const messageInRoom = room.messages.filter(cur1 => cur1._id.toString() === cur.messageObj._id.toString())[0];
+            let messageDeleted = false;
+            if(!messageInRoom) {
+                messageDeleted = true;
+            }
             
             mentions.push({
                 nsDetails: {
@@ -1200,7 +1262,8 @@ exports.fetchDetails = async (req, res, next) => {
                     },
                     body: cur.messageObj.body,
                     time: cur.messageObj.time
-                }
+                },
+                messageDeleted: messageDeleted
             });
         }
         

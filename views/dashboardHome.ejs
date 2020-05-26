@@ -87,9 +87,11 @@
                             class="material-icons">arrow_drop_down</i>
                     </div>
                     <div class="ns-options dropdown">
-                        <div class="ns-option workspace-settings removeBackDropOnClick remove_sidebar">
-                            <p class="red">Workspace Settings</p>
-                        </div>
+                        <% if(permissionObj.workSpaceSettings) { %>
+                            <div class="ns-option workspace-settings removeBackDropOnClick remove_sidebar">
+                                <p class="red">Workspace Settings</p>
+                            </div>
+                        <% } %>
                         <div class="ns-option invite-friend removeBackDropOnClick remove_sidebar">
                             <p class="green">Invite Friend</p>
                         </div>
@@ -472,7 +474,7 @@
                 </div>
                 <div class="input" id="editable" data-text="Enter your message!" contenteditable="true" role="textbox"
                     tabindex="0">
-
+                    <span class="text"></span>
                 </div>
                 <!-- <div class="emoji-input">
                     <div class="input" id="editable" data-text="Enter your message!" contenteditable="true" role="textbox" tabindex="0"></div>

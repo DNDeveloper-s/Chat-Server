@@ -42,14 +42,28 @@ function addRooms(roomDetails) {
     
 
     lastRoom.querySelector('i.delete-room').addEventListener('click', function(e) {
-        addModal('CONFIRM', {
-            roomDetails: {
-                roomId: this.parentElement.dataset.id,
-                roomNsId: this.parentElement.dataset.nsid,
-                nsEndPoint: this.parentElement.dataset.ns,
-                roomName: this.parentElement.querySelector('.roomName').innerText
+
+        const roomId = this.parentElement.dataset.id;
+        const roomNsId = this.parentElement.dataset.nsid;
+        const nsEndPoint = this.parentElement.dataset.ns;
+        const roomName = this.parentElement.querySelector('.roomName').innerText;
+
+
+        addModal('CONFIRMATION_MODAL', {
+            message: `Are you sure you want to delete the room ${roomName}.`,
+            callback: function(res) {
+                    if(!res) {
+                        return 'Nothing to do!';
+                    }
+
+                    postDeleteRoom({
+                        roomId: roomId,
+                        nsId: roomNsId,
+                        nsEndPoint: nsEndPoint
+                    })
+                }
             }
-        });
+        );
     });
 
     lastRoom.querySelector('.room-name').addEventListener('click', function(e) {
@@ -102,13 +116,32 @@ function addNewRoom(roomDetails, workSpace) {
     
 
     lastRoom.querySelector('i.delete-room').addEventListener('click', function(e) {
-        addModal('CONFIRM', {
-            roomDetails: {
-                roomId: this.parentElement.dataset.id,
-                roomNsId: this.parentElement.dataset.nsid,
-                nsEndPoint: this.parentElement.dataset.ns,
-                roomName: this.parentElement.querySelector('.roomName').innerText
+        // addModal('CONFIRMATION_MODAL', {
+        //     roomDetails: {
+        //         roomId: this.parentElement.dataset.id,
+        //         roomNsId: this.parentElement.dataset.nsid,
+        //         nsEndPoint: this.parentElement.dataset.ns,
+        //         roomName: this.parentElement.querySelector('.roomName').innerText
+        //     }
+        // });
+
+        const roomId = this.parentElement.dataset.id;
+        const roomNsId = this.parentElement.dataset.nsid;
+        const nsEndPoint = this.parentElement.dataset.ns;
+        const roomName = this.parentElement.querySelector('.roomName').innerText;
+
+
+        addModal('CONFIRMATION_MODAL', function(res) {
+            if(!res) {
+                return 'Nothing to do!';
             }
+
+            postDeleteRoom({
+                roomId: roomId,
+                nsId: roomNsId,
+                nsEndPoint: nsEndPoint
+            })
+
         });
     });
 
@@ -183,6 +216,7 @@ function loadMessageToRoom(messages, msgId) {
             className = 'user_dp';
         }
         if(messageContainer.childElementCount > 1 && messageContainer.firstElementChild.dataset.userid.toString() === message.user.id.toString()) {
+            console.log(message);
             if(message.body !== '<span class="text"></span>') {
                 messageContainer.firstElementChild.querySelector('.message-inner > .message-data').insertAdjacentHTML('beforeend', `
                     <p data-messageid="${message._id}">${message.body}
@@ -206,7 +240,7 @@ function loadMessageToRoom(messages, msgId) {
             //     messageContainer.firstElementChild.querySelector('.message-data').lastElementChild.style.display = 'none';
             // }
         } else {
-            
+            console.log(message);
             const messageHtml = `
                 <div class="message" data-userid=${message.user.id}>
                     <div class="message-inner">
@@ -382,6 +416,10 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, options) {
                     })
                 }
             });
+
+            // Initializing MessageSettings
+            const { roomFunctionality } = require('../room');
+            roomFunctionality();
         }
     } else {
         // Handling the case where client is not in the same room
@@ -394,11 +432,11 @@ function addMessageToRoom(messageObj, roomId, nsEndPoint, options) {
 
         // 1. When the client is in the same workspace but same room
         // if(nsContainer) {
-            const room = roomContainer.querySelector(`.room[data-id="${roomId}"]`);
-            if(room) {
-                room.querySelector('.room-notification').dataset.nothing = "false";
-            }
-            const ns = nameSpaceContainer.querySelector(`.name_space[data-ns="${nsEndPoint}"]`);
+                const room = roomContainer.querySelector(`.room[data-id="${roomId}"]`);
+                if(room) {
+                    room.querySelector('.room-notification').dataset.nothing = "false";
+                }
+                const ns = nameSpaceContainer.querySelector(`.name_space[data-ns="${nsEndPoint}"]`);
             console.log(ns, nsEndPoint);
             ns.querySelector('.ns-notification').dataset.nothing = "false";
         // }

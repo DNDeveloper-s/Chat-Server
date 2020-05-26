@@ -130,7 +130,8 @@ $sidebar_grad1: #151521;
 $sidebar_grad2: linear-gradient(180deg, #1d1d2c 0%, #151521 100%);
 $btn_grad: linear-gradient(180deg, #1d1d2cd6 0%, #0b0b15 100%);
 $friendlist_grad: linear-gradient(180deg, #222235 0%, #161623 100%);
-$fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
+// $fashioned_bezier: cubic-bezier(.63,1.19,0,1.02);
+$fashioned_bezier: cubic-bezier(0.5, 1.28, 0.3, 1.03);
 $focus_color: #e03600;
 $purple: #693089;
 
@@ -890,9 +891,10 @@ $purple: #693089;
                         top: 100%;
                         left: 0;
                         width: 100%;
-                        background: linear-gradient(180deg, #2b2b2b 0%, #252424 100%);
-                        box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-                        border: 0.5px solid #232222;
+                        // background: linear-gradient(180deg, #2b2b2b 0%, #252424 100%);
+                        background: #101019;
+                        box-shadow: 0 2px 2px rgba(0,0,0,0.4);
+                        // border: 0.5px solid #232222;
                         z-index: 199;
                         display: none;
 
@@ -909,7 +911,7 @@ $purple: #693089;
                             }
 
                             &:hover {
-                                background: #d4c68b12;
+                                background: #ababab08;
                             }
                         }
                     }
@@ -5564,6 +5566,16 @@ $purple: #693089;
                                                     font-size: 13px;
                                                 }
                                             }
+
+                                            > .messageDeleted {
+                                                color: #e20d0d;
+                                                font-size: 10px;
+                                                font-weight: 300;
+                                                font-family: 'Montserrat_Regular';
+                                                margin-left: 10px;
+                                                border: 1px solid #ffffff1a;
+                                                padding: 1px 6px;
+                                            }
                                         }
 
                                         > .action_btn {
@@ -6332,5 +6344,85 @@ $white: #eeeeee;
 @keyframes removeHeight {
     100% {
         height: 0px
+    }
+}
+
+.notification_container {
+    position: absolute;
+    // bottom: 20px;
+    // right: 20px;
+    bottom: 0;
+    right: 0;
+    width: 400px;
+    padding: 20px;
+    transition: 0.4s cubic-bezier(.5,1.28,.3,1.03);
+    // min-height: 90vh;
+    max-height: 90vh;
+    overflow: hidden auto;
+    display: flex;
+    flex-direction: column-reverse;
+
+    .notification {
+        position: absolute;
+        width: calc(100% - 40px);
+
+        display: flex;
+        align-items: flex-start;
+        padding: 13px 18px;
+        color: #f1f1f1;
+        border: 2px solid #f1f1f1;
+        border-radius: 6px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+        transition: 0.4s cubic-bezier(.5,1.28,.3,1.03);
+
+        &.greenBg {
+            background: #2f9a5f;
+        }
+
+        &.redBg {
+            background: #bb3838;
+        }
+
+        // Temp Settings
+        // margin: 20px 0 0;
+        // top: 0;
+
+        &.hidden {
+            transform: translateX(120%)
+        }
+
+        &_close-btn {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: 4px;
+            right: 10px;
+            cursor: pointer;
+
+            > svg {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        &_img {
+            flex-shrink: 0;
+            width: 30px;
+            height: 34px;
+            padding: 4px 0 0;
+
+            > img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        &_txt {
+            // flex-shrink: 0;
+            margin-left: 10px;
+            line-height: 1.4;
+            font-size: 14.5px;
+            padding-right: 8px;
+        }
     }
 }

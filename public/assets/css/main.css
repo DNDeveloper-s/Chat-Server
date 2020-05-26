@@ -316,8 +316,8 @@ body {
   background: lightgrey;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  -webkit-transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 .auth-modal > form > .input-control.checkbox > .dot > .yes {
@@ -330,8 +330,8 @@ body {
   height: 10px;
   background: #2DA8D8FF;
   border-radius: 20px;
-  -webkit-transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   opacity: 0;
 }
 
@@ -340,8 +340,8 @@ body {
   font-weight: 900;
   margin-bottom: 7px;
   color: #0b252f;
-  -webkit-transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.25s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 .auth-modal > form > .input-control > label.checkbox {
@@ -611,8 +611,8 @@ body {
   background: #2f2c2c;
   -webkit-box-shadow: 1px 0 2px rgba(0, 0, 0, 0.4);
           box-shadow: 1px 0 2px rgba(0, 0, 0, 0.4);
-  -webkit-transition: 0.35s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.35s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.35s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.35s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 @media (max-width: 768px) {
@@ -913,11 +913,9 @@ body {
   top: 100%;
   left: 0;
   width: 100%;
-  background: -webkit-gradient(linear, left top, left bottom, from(#2b2b2b), to(#252424));
-  background: linear-gradient(180deg, #2b2b2b 0%, #252424 100%);
-  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-  border: 0.5px solid #232222;
+  background: #101019;
+  -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
   z-index: 199;
   display: none;
 }
@@ -936,7 +934,7 @@ body {
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .namespace-name > .ns-options.dropdown > .ns-option:hover {
-  background: #d4c68b12;
+  background: #ababab08;
 }
 
 #root > .nav_bar > .nameSpaceDetails-Room_container > .back-drop {
@@ -1411,8 +1409,8 @@ body {
 }
 
 #root > .main_bar > .message-display__container > .messages > .message.remove {
-  -webkit-animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
-          animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
+  -webkit-animation: removeHeight 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03) forwards;
+          animation: removeHeight 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03) forwards;
   overflow: hidden;
   margin: 0;
 }
@@ -1500,8 +1498,8 @@ body {
   opacity: 0;
   pointer-events: none;
   right: 0;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   background: #191926;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -1563,8 +1561,8 @@ body {
   color: #d0cbbc82;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .user-img {
@@ -1686,8 +1684,8 @@ body {
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p {
   position: relative;
   margin: 7px 0;
-  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   cursor: default;
   padding-left: 10px;
   width: 100%;
@@ -1833,8 +1831,8 @@ body {
   opacity: 0;
   pointer-events: none;
   right: 0;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-data > p > .react_container > .icon {
@@ -1863,8 +1861,8 @@ body {
   color: #d0cbbc82;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .header > .message-body > .message-status {
@@ -1928,8 +1926,8 @@ body {
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p.remove {
-  -webkit-animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
-          animation: removeHeight 0.25s cubic-bezier(0.63, 1.19, 0, 1.02) forwards;
+  -webkit-animation: removeHeight 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03) forwards;
+          animation: removeHeight 0.25s cubic-bezier(0.5, 1.28, 0.3, 1.03) forwards;
   overflow: hidden;
   margin: 0;
 }
@@ -2082,8 +2080,8 @@ body {
   opacity: 0;
   pointer-events: none;
   right: 0;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   background: #191926;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -2145,8 +2143,8 @@ body {
   color: #d0cbbc82;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .main_bar > .message-display__container > .back-drop {
@@ -2162,8 +2160,8 @@ body {
 #root > .main_bar > .message-display__container > .workspace-clients {
   width: 0;
   overflow: hidden;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   height: 100%;
   background: #151521;
 }
@@ -2528,8 +2526,8 @@ body {
   position: relative;
   height: 30px;
   cursor: pointer;
-  -webkit-transition: 0.14s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.14s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.14s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.14s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .main_bar > .send-message > .selectors > .image_input > input[type="file"] {
@@ -2717,8 +2715,8 @@ body {
   -webkit-animation: addPopupModalWithoutYTransform .19s ease-in-out forwards;
           animation: addPopupModalWithoutYTransform .19s ease-in-out forwards;
   top: -15%;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   z-index: 301;
 }
 
@@ -2752,8 +2750,8 @@ body {
 #root > .modal[data-id="confirmation"] .message-data > p {
   position: relative;
   margin: 7px 0;
-  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   cursor: default;
   padding-left: 10px;
   width: 100%;
@@ -2899,8 +2897,8 @@ body {
   opacity: 0;
   pointer-events: none;
   right: 0;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal[data-id="confirmation"] .message-data > p > .react_container > .icon {
@@ -2929,8 +2927,8 @@ body {
   color: #d0cbbc82;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal[data-id="workspace_settings"] {
@@ -3453,8 +3451,8 @@ body {
       -ms-flex-align: center;
           align-items: center;
   padding: 15px 30px;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   background: rgba(255, 255, 255, 0);
   border-bottom: 1px solid #d3d3d314;
 }
@@ -3481,8 +3479,8 @@ body {
   background: white;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal[data-id="workspace_settings"] > .main_nav > .settings[data-setting="roles"] > .roles_overview > .role_permissions .permission.toBeSaved {
@@ -4838,8 +4836,8 @@ body {
   padding: 5px 10px;
   cursor: pointer;
   margin: 2px 0;
-  -webkit-transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.1s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.1s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.1s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > .role_type_drop-down .role_type:hover {
@@ -4872,8 +4870,8 @@ body {
   color: #020202;
   font-weight: 800;
   cursor: pointer;
-  -webkit-transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.155s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.155s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .roles_container > .role_tag > i:hover {
@@ -4897,8 +4895,8 @@ body {
   pointer-events: none;
   visibility: hidden;
   background: #0000008f;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .add_roles {
@@ -4983,8 +4981,8 @@ body {
           box-shadow: inset 0px 0px 0px #7ac142;
   opacity: 0;
   pointer-events: none;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .add_roles .checkmark__circle {
@@ -5065,8 +5063,8 @@ body {
   pointer-events: none;
   -webkit-transform: translateX(15px);
           transform: translateX(15px);
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .add_roles > input {
@@ -5086,8 +5084,8 @@ body {
 #root > .modal > .attached-modal .roles-head > .roles_mechanism > .add_roles > i {
   font-size: 35px;
   cursor: pointer;
-  -webkit-transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.155s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.155s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.155s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   color: darkgrey;
 }
 
@@ -5191,8 +5189,8 @@ body {
 }
 
 #root > .modal > .attached-modal .members-list > .clients .client {
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .members-list > .clients .client.remove {
@@ -5241,8 +5239,8 @@ body {
       -ms-flex-align: center;
           align-items: center;
   cursor: pointer;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   -webkit-transform: translateX(10px);
           transform: translateX(10px);
   pointer-events: none;
@@ -5259,8 +5257,8 @@ body {
           transform: translateX(10px);
   pointer-events: none;
   opacity: 0;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .members-list > .clients .client .action_btn.loading {
@@ -5328,8 +5326,8 @@ body {
 #root > .modal > .attached-modal .members-list > .clients .client .action_btn > i {
   -webkit-transform: rotateZ(45deg);
           transform: rotateZ(45deg);
-  -webkit-transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.23s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.23s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   color: #000;
 }
 
@@ -5365,8 +5363,8 @@ body {
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .search-members > .search_member_container.active {
@@ -5380,8 +5378,8 @@ body {
 #root > .modal > .attached-modal .search-members > .search_member_container .client.remove {
   height: 0;
   overflow: hidden;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .search-members > .search_member_container .image {
@@ -5411,8 +5409,8 @@ body {
       -ms-flex-align: center;
           align-items: center;
   cursor: pointer;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .search-members > .search_member_container .action_btn:hover > .add_member_to_role {
@@ -5460,20 +5458,20 @@ body {
   pointer-events: none;
   -webkit-transform: translateX(20px);
           transform: translateX(20px);
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .search-members > .search_member_container .action_btn > .add_member_to_role {
-  -webkit-transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.23s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.23s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.23s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   color: #fff;
   opacity: 1;
   pointer-events: auto;
   -webkit-transform: translateX(0);
           transform: translateX(0);
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .search-members > .search_member_container .action_btn > .loader-container {
@@ -5486,8 +5484,8 @@ body {
   pointer-events: none;
   -webkit-transform: translateX(20px);
           transform: translateX(20px);
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .simple-settings {
@@ -5506,8 +5504,8 @@ body {
       -ms-flex-pack: start;
           justify-content: flex-start;
   height: calc(100% - 137px);
-  -webkit-transition: 0.6s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.6s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.6s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.6s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 #root > .modal > .attached-modal .btn {
@@ -5550,8 +5548,8 @@ body {
           justify-content: flex-start;
   height: calc(100% - 137px);
   background: white;
-  -webkit-transition: 0.6s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.6s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.6s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.6s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   overflow: auto;
   -webkit-box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3) inset;
           box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3) inset;
@@ -5614,8 +5612,8 @@ body {
   opacity: 1;
   -webkit-transform: translateY(0);
           transform: translateY(0);
-  -webkit-transition: all 0.7s cubic-bezier(0.63, 1.19, 0, 1.02) 0.5s;
-  transition: all 0.7s cubic-bezier(0.63, 1.19, 0, 1.02) 0.5s;
+  -webkit-transition: all 0.7s cubic-bezier(0.5, 1.28, 0.3, 1.03) 0.5s;
+  transition: all 0.7s cubic-bezier(0.5, 1.28, 0.3, 1.03) 0.5s;
 }
 
 #root > .modal > .response_modal.success > button {
@@ -5678,8 +5676,8 @@ body {
       -ms-flex-align: center;
           align-items: center;
   padding: 10px 0;
-  -webkit-transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.3s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.3s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   z-index: auto;
 }
 
@@ -6029,14 +6027,24 @@ body {
   }
 }
 
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > .messageDeleted {
+  color: #e20d0d;
+  font-size: 10px;
+  font-weight: 300;
+  font-family: 'Montserrat_Regular';
+  margin-left: 10px;
+  border: 1px solid #ffffff1a;
+  padding: 1px 6px;
+}
+
 .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn {
   background: #ffffff14;
   padding: 2px 12px;
   opacity: 0;
   -webkit-transform: translateY(-8px);
           transform: translateY(-8px);
-  -webkit-transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.2s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn > p {
@@ -6574,8 +6582,8 @@ button:hover {
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
-  -webkit-transition: opacity 0.5s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: opacity 0.5s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: opacity 0.5s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: opacity 0.5s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 .disconnected-modal.enable {
@@ -6809,8 +6817,8 @@ button:hover {
 .settingContainer {
   position: relative;
   border: 2px solid transparent;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
 .settingContainer.toBeSaved {
@@ -6838,8 +6846,8 @@ button:hover {
   color: #bfbfbfb8;
   border-radius: 4px;
   background: #5b5c5d;
-  -webkit-transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
-  transition: 0.15s cubic-bezier(0.63, 1.19, 0, 1.02);
+  -webkit-transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.15s cubic-bezier(0.5, 1.28, 0.3, 1.03);
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -6999,5 +7007,90 @@ button:hover {
   100% {
     height: 0px;
   }
+}
+
+.notification_container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 400px;
+  padding: 20px;
+  -webkit-transition: 0.4s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.4s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  max-height: 90vh;
+  overflow: hidden auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
+}
+
+.notification_container .notification {
+  position: absolute;
+  width: calc(100% - 40px);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  padding: 13px 18px;
+  color: #f1f1f1;
+  border: 2px solid #f1f1f1;
+  border-radius: 6px;
+  -webkit-box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  -webkit-transition: 0.4s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+  transition: 0.4s cubic-bezier(0.5, 1.28, 0.3, 1.03);
+}
+
+.notification_container .notification.greenBg {
+  background: #2f9a5f;
+}
+
+.notification_container .notification.redBg {
+  background: #bb3838;
+}
+
+.notification_container .notification.hidden {
+  -webkit-transform: translateX(120%);
+          transform: translateX(120%);
+}
+
+.notification_container .notification_close-btn {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 4px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.notification_container .notification_close-btn > svg {
+  width: 10px;
+  height: 10px;
+}
+
+.notification_container .notification_img {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  width: 30px;
+  height: 34px;
+  padding: 4px 0 0;
+}
+
+.notification_container .notification_img > img {
+  width: 100%;
+  height: 100%;
+}
+
+.notification_container .notification_txt {
+  margin-left: 10px;
+  line-height: 1.4;
+  font-size: 14.5px;
+  padding-right: 8px;
 }
 /*# sourceMappingURL=main.css.map */

@@ -3,7 +3,7 @@ const { updateStatus } = require('../User/friend');
 const { updateNotificationCount } = require('../User/notification'); 
 const { pushRecievedMessageToUI, showTypingStatus } = require('../User/message'); 
 const { addMessageToRoom } = require('../Room/Client/roomUI'); 
-const { loader, dragNdrop, fetchSingleWorkSpaceSS, fetchAllWorkSpacesSS } = require('../../utilities');
+const { loader, dragNdrop, fetchSingleWorkSpaceSS, fetchAllWorkSpacesSS, getPermissionsForUser, addEventToWorkspaceSettings } = require('../../utilities');
 
 const { showRooms, loadRoom, addRooms, deleteRooom } = require('../Room/Client/roomUI'); 
 const { reloadActiveSetting } = require('./workSpaceSettings/settings_nav');
@@ -518,6 +518,20 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
             sessionStorage.setItem(`nsRooms-${data.nsEndPoint}`, JSON.stringify(rooms));
 
 
+            // Updating the mentions message object
+            const jsonmentions = sessionStorage.getItem('mentions');
+            const data2 = JSON.parse(jsonmentions);
+
+            data2.filter(cur => {
+                if(cur.messageObj._id.toString() === data2.messageId.toString()) {
+                    cur.messageDeleted = true;
+                }
+            });
+
+            sessionStorage.setItem(`mentions`, JSON.stringify(data2));
+
+
+
         }
     })
 
@@ -612,6 +626,28 @@ async function loadNamespace(endPoint, dontLoadDefaultRoom) {
     // Injecting nsid to page
     const nsContainer = document.querySelector('.nameSpaceDetails-Room_container');
     nsContainer.dataset.nsendpoint = endPoint;
+
+    // Updating Dropdown for workspace settings
+    const nsDropDown = document.querySelector('.ns-options.dropdown');
+    
+    const { permissionObj } = getPermissionsForUser(endPoint);
+
+    let workSpaceSettingsNsOptionEl = document.querySelector('.ns-option.workspace-settings');
+    
+    if(workSpaceSettingsNsOptionEl) {
+        workSpaceSettingsNsOptionEl.remove();
+    }
+
+    if(permissionObj.workSpaceSettings) {
+        nsDropDown.insertAdjacentHTML('afterbegin', `
+            <div class="ns-option workspace-settings removeBackDropOnClick remove_sidebar">
+                <p class="red">Workspace Settings</p>
+            </div>
+        `);
+
+        addEventToWorkspaceSettings();
+    }
+
 
     // Working with sessionStorage
     let jsonRooms = sessionStorage.getItem(`nsRooms-${endPoint}`);

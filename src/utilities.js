@@ -319,17 +319,17 @@ function tagImplementation(inputBox_SELECTOR) {
     let workspaces = JSON.parse(jsonData);
 
     inputBox.addEventListener('focus', e => {
-        if(inputBox.childElementCount === 0) {
-            inputBox.innerHTML = '<span class="text"></span>';
-        }
+        // if(inputBox.childElementCount === 0) {
+        //     inputBox.innerHTML = '<span class="text"></span>';
+        // }
         const jsonData = sessionStorage.getItem('all_workspaces');
         workspaces = JSON.parse(jsonData);
     })
     inputBox.addEventListener('keypress', function(e){ return e.which != 13 });
     inputBox.addEventListener('keyup', function(e) {
-        if(inputBox.childElementCount === 0) {
-            inputBox.innerHTML = '<span class="text"></span>';
-        }
+        // if(inputBox.childElementCount === 0) {
+        //     inputBox.innerHTML = '<span class="text"></span>';
+        // }
 
         const nsEndPoint = nsContainer.dataset.nsendpoint;
         if((e.keyCode >= 64 && e.keyCode <= 91) || e.key === '@' || e.key === "Backspace") {
@@ -1080,6 +1080,94 @@ function playSound(options) {
     audio.play();
 }
 
+function getPermissionsForUser(nsEndPoint) {
+    // Fetching Workspace through the database
+    const workSpace = fetchSingleWorkSpaceSS(nsEndPoint);
+    const userId = document.getElementById('user-dp').dataset.userid;
+
+    const permissionObj = {
+        fullAccess: false,
+        privateRooms: false,
+        editRoles: false,
+        deletedMessages: false,
+        pinMessages: false,
+        roomHandler: false,
+        workSpaceSettings: false,
+        invitations: false
+    }
+
+    if(workSpace.roles.owner._id.toString() === userId.toString()) {
+        // Permission Object
+        const keys = Object.keys(permissionObj);
+    
+        for(let i = 0; i < keys.length; i++) {
+            permissionObj[keys[i]] = true;
+        }
+
+        return {
+            workSpace: workSpace,
+            permissionObj: permissionObj
+        };
+    }
+
+    // Fetching Roles of the highest priority
+    workSpace.roles.custom.filter(cur => {
+        // Fetching if member is part of the role
+        const member = cur.members.filter(cur1 => cur1.toString() === userId.toString())[0];
+        console.log(member);
+        // yes if it is part of the role
+        if(member) {
+            // Permission Object
+            const keys = Object.keys(cur.permissions);
+    
+            for(let i = 0; i < keys.length; i++) {
+                if(cur.permissions[keys[i]]) {
+                    permissionObj[keys[i]] = true;
+                }
+            }
+        }
+    })
+
+    console.log(userId);
+
+    return {
+        workSpace: workSpace,
+        permissionObj: permissionObj
+    };
+}
+
+function addEventToWorkspaceSettings() {
+    const nsDropdown = document.querySelector('.namespace-name > .ns-options.dropdown');
+    const workspaceSettings = nsDropdown.querySelector('.workspace-settings');
+
+    const { addModal } = require('./dashboard/Modal/addModal');
+    const { workSpaceSettings } = require('./dashboard/Namespace/workSpaceSettings/workspaceSettings');
+
+    if(workspaceSettings) {
+        workspaceSettings.addEventListener('click', async(e) => {
+            e.preventDefault();
+    
+            const nsEndPoint = workspaceSettings.closest('.ns-options').dataset.id;
+    
+            addModal(`WORKSPACESETTINGS`, {
+                nsEndPoint: nsEndPoint
+            });
+            // const res = await fetch(`${window.location.origin}/dashboard/workspace?nsEndPoint=${nsEndPoint}&getWorkspaceDetails=true`, {
+            //     method: "GET"
+            // });
+    
+            // const data = await res.json();
+    
+            // console.log(data);
+            
+            // if(data.acknowledgment.type === 'success') {
+            workSpaceSettings();
+                // workSpaceSettings(data);
+            // }
+            
+        });
+    }
+}
 
 module.exports = { 
     bgAnim, 
@@ -1103,5 +1191,7 @@ module.exports = {
     dragNdrop,
     fetchAllWorkSpacesSS,
     fetchSingleWorkSpaceSS,
-    playSound
+    playSound,
+    getPermissionsForUser,
+    addEventToWorkspaceSettings
 }

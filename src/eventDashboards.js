@@ -2,7 +2,6 @@ const { addModal } = require('./dashboard/Modal/addModal');
 // const { addUserModal } = require('./dashboard/User/userUI');
 const { messageToRoomHandler } = require('./dashBoard/User/message');
 const { fetchMentions } = require('./utilities');
-const { workSpaceSettings } = require('./dashboard/Namespace/workSpaceSettings/workspaceSettings');
 // const randomize = require('randomatic');
 
 module.exports = () => {
@@ -75,29 +74,6 @@ module.exports = () => {
             modalEl.querySelector('.invite-code').innerHTML = `<p>${data.acknowledgment.link}</p>`
         }
     })
-    const workspaceSettings = nsDropdown.querySelector('.workspace-settings');
-    workspaceSettings.addEventListener('click', async(e) => {
-        e.preventDefault();
-
-        const nsEndPoint = workspaceSettings.closest('.ns-options').dataset.id;
-
-        addModal(`WORKSPACESETTINGS`, {
-            nsEndPoint: nsEndPoint
-        });
-        // const res = await fetch(`${window.location.origin}/dashboard/workspace?nsEndPoint=${nsEndPoint}&getWorkspaceDetails=true`, {
-        //     method: "GET"
-        // });
-
-        // const data = await res.json();
-
-        // console.log(data);
-        
-        // if(data.acknowledgment.type === 'success') {
-        workSpaceSettings();
-            // workSpaceSettings(data);
-        // }
-        
-    });
     
     const notificationCount = document.querySelector('.notification-count');
     notificationCount.addEventListener('click', function () {
@@ -178,6 +154,12 @@ module.exports = () => {
         mentionsModal.style.height = '500px';
         mentionsContainer.innerHTML = '';
         mentions.forEach(mention => {
+            // Checking if message is deleted
+            let messageDeleteHTML = ``;
+            if(mention.messageDeleted) {
+                messageDeleteHTML = `<span class="messageDeleted">Deleted</span>`;
+            }
+
             const htmlToAdd = `
                 <div class="channel-separator"></div>
                 <div class="message">
@@ -206,10 +188,9 @@ module.exports = () => {
                                             <div class="message-header">
                                                 <div class="user">
                                                     <span class="message-user_name">${mention.messageObj.user.name}</span>
+                                                    ${messageDeleteHTML}
                                                 </div>
-                                                <div class="action_btn">
-                                                    <p>Jump</p>
-                                                </div>
+                                                ${!mention.messageDeleted ? '<div class="action_btn"><p>Jump</p></div>' : ''}
                                             </div>
                                             <div class="message-data">
                                                 <p>${mention.messageObj.body}</p>

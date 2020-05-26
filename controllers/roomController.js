@@ -1,4 +1,5 @@
 const Room = require('../models/Room');
+const User = require('../models/User');
 const checkPermissions = require('../middleware/checkPermissions');
 
 module.exports.messageActions = async (req, res, next) => {
@@ -29,6 +30,9 @@ module.exports.messageActions = async (req, res, next) => {
             room.messages = room.messages.filter(cur => cur._id.toString() !== messageId.toString());
 
             await room.save();
+
+            // Updating User Mentions
+            const user = await User.find();
         
             // Emitting Event to all the connected 'online' sockets to the workspace 
             workSpace.roles.members.forEach(member => {
