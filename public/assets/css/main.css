@@ -1200,17 +1200,20 @@ body {
   }
 }
 
-#root > .main_bar > .room-details > .toRight > .mentions-btn {
+#root > .main_bar > .room-details > .toRight > .mentions-btn,
+#root > .main_bar > .room-details > .toRight > .pins-btn {
   position: relative;
   width: 23px;
 }
 
-#root > .main_bar > .room-details > .toRight > .mentions-btn > img {
+#root > .main_bar > .room-details > .toRight > .mentions-btn > img,
+#root > .main_bar > .room-details > .toRight > .pins-btn > img {
   width: 100%;
   height: 100%;
 }
 
-#root > .main_bar > .room-details > .toRight > .mentions-btn.tut_focus {
+#root > .main_bar > .room-details > .toRight > .mentions-btn.tut_focus,
+#root > .main_bar > .room-details > .toRight > .pins-btn.tut_focus {
   z-index: 133;
   border: 2px solid white;
   padding: 10px;
@@ -1956,7 +1959,7 @@ body {
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p.focus {
   border-top: 1px solid #e03600;
   margin: 10px 0 0;
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 #root > .main_bar > .message-display__container > .messages > .message > .message-inner > .message-data > p.focus::before {
@@ -5800,7 +5803,8 @@ body {
   background: yellow;
 }
 
-.mentions-modal {
+.mentions-modal,
+.pins-modal {
   width: 400px;
   overflow: auto;
   background: #252535;
@@ -5820,15 +5824,24 @@ body {
   border-bottom: 10px solid #252535;
 }
 
-.mentions-modal > .mentions-container > .loader-container {
+.mentions-modal > .mentions-container > .loader-container,
+.mentions-modal > .pins-container > .loader-container,
+.pins-modal > .mentions-container > .loader-container,
+.pins-modal > .pins-container > .loader-container {
   margin: 20px auto;
 }
 
-.mentions-modal > .mentions-container > .channel-separator {
+.mentions-modal > .mentions-container > .channel-separator,
+.mentions-modal > .pins-container > .channel-separator,
+.pins-modal > .mentions-container > .channel-separator,
+.pins-modal > .pins-container > .channel-separator {
   margin: 20px 0;
 }
 
-.mentions-modal > .mentions-container > .message {
+.mentions-modal > .mentions-container > .message,
+.mentions-modal > .pins-container > .message,
+.pins-modal > .mentions-container > .message,
+.pins-modal > .pins-container > .message {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -5841,7 +5854,10 @@ body {
   padding: 0 0 10px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .channel {
+.mentions-modal > .mentions-container > .message > .channel-details > .channel,
+.mentions-modal > .pins-container > .message > .channel-details > .channel,
+.pins-modal > .mentions-container > .message > .channel-details > .channel,
+.pins-modal > .pins-container > .message > .channel-details > .channel {
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -5854,7 +5870,10 @@ body {
           align-items: center;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .channel::before {
+.mentions-modal > .mentions-container > .message > .channel-details > .channel::before,
+.mentions-modal > .pins-container > .message > .channel-details > .channel::before,
+.pins-modal > .mentions-container > .message > .channel-details > .channel::before,
+.pins-modal > .pins-container > .message > .channel-details > .channel::before {
   width: 100%;
   height: 1.5px;
   position: absolute;
@@ -5867,7 +5886,10 @@ body {
   z-index: -1;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details {
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details,
+.mentions-modal > .pins-container > .message > .channel-details > .channel > .details,
+.pins-modal > .mentions-container > .message > .channel-details > .channel > .details,
+.pins-modal > .pins-container > .message > .channel-details > .channel > .details {
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -5882,19 +5904,28 @@ body {
   z-index: 1;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img {
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img,
+.mentions-modal > .pins-container > .message > .channel-details > .channel > .details > .channel-img,
+.pins-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img,
+.pins-modal > .pins-container > .message > .channel-details > .channel > .details > .channel-img {
   width: 25px;
   height: 25px;
   margin-right: 10px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img > img {
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img > img,
+.mentions-modal > .pins-container > .message > .channel-details > .channel > .details > .channel-img > img,
+.pins-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-img > img,
+.pins-modal > .pins-container > .message > .channel-details > .channel > .details > .channel-img > img {
   width: 100%;
   height: 100%;
   border-radius: 200px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-name > p {
+.mentions-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-name > p,
+.mentions-modal > .pins-container > .message > .channel-details > .channel > .details > .channel-name > p,
+.pins-modal > .mentions-container > .message > .channel-details > .channel > .details > .channel-name > p,
+.pins-modal > .pins-container > .message > .channel-details > .channel > .details > .channel-name > p {
   color: #c1c1d645;
   text-transform: uppercase;
   font-weight: 600;
@@ -5902,12 +5933,18 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .room-name {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .room-name,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .room-name,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .room-name,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .room-name {
   padding: 0 20px;
   margin: 20px 0 10px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .room-name > p {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .room-name > p,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .room-name > p,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .room-name > p,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .room-name > p {
   letter-spacing: 1px;
   text-transform: lowercase;
   color: #95afa99e;
@@ -5916,13 +5953,19 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details {
   width: 90%;
   position: relative;
   margin: auto;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details::before {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details::before,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details::before,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details::before,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details::before {
   content: '';
   position: absolute;
   top: 0;
@@ -5936,7 +5979,10 @@ body {
   visibility: hidden;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner {
   position: relative;
   -webkit-box-align: start;
       -ms-flex-align: start;
@@ -5951,11 +5997,17 @@ body {
   display: inline-flex;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > hr {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > hr,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > hr,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > hr,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > hr {
   margin: 5px 0;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img {
   min-height: -webkit-min-content;
   min-height: -moz-min-content;
   min-height: min-content;
@@ -5969,12 +6021,18 @@ body {
   overflow: hidden;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img > .message-user_dp {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img > .message-user_dp,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img > .message-user_dp,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img > .message-user_dp,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .user-img > .message-user_dp {
   width: 100%;
   height: 100%;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body {
   min-height: -webkit-min-content;
   min-height: -moz-min-content;
   min-height: min-content;
@@ -5984,12 +6042,18 @@ body {
 }
 
 @media (max-width: 768px) {
-  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body {
+  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body,
+  .mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body,
+  .pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body,
+  .pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body {
     width: 100%;
   }
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header {
   position: relative;
   color: #EBA63F;
   font-weight: 800;
@@ -6005,7 +6069,10 @@ body {
           align-items: flex-end;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -6015,19 +6082,28 @@ body {
   margin-right: 30px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span {
   font-family: 'Montserrat_Bold';
   font-size: 13px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 768px) {
-  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span {
+  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span,
+  .mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span,
+  .pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span,
+  .pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > span {
     font-size: 13px;
   }
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > .messageDeleted {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > .messageDeleted,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > .messageDeleted,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > .messageDeleted,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .user > .messageDeleted {
   color: #e20d0d;
   font-size: 10px;
   font-weight: 300;
@@ -6037,7 +6113,10 @@ body {
   padding: 1px 6px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn {
   background: #ffffff14;
   padding: 2px 12px;
   opacity: 0;
@@ -6047,16 +6126,25 @@ body {
   transition: 0.2s cubic-bezier(0.5, 1.28, 0.3, 1.03);
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn > p {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn > p,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn > p,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn > p,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn > p {
   color: #d0cbbc;
   font-size: 12px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn:hover {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn:hover,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn:hover,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn:hover,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-header > .action_btn:hover {
   background: #ffffff46;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data {
   margin: 9px 30px 0 0;
   font-size: 11px;
   padding: 0 0 7px 9px;
@@ -6065,7 +6153,10 @@ body {
 }
 
 @media (max-width: 768px) {
-  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data {
+  .mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data,
+  .mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data,
+  .pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data,
+  .pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data {
     margin: 3px 30px 0 0;
     max-width: 100%;
     overflow: auto;
@@ -6073,34 +6164,55 @@ body {
   }
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > .new-line {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > .new-line,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > .new-line,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > .new-line,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > .new-line {
   margin-top: 4px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input {
   height: auto;
   display: block;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input > img {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input > img,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input > img,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input > img,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .image-input > img {
   width: 100%;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text:first-child:empty {
   margin: 0;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > span {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > span,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > span,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > span,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > span {
   height: 26px;
   line-height: 26px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .text {
   padding: 4px 0;
   margin: 0 10px 0 0;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details {
   position: relative;
   -webkit-box-align: center;
       -ms-flex-align: center;
@@ -6123,15 +6235,24 @@ body {
           user-select: none;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details.role {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details.role,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details.role,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details.role,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details.role {
   padding-left: 8px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details:hover {
   background: #161623;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details > img {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details > img,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details > img,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details > img,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-data > p > .tag-details > img {
   position: absolute;
   top: 50%;
   left: 5px;
@@ -6143,22 +6264,34 @@ body {
   margin-right: 4px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status {
   position: absolute;
   bottom: 0;
   right: 4px;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status.sent > .material-icons {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status.sent > .material-icons,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status.sent > .material-icons,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status.sent > .material-icons,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status.sent > .material-icons {
   color: #2797A7;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status > .material-icons {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status > .material-icons,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status > .material-icons,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status > .material-icons,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-status > .material-icons {
   font-size: 14px;
   color: #ffffff3d;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-time_stamp {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-time_stamp,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-time_stamp,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-time_stamp,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details > .message > .message-inner > .message-body > .message-time_stamp {
   position: absolute;
   bottom: 4px;
   right: 25px;
@@ -6167,25 +6300,33 @@ body {
   color: #ffffff3d;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover::before {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover::before,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details:hover::before,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover::before,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details:hover::before {
   opacity: 1;
   visibility: visible;
 }
 
-.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover > .message > .message-inner > .message-body > .message-header > .action_btn {
+.mentions-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover > .message > .message-inner > .message-body > .message-header > .action_btn,
+.mentions-modal > .pins-container > .message > .channel-details > .room-id > .message-details:hover > .message > .message-inner > .message-body > .message-header > .action_btn,
+.pins-modal > .mentions-container > .message > .channel-details > .room-id > .message-details:hover > .message > .message-inner > .message-body > .message-header > .action_btn,
+.pins-modal > .pins-container > .message > .channel-details > .room-id > .message-details:hover > .message > .message-inner > .message-body > .message-header > .action_btn {
   opacity: 1;
   -webkit-transform: translateY(0);
           transform: translateY(0);
 }
 
-.mentions-modal.open {
+.mentions-modal.open,
+.pins-modal.open {
   opacity: 1;
   visibility: visible;
   height: 100px;
   pointer-events: all;
 }
 
-.mentions-modal.open .message {
+.mentions-modal.open .message,
+.pins-modal.open .message {
   opacity: 1;
   visibility: visible;
   pointer-events: all;
@@ -6727,7 +6868,10 @@ button:hover {
 
 .save_modal {
   position: absolute;
-  top: 100%;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
@@ -6748,8 +6892,11 @@ button:hover {
 }
 
 .save_modal.savePopup {
-  -webkit-transform: translateY(-100px) translateX(-50%);
-          transform: translateY(-100px) translateX(-50%);
+  -webkit-transform: translateY(-40px) translateX(-50%);
+          transform: translateY(-40px) translateX(-50%);
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
 }
 
 .save_modal > p {

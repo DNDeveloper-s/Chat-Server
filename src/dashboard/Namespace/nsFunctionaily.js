@@ -34,6 +34,7 @@ async function connectToNs(nsEndPoint, dontJoinDefaultRoom) {
     // nsContainer.dataset.nsendpoint = nsEndPoint;
     
     // Loading Connected Namespace
+    window.nsEndPoint = nsEndPoint;
     await fetch(`${window.location.origin}/dashboard/workspace?isLoad=true&nsEndPoint=${nsEndPoint}`, {
         method: "GET"
     });

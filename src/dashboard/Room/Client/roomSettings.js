@@ -9,6 +9,8 @@ function initHandlers(roomId = String, nsEndPoint = String) {
     // Initializing Delete Button
     initDeleteButton(messageContainer, roomId, nsEndPoint);
 
+    // Initializing Pin Button
+    initPinButton(messageContainer, roomId, nsEndPoint);
 }
 
 function initDeleteButton(messageContainer = Element, roomId = String, nsEndPoint = String) {
@@ -55,6 +57,60 @@ function initDeleteButton(messageContainer = Element, roomId = String, nsEndPoin
                         // Making Request and Getting Data from the Server
                         console.log(nsEndPoint);
                         const data = await deleteRoomMsg(messageId, roomId, nsEndPoint);
+                        console.log(data);
+                    },
+                    dontPlaySound: true     // default is false
+                })
+            });
+        }
+    })
+
+}
+
+function initPinButton(messageContainer = Element, roomId = String, nsEndPoint = String) {
+    // Delete Message Buttons
+    const messagePinBtns = messageContainer.querySelectorAll('.message .react_container > .pin-icon');
+
+    // Looping through all btns
+    messagePinBtns.forEach(messagePinBtn => {
+
+        // Adding Event Listeners
+        if(!messagePinBtn.dataset.clickevent || messagePinBtn.dataset.clickevent !== 'true') {
+            messagePinBtn.addEventListener('click', async function(e) {
+                messagePinBtn.dataset.clickevent = true;
+                
+                // Getting Message ID using react_container element
+                const react_container = messagePinBtn.closest('.react_container');
+                const {messageId, messageText, messageUserId} = getRoomId(react_container);
+    
+                // Playing Sound
+                playSound({
+                    name: 'confirmSound',
+                    volume: 0.1
+                })
+                
+                // Adding Confirmation Modal // User will get two options "Yes" or "No"
+                addModal('CONFIRMATION_MODAL', {
+                    message: `Are you sure you want to pin this message.
+                        <div class="message-data">
+                            <p>${messageText}</p>
+                        </div>
+                    `,
+                    callback: async function(res) {
+    
+                        // User clicked "No"
+                        if(!res) {
+                            return 'Nothing To Do!';
+                        }
+    
+                        // User clicked "Yes"
+                        // Posting Pin Messages
+                        console.log('Posting Pin messages');
+    
+                        const pinMessage = require('../Server/pinMessage');
+    
+                        // Making Request and Getting Data from the Server
+                        const data = await pinMessage(messageId, roomId, messageUserId, nsEndPoint);
                         console.log(data);
                     },
                     dontPlaySound: true     // default is false

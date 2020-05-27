@@ -229,6 +229,14 @@ async function fetchMentions() {
     }
 }
 
+async function fetchPins(nsEndPoint) {
+    const res = await fetch(`${window.location.origin}/dashboard/fetch?pins=true&nsEndPoint=${nsEndPoint}`, {
+        method: "GET"
+    });
+
+    return res.json();
+}
+
 async function fetchWorkSpaces() {
     const allNamespaces = document.querySelectorAll('.nameSpaceContainer > .name_space');
     const allEndPoints = [];
@@ -1177,6 +1185,7 @@ module.exports = {
     remove_sidebar,
     fetchRooms,
     fetchMentions,
+    fetchPins,
     focusMessageById,
     sendImageData,
     tagImplementation,

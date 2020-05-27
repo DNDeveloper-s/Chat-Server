@@ -1140,7 +1140,8 @@ $purple: #693089;
                     }
                 }
 
-                > .mentions-btn {
+                > .mentions-btn,
+                > .pins-btn {
                     position: relative;
                     width: 23px;
                     // height: 40px;
@@ -1848,7 +1849,7 @@ $purple: #693089;
                                     // box-shadow: 0 4px 8px rgba(0,0, 0,0.3);
                                     border-top: 1px solid $focus_color;
                                     margin: 10px 0 0;
-                                    padding-top: 20px;
+                                    padding-top: 10px;
             
                                     &::before {
                                         content: '';
@@ -5359,7 +5360,8 @@ $purple: #693089;
     }
 }
 
-.mentions-modal {
+.mentions-modal,
+.pins-modal {
     width: 400px;
     overflow: auto;
     background: #252535;
@@ -5376,7 +5378,8 @@ $purple: #693089;
     pointer-events: none;
     border-bottom: 10px solid #252535;
 
-    > .mentions-container {
+    > .mentions-container,
+    > .pins-container {
 
         > .loader-container {
             margin: 20px auto;
@@ -6134,7 +6137,10 @@ $white: #eeeeee;
 
 .save_modal {
     position: absolute;
-    top: 100%;
+    bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
     // top: calc(100% + 100px);
     left: 50%;
     transform: translateX(-50%);
@@ -6148,7 +6154,10 @@ $white: #eeeeee;
     transition: .3s cubic-bezier(0,.71,.28,1.23);
 
     &.savePopup {
-        transform: translateY(-100px) translateX(-50%);
+        transform: translateY(-40px) translateX(-50%);
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
     }
 
     > p {

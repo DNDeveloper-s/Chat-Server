@@ -1,7 +1,7 @@
 const { addModal } = require('./dashboard/Modal/addModal');
 // const { addUserModal } = require('./dashboard/User/userUI');
 const { messageToRoomHandler } = require('./dashBoard/User/message');
-const { fetchMentions } = require('./utilities');
+const utils = require('./utilities');
 // const randomize = require('randomatic');
 
 module.exports = () => {
@@ -146,7 +146,7 @@ module.exports = () => {
         const mentionsModal = document.querySelector('.mentions-modal');
         mentionsModal.classList.toggle('open');
 
-        await fetchMentions();
+        await utils.fetchMentions();
         const jsonData = sessionStorage.getItem('mentions');
 
         const mentions = JSON.parse(jsonData);
@@ -236,6 +236,111 @@ module.exports = () => {
             })
         })
     });
+
+    // Pins Toggle button Handler
+    const pinBtn = document.querySelector('.pins-btn > img');
+    pinBtn.addEventListener('click', async function(e) {
+
+        const pinsModal = document.querySelector('.pins-modal');
+        pinsModal.classList.toggle('open');
+
+        // Fetching Pins
+        const data = await utils.fetchPins(nsEndPoint);
+        const pins = data.acknowledgment.pins;
+        console.log(pins);
+
+        const pinsContainer = pinsModal.querySelector('.pins-container');
+        pinsModal.style.height = '500px';
+        pinsContainer.innerHTML = '';
+
+        pins.forEach(pin => {
+            // Checking if message is deleted
+            let messageDeleteHTML = ``;
+            if(pin.messageDeleted) {
+                messageDeleteHTML = `<span class="messageDeleted">Deleted</span>`;
+            }
+
+            const htmlToAdd = `
+                <div class="channel-separator"></div>
+                <div class="message">
+                    <div class="channel-details" data-endpoint="${pin.nsDetails.endPoint}">
+                        <div class="channel">
+                            <div class="details">
+                                <div class="channel-img">
+                                    <img src="${pin.nsDetails.image}" class="message-user_dp" alt="${pin.nsDetails.title}">
+                                </div>
+                                <div class="channel-name">
+                                    <p>${pin.nsDetails.title}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="room-id" data-roomid="${pin.roomDetails._id}">
+                            <div class="room-name">
+                                <p># ${pin.roomDetails.name}</p>
+                            </div>
+                            <div class="message-details">
+                                <div class="message" id="${pin.messageObj._id}">
+                                    <div class="message-inner">
+                                        <div class="user-img">
+                                            <img src="${pin.messageObj.user.image}" class="message-user_dp" alt="${pin.messageObj.user.name}">
+                                        </div>
+                                        <div class="message-body">
+                                            <div class="message-header">
+                                                <div class="user">
+                                                    <span class="message-user_name">${pin.messageObj.user.name}</span>
+                                                    ${messageDeleteHTML}
+                                                </div>
+                                                ${!pin.messageDeleted ? '<div class="action_btn"><p>Jump</p></div>' : ''}
+                                            </div>
+                                            <div class="message-data">
+                                                <p>${pin.messageObj.body}</p>
+                                            </div>
+                                            <span class="message-time_stamp">${pin.messageObj.time}</span>
+                                            <div class="message-status">
+                                                <i class="material-icons">done_all</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            pinsContainer.insertAdjacentHTML('afterbegin', htmlToAdd);
+        });
+
+        const jumpBtns = pinsContainer.querySelectorAll('.action_btn');
+        jumpBtns.forEach(jumpBtn => {
+            jumpBtn.addEventListener('click', function(e) {
+
+                const { joinRoom } = require('./dashboard/Room/Client/addRoom');
+
+                // const { connectToNs, loadNamespace } = require('./dashboard/Namespace/nsFunctionaily');
+
+                const messageId = jumpBtn.closest('.message').getAttribute('id');
+
+                // Getting which is active Workspace
+                // const curWorkSpace = document.querySelector('.nameSpaceDetails-Room_container').dataset.nsendpoint;
+                // console.log(curWorkSpace, this.closest('.channel-details').dataset.endpoint);
+                // if(curWorkSpace != this.closest('.channel-details').dataset.endpoint) {
+                //     loadNamespace(this.closest('.channel-details').dataset.endpoint, true);
+                //     connectToNs(this.closest('.channel-details').dataset.endpoint, true);
+                // }   
+
+                joinRoom({
+                    roomId: this.closest('.room-id').dataset.roomid,
+                    nsEndPoint: this.closest('.channel-details').dataset.endpoint
+                }, messageId);
+                console.log(messageId);
+
+                
+                pinsModal.classList.remove('open');
+            })
+        })
+
+    })
 
     // Jump to message button Handler
     // const jumpBtn = document.getElementById('search-btn');

@@ -8,7 +8,7 @@ const roomController = require('../controllers/roomController');
 
 // All comes under 'room'
 
-router.post('/message', auth.isAuth, roomController.messageActions);
+router.post('/message', auth.isAuth, roomController.messageActions); // This route is for room Actions
 
 // router.get('/download', messageController.download);
 

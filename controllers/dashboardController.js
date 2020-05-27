@@ -1224,6 +1224,7 @@ exports.fetchDetails = async (req, res, next) => {
     const workspaces = req.query.workspaces;
     const clientsStatus = req.query.clientsStatus;
     const mentions = req.query.mentions;
+    const pins = req.query.pins;
     
     if(mentions) {
         const user = await User.findOne({email: req.session.user.email})
@@ -1266,8 +1267,6 @@ exports.fetchDetails = async (req, res, next) => {
                 messageDeleted: messageDeleted
             });
         }
-        
-        console.log(mentions);
 
         return res.json({
             acknowledgment: {
@@ -1276,6 +1275,67 @@ exports.fetchDetails = async (req, res, next) => {
                 mentions: mentions
             }
         })
+
+    } else if(pins) {
+        const nsEndPoint = req.query.nsEndPoint;
+        const workSpace = await WorkSpace.findOne({endPoint: nsEndPoint});
+        
+        const pins = [];
+
+        for(let i = 0; i < workSpace.pins.length; i++) {
+            // Pin update on each iteration
+            const pin = workSpace.pins[i];
+
+            const room = await Room.findById(pin.roomId);
+
+            const messageInRoom = room.messages.filter(cur1 => cur1._id.toString() === pin.messageId.toString())[0];
+            let messageDeleted = false;
+            if(!messageInRoom) {
+                messageDeleted = true;
+            }
+
+            if(messageDeleted) {
+                continue; 
+            }
+            
+            const messageObj = room.messages.find(cur => cur._id.toString() === pin.messageId.toString());
+            let messageUser = await User.findById(messageObj.user.id);
+
+            pins.push({
+                nsDetails: {
+                    _id: workSpace._id,
+                    title: workSpace.title,
+                    image: workSpace.image,
+                    endPoint: workSpace.endPoint 
+                },
+                roomDetails: {
+                    _id: room._id,
+                    name: room.name,
+                    privacy: room.privacy
+                },
+                pinnedByUserId: pin.pinnedByUserId,
+                messageObj: {
+                    _id: messageObj._id,
+                    user: {
+                        id: messageUser._id,
+                        name: messageUser.name,
+                        image: messageUser.image
+                    },
+                    body: messageObj.body,
+                    time: messageObj.time
+                },
+                messageDeleted: messageDeleted
+            });
+        }
+
+        return res.json({
+            acknowledgment: {
+                type: 'success',
+                message: 'Succesfully Got the Pins!',
+                pins: pins
+            }
+        })
+
 
     } else if(clientsStatus) {
     
@@ -1336,7 +1396,7 @@ exports.fetchDetails = async (req, res, next) => {
             .populate('roles.owner')
             .populate('roles.admins')
             .populate('roles.custom.members')
-            .exec((err, workSpace) => {
+            .exec(async (err, workSpace) => {
                 // Checking for internal error
                 if(err) {
                     return next('Internal Error!');
@@ -1370,6 +1430,7 @@ exports.fetchDetails = async (req, res, next) => {
                             uniqueTag: cur.uniqueTag
                         }
                     });
+
                     const custom = workSpace.roles.custom.map(cur => {
                         const memberDetails = cur.members.map(member => {
                             return {
@@ -1388,7 +1449,8 @@ exports.fetchDetails = async (req, res, next) => {
                             priority: cur.priority,
                             permissions: cur.permissions
                         }
-                    })
+                    });
+
                     const owner = {
                         name: workSpace.roles.owner.name,
                         _id: workSpace.roles.owner._id,

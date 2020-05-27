@@ -56,6 +56,21 @@ const workSpaceSchema = new Schema({
             }
         ],
     },
+    pins: [
+        {
+            roomId: {
+                type: Schema.Types.ObjectID,
+                ref: 'Room'
+            },
+            pinnedByUserId: {
+                type: Schema.Types.ObjectID,
+                ref: 'User'
+            },
+            messageId: {
+                type: Schema.Types.ObjectID,
+            }
+        }
+    ],
     defRoom: {
         id: {
             type: Schema.Types.ObjectID,
