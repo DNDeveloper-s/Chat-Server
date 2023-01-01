@@ -40,8 +40,8 @@
   "devDependencies": {
     "compress-images": "^1.6.0",
     "nodemon": "^2.0.2",
-    "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^3.10.3"
   }
 }
